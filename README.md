@@ -4,7 +4,7 @@
 
 </p>
 
-<p align="center"><b>A library that helps you create user interfaces using reusable components.
+<p align="center"><b>A library for creating user interfaces using reusable components.
 </b>
   
 </p>
