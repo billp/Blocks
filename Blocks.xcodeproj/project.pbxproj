@@ -78,7 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				23D82C0E27651FED00322193 /* Blocks */,
-				23D82C1A27651FEE00322193 /* BlocksTests */,
+				23D82C1A27651FEE00322193 /* Tests */,
 				23D82C0D27651FED00322193 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -101,13 +101,13 @@
 			path = Blocks;
 			sourceTree = "<group>";
 		};
-		23D82C1A27651FEE00322193 /* BlocksTests */ = {
+		23D82C1A27651FEE00322193 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
 				23D82C52276546C000322193 /* Components */,
 				23D82C512765456300322193 /* TableViewRenderer */,
 			);
-			path = BlocksTests;
+			path = Tests;
 			sourceTree = "<group>";
 		};
 		23D82C28276520DF00322193 /* Source */ = {
