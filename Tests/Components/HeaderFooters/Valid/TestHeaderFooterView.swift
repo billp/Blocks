@@ -1,4 +1,4 @@
-// ComponentTypes.swift
+// TestHeaderView.swift
 //
 // Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
 //
@@ -17,11 +17,32 @@
 // FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import Foundation
+import UIKit
 
-/// Type for defining nib initializable components.
-public typealias ComponentViewModelNibInitializable = ComponentViewModel & ComponentViewModelReusable &
-    ComponentViewModelNibInitializableProtocol & ComponentViewModelDifferentiable
-/// Type for defining class initializable components.
-public typealias ComponentViewModelClassInitializable = ComponentViewModel & ComponentViewModelReusable &
-    ComponentViewModelClassInitializableProtocol & ComponentViewModelDifferentiable
+@testable import Blocks
+
+class TestHeaderFooterView: UITableViewHeaderFooterView, ComponentViewProtocol {
+    func configure(with model: ComponentViewModelProtocol) {
+
+    }
+
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
+
+        let view = UIView()
+        contentView.addSubview(view)
+        view.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            view.heightAnchor.constraint(equalToConstant: 152),
+            view.topAnchor.constraint(equalTo: contentView.topAnchor),
+            view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            view.leftAnchor.constraint(equalTo: contentView.leftAnchor),
+            view.rightAnchor.constraint(equalTo: contentView.rightAnchor)
+        ])
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}

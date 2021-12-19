@@ -1,4 +1,6 @@
-// ComponentTypes.swift
+// swift-tools-version:5.5
+//
+// Package.swift
 //
 // Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
 //
@@ -17,11 +19,13 @@
 // FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import Foundation
+import PackageDescription
 
-/// Type for defining nib initializable components.
-public typealias ComponentViewModelNibInitializable = ComponentViewModel & ComponentViewModelReusable &
-    ComponentViewModelNibInitializableProtocol & ComponentViewModelDifferentiable
-/// Type for defining class initializable components.
-public typealias ComponentViewModelClassInitializable = ComponentViewModel & ComponentViewModelReusable &
-    ComponentViewModelClassInitializableProtocol & ComponentViewModelDifferentiable
+let package = Package(name: "Blocks",
+                      platforms: [.iOS(.v10)],
+                      products: [.library(name: "Blocks",
+                                          targets: ["Blocks"])],
+                      dependencies: [.package(url: "https://github.com/ra1028/DifferenceKit.git", from: "1.2.0")],
+                      targets: [.target(name: "Blocks",
+                                        path: "Source")],
+                      swiftLanguageVersions: [.v5])

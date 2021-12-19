@@ -23,7 +23,7 @@ import UIKit
 private var tableViewHandle: UInt8 = 0
 
 /// Protocol for UITableViewCell subclasses.
-protocol ComponentViewProtocol: AnyObject {
+public protocol ComponentViewProtocol: AnyObject {
     /// Required for cell configuration with the given model (e.g. setup MVVM Bindings)
     /// - parameters:
     ///   - model: The corresponding view model.
@@ -37,7 +37,7 @@ protocol ComponentViewProtocol: AnyObject {
 
 /// Add default implementation for ComponentViewProtocol.
 extension ComponentViewProtocol {
-    private weak var tableView: UITableView? {
+    weak var tableView: UITableView? {
         get {
             objc_getAssociatedObject(self, &tableViewHandle) as? UITableView
         }
@@ -49,7 +49,7 @@ extension ComponentViewProtocol {
         }
     }
 
-    func updateCellHeight(animated: Bool) {
+    public func updateCellHeight(animated: Bool) {
         let updateHeights = {
             self.tableView?.beginUpdates()
             self.tableView?.endUpdates()

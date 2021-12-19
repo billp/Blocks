@@ -139,7 +139,7 @@ extension TableViewRenderer {
 
     func setRows(_ viewModels: [ComponentViewModel]) {
         let newSections = [
-            Section(model: TableViewSection(id: "1", header: nil, footer: nil),
+            Section(model: TableViewSection(sectionId: "1", header: nil, footer: nil),
                     elements: viewModels)
 
         ]
@@ -218,8 +218,59 @@ extension TableViewRenderer {
     }
 }
 
+// MARK: - Configure Views
+
+extension TableViewRenderer {
+    func headerView(for tableView: UITableView, inSection section: Int) throws -> UIView? {
+        guard let headerModel = sections[section].model.header
+                as? ComponentViewModel & ComponentViewModelReusable else {
+            throw BlocksError.invalidModelClass
+        }
+        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerModel.reuseIdentifier)
+                as? UITableViewHeaderFooterView & ComponentViewProtocol else {
+            throw BlocksError.invalidViewClass
+        }
+
+        header.configure(with: headerModel)
+        tableView.setHeight(headerSection: section, view: header)
+        return header
+    }
+
+    func footerView(for tableView: UITableView, inSection section: Int) throws -> UIView? {
+        guard let footerModel = sections[section].model.footer
+                as? ComponentViewModel & ComponentViewModelReusable else {
+            throw BlocksError.invalidModelClass
+        }
+        guard let footer = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerModel.reuseIdentifier)
+                as? UITableViewHeaderFooterView & ComponentViewProtocol else {
+            throw BlocksError.invalidViewClass
+        }
+
+        footer.configure(with: footerModel)
+        return footer
+    }
+
+    func cellView(for tableView: UITableView, at indexPath: IndexPath) throws -> UITableViewCell? {
+        guard let cellModel = sections[indexPath.section].elements[indexPath.row]
+                as? ComponentViewModel & ComponentViewModelReusable else {
+            throw BlocksError.invalidModelClass
+        }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellModel.reuseIdentifier,
+                                                       for: indexPath)
+                as? UITableViewCell & ComponentViewProtocol else {
+            throw BlocksError.invalidViewClass
+        }
+
+        cellModel.beforeReuse()
+        cell.setTableView(tableView)
+        cell.configure(with: cellModel)
+        return cell
+    }
+}
+
+// MARK: - UITableView Delegate
+
 extension TableViewRenderer: UITableViewDelegate, UITableViewDataSource {
-    // MARK: - Configure Cells/Headers
 
     func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
@@ -232,53 +283,28 @@ extension TableViewRenderer: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView,
                    viewForHeaderInSection section: Int) -> UIView? {
-        guard let headerModel = sections[section].model.header as? ComponentViewModel &
-                ComponentViewModelReusable else {
-            return nil
+        do {
+            return try headerView(for: tableView, inSection: section)
+        } catch let error {
+            fatalError(error.localizedDescription)
         }
-        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerModel.reuseIdentifier)
-                as? UITableViewHeaderFooterView & HeaderFooterComponentViewProtocol else {
-            return UIView()
-        }
-
-        header.configure(with: headerModel)
-        tableView.setHeight(headerSection: section, view: header)
-        return header
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        guard let footerModel = sections[section].model.footer as? ComponentViewModel &
-                ComponentViewModelReusable else {
-            return nil
+        do {
+            return try footerView(for: tableView, inSection: section)
+        } catch let error {
+            fatalError(error.localizedDescription)
         }
-        guard let footer = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerModel.reuseIdentifier)
-                as? UITableViewHeaderFooterView & HeaderFooterComponentViewProtocol else {
-            return UIView()
-        }
-
-        footer.configure(with: footerModel)
-        return footer
     }
 
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cellModel = sections[indexPath.section].elements[indexPath.row] as? ComponentViewModel &
-                ComponentViewModelReusable else {
-            fatalError("\(sections[indexPath.section].elements[indexPath.row]) should " +
-                       "conform to ComponentViewModelReusable")
+        do {
+            return try cellView(for: tableView, at: indexPath) ?? UITableViewCell()
+        } catch let error {
+            fatalError(error.localizedDescription)
         }
-
-        guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: cellModel.reuseIdentifier,
-                for: indexPath) as? UITableViewCell & ComponentViewProtocol else {
-                    fatalError("Cell with reuseIdentifier: \(cellModel.reuseIdentifier)" +
-                                " should implement CellComponentViewProtocol")
-        }
-
-        cellModel.beforeReuse()
-        cell.setTableView(tableView)
-        cell.configure(with: cellModel)
-        return cell
     }
 
     // MARK: Set Heights

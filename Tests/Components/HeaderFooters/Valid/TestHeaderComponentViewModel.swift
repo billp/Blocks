@@ -1,4 +1,4 @@
-// ComponentTypes.swift
+// TestHeaderFooterComponentViewModel.swift
 //
 // Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
 //
@@ -19,9 +19,23 @@
 
 import Foundation
 
-/// Type for defining nib initializable components.
-public typealias ComponentViewModelNibInitializable = ComponentViewModel & ComponentViewModelReusable &
-    ComponentViewModelNibInitializableProtocol & ComponentViewModelDifferentiable
-/// Type for defining class initializable components.
-public typealias ComponentViewModelClassInitializable = ComponentViewModel & ComponentViewModelReusable &
-    ComponentViewModelClassInitializableProtocol & ComponentViewModelDifferentiable
+@testable import Blocks
+
+class TestHeaderFooterComponentViewModel: ComponentViewModelClassInitializable {
+    var reuseIdentifier: String {
+        String(describing: TestHeaderFooterView.self)
+    }
+
+    var viewClass: AnyClass {
+        TestHeaderFooterView.self
+    }
+
+    var componentId: String {
+        String(describing: TestHeaderFooterView.self)
+    }
+
+    func isComponentEqual(to source: ComponentViewModel) -> Bool {
+        let model = source.value() as TestHeaderFooterComponentViewModel
+        return model.componentId == componentId
+    }
+}

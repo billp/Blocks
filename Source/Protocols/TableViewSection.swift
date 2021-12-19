@@ -21,10 +21,10 @@ import Foundation
 import DifferenceKit
 
 struct TableViewSection: Differentiable {
-    var id: String
+    var sectionId: String
 
     var differenceIdentifier: String {
-        return id
+        sectionId
     }
 
     var header: ComponentViewModel?
