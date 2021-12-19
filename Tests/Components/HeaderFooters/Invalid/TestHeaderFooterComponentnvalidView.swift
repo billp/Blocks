@@ -1,4 +1,4 @@
-// HeaderFooterComponentViewProtocol.swift
+// TestHeaderFooterComponentInvalidView.swift
 //
 // Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
 //
@@ -19,10 +19,23 @@
 
 import Foundation
 
-/// Protocol for UITableHeaderFooterView subclasses.
-protocol HeaderFooterComponentViewProtocol {
-    /// Required for cell configuration with the given model (e.g. setup MVVM Bindings)
-    /// - parameters:
-    ///   - model: The corresponding view model.
-    func configure(with model: ComponentViewModelProtocol)
+import Blocks
+
+class TestHeaderFooterComponentInvalidView: ComponentViewModelClassInitializable {
+    var reuseIdentifier: String {
+        String(describing: TestHeaderFooterView.self)
+    }
+
+    var viewClass: AnyClass {
+        TestHeaderFooterInvalidView.self
+    }
+
+    var componentId: String {
+        UUID().uuidString
+    }
+
+    func isComponentEqual(to source: ComponentViewModel) -> Bool {
+        let model = source.value() as TestHeaderFooterComponentViewModel
+        return model.componentId == componentId
+    }
 }

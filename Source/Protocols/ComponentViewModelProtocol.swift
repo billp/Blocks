@@ -21,7 +21,7 @@ import Foundation
 import DifferenceKit
 
 /// Protocol for base ComponentViewModel.
-protocol ComponentViewModelProtocol {
+public protocol ComponentViewModelProtocol {
     /// Get the model with its actual object type.
     func value<T>() -> T
 
@@ -30,7 +30,7 @@ protocol ComponentViewModelProtocol {
 }
 
 /// Selectable protocol that enables didSelect functionality.
-protocol ComponentViewModelSelectable {
+public protocol ComponentViewModelSelectable {
     /// Called when cell is selected.
     ///
     /// Parameters:
@@ -39,32 +39,32 @@ protocol ComponentViewModelSelectable {
 }
 
 /// Protocol which defines that the ListComponentViewModel is reusable.
-protocol ComponentViewModelReusable {
+public protocol ComponentViewModelReusable {
     /// Set the reuseIdentifier of cell/header/footer.
     var reuseIdentifier: String { get }
 }
 
 /// Protocol which defines that the ListComponentViewModel is Nib initializable.
-protocol ComponentViewModelNibInitializableProtocol {
+public protocol ComponentViewModelNibInitializableProtocol {
     /// Set the nibName to automatically register as UINib.
     var nibName: String { get }
 }
 
 /// Protocol which defines that the ListComponentViewModel is Class initializable.
-protocol ComponentViewModelClassInitializableProtocol {
+public protocol ComponentViewModelClassInitializableProtocol {
     /// Set the className to automatically register as Class.
     var viewClass: AnyClass { get }
 }
 
 /// Protocol which bridges the component with the DifferenceKit
-protocol ComponentViewModelDifferentiable {
+public protocol ComponentViewModelDifferentiable {
     /// Defines a unique id of the component.
     var componentId: String { get }
     /// Defines how the components can be compared.
     func isComponentEqual(to source: ComponentViewModel) -> Bool
 }
 
-extension ComponentViewModelProtocol {
+public extension ComponentViewModelProtocol {
     /// Returns model value casted to the given type.
     func value<T>() -> T {
         if let viewModel = self as? T {

@@ -58,7 +58,7 @@ protocol TableViewRendererProtocol: UITableViewDataSource, UITableViewDelegate {
 }
 
 /// Renderer delegate
-protocol TableViewRendererDelegate: AnyObject {
+public protocol TableViewRendererDelegate: AnyObject {
     /// Called when tableView:didSelectRowAtIndexPath: is called.
     func didSelectRow(_ viewModel: ComponentViewModel,
                       tableView: UITableView,

@@ -1,4 +1,4 @@
-// ComponentTypes.swift
+// TestComponentInvalidModel.swift
 //
 // Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
 //
@@ -17,11 +17,25 @@
 // FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+@testable import Blocks
+
 import Foundation
 
-/// Type for defining nib initializable components.
-public typealias ComponentViewModelNibInitializable = ComponentViewModel & ComponentViewModelReusable &
-    ComponentViewModelNibInitializableProtocol & ComponentViewModelDifferentiable
-/// Type for defining class initializable components.
-public typealias ComponentViewModelClassInitializable = ComponentViewModel & ComponentViewModelReusable &
-    ComponentViewModelClassInitializableProtocol & ComponentViewModelDifferentiable
+class TestComponentInvalidModel: ComponentViewModel, ComponentViewModelDifferentiable {
+    var viewClass: AnyClass {
+        TestComponentInvalidCell.self
+    }
+
+    var componentId: String {
+        "testComponent"
+    }
+
+    var reuseIdentifier: String {
+        "testComponent"
+    }
+
+    func isComponentEqual(to source: ComponentViewModel) -> Bool {
+        let model = source.value() as TestComponentViewModel
+        return model.componentId == self.componentId
+    }
+}

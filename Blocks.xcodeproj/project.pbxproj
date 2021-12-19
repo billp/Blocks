@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2303DE1327863B1A00B17C0A /* TestComponentInvalidModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2303DE1127863ACC00B17C0A /* TestComponentInvalidModel.swift */; };
+		2303DE1427863B1D00B17C0A /* TestComponentInvalidCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2303DE1227863ACC00B17C0A /* TestComponentInvalidCell.swift */; };
+		2303DE1627863CB700B17C0A /* TestComponentInvalidView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2303DE1527863CB700B17C0A /* TestComponentInvalidView.swift */; };
+		237E5949276FC8FB00E36E73 /* TestHeaderComponentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237E5944276FC19A00E36E73 /* TestHeaderComponentViewModel.swift */; };
+		237E594A276FC8FE00E36E73 /* TestHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237E5946276FC1D700E36E73 /* TestHeaderFooterView.swift */; };
+		237E594F276FC9F300E36E73 /* TestHeaderFooterComponentInvalidModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237E594D276FC9ED00E36E73 /* TestHeaderFooterComponentInvalidModel.swift */; };
+		237E5950276FC9F500E36E73 /* TestHeaderFooterInvalidView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237E594E276FC9ED00E36E73 /* TestHeaderFooterInvalidView.swift */; };
+		237E5959276FD26900E36E73 /* TestHeaderFooterComponentnvalidView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237E5958276FD26900E36E73 /* TestHeaderFooterComponentnvalidView.swift */; };
+		237E5962276FDCD400E36E73 /* BlocksError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237E5960276FDCCA00E36E73 /* BlocksError.swift */; };
 		23D82C1727651FEE00322193 /* Blocks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23D82C0C27651FED00322193 /* Blocks.framework */; };
 		23D82C1C27651FEE00322193 /* TableViewRendererDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C1B27651FEE00322193 /* TableViewRendererDataSourceTests.swift */; };
 		23D82C272765209900322193 /* Blocks.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D82C262765209900322193 /* Blocks.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -14,7 +23,6 @@
 		23D82C4627652D0A00322193 /* TableViewRendererProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C2A2765263000322193 /* TableViewRendererProtocol.swift */; };
 		23D82C4727652D5800322193 /* ComponentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C322765263000322193 /* ComponentViewModel.swift */; };
 		23D82C4827652D5800322193 /* UITableView+FlexibleHeightCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C352765263000322193 /* UITableView+FlexibleHeightCell.swift */; };
-		23D82C4927652D5F00322193 /* HeaderFooterComponentViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C2B2765263000322193 /* HeaderFooterComponentViewProtocol.swift */; };
 		23D82C4A27652D5F00322193 /* ComponentTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C2F2765263000322193 /* ComponentTypes.swift */; };
 		23D82C4B27652D5F00322193 /* FlexibleHeightCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C2E2765263000322193 /* FlexibleHeightCellProtocol.swift */; };
 		23D82C4C27652D5F00322193 /* ComponentViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C302765263000322193 /* ComponentViewModelProtocol.swift */; };
@@ -36,12 +44,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2303DE1127863ACC00B17C0A /* TestComponentInvalidModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestComponentInvalidModel.swift; sourceTree = "<group>"; };
+		2303DE1227863ACC00B17C0A /* TestComponentInvalidCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestComponentInvalidCell.swift; sourceTree = "<group>"; };
+		2303DE1527863CB700B17C0A /* TestComponentInvalidView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestComponentInvalidView.swift; sourceTree = "<group>"; };
+		235982A9276FBB9300FF0AA6 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = SOURCE_ROOT; };
+		237E5944276FC19A00E36E73 /* TestHeaderComponentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHeaderComponentViewModel.swift; sourceTree = "<group>"; };
+		237E5946276FC1D700E36E73 /* TestHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHeaderFooterView.swift; sourceTree = "<group>"; };
+		237E594D276FC9ED00E36E73 /* TestHeaderFooterComponentInvalidModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHeaderFooterComponentInvalidModel.swift; sourceTree = "<group>"; };
+		237E594E276FC9ED00E36E73 /* TestHeaderFooterInvalidView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHeaderFooterInvalidView.swift; sourceTree = "<group>"; };
+		237E5958276FD26900E36E73 /* TestHeaderFooterComponentnvalidView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHeaderFooterComponentnvalidView.swift; sourceTree = "<group>"; };
+		237E5960276FDCCA00E36E73 /* BlocksError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlocksError.swift; sourceTree = "<group>"; };
 		23D82C0C27651FED00322193 /* Blocks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Blocks.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		23D82C1627651FEE00322193 /* BlocksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BlocksTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		23D82C1B27651FEE00322193 /* TableViewRendererDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewRendererDataSourceTests.swift; sourceTree = "<group>"; };
 		23D82C262765209900322193 /* Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Blocks.h; sourceTree = "<group>"; };
 		23D82C2A2765263000322193 /* TableViewRendererProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewRendererProtocol.swift; sourceTree = "<group>"; };
-		23D82C2B2765263000322193 /* HeaderFooterComponentViewProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderFooterComponentViewProtocol.swift; sourceTree = "<group>"; };
 		23D82C2D2765263000322193 /* ComponentViewProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentViewProtocol.swift; sourceTree = "<group>"; };
 		23D82C2E2765263000322193 /* FlexibleHeightCellProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlexibleHeightCellProtocol.swift; sourceTree = "<group>"; };
 		23D82C2F2765263000322193 /* ComponentTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentTypes.swift; sourceTree = "<group>"; };
@@ -74,6 +91,70 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2303DE0F27863ABD00B17C0A /* Valid */ = {
+			isa = PBXGroup;
+			children = (
+				23D82C532765482B00322193 /* TestComponentViewModel.swift */,
+				23D82C552765488F00322193 /* TestComponentCell.swift */,
+			);
+			path = Valid;
+			sourceTree = "<group>";
+		};
+		2303DE1027863AC400B17C0A /* Invalid */ = {
+			isa = PBXGroup;
+			children = (
+				2303DE1127863ACC00B17C0A /* TestComponentInvalidModel.swift */,
+				2303DE1527863CB700B17C0A /* TestComponentInvalidView.swift */,
+				2303DE1227863ACC00B17C0A /* TestComponentInvalidCell.swift */,
+			);
+			path = Invalid;
+			sourceTree = "<group>";
+		};
+		237E5941276FC16100E36E73 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				2303DE1027863AC400B17C0A /* Invalid */,
+				2303DE0F27863ABD00B17C0A /* Valid */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		237E5942276FC16C00E36E73 /* HeaderFooters */ = {
+			isa = PBXGroup;
+			children = (
+				237E594C276FC9DE00E36E73 /* Invalid */,
+				237E594B276FC9D800E36E73 /* Valid */,
+			);
+			path = HeaderFooters;
+			sourceTree = "<group>";
+		};
+		237E594B276FC9D800E36E73 /* Valid */ = {
+			isa = PBXGroup;
+			children = (
+				237E5944276FC19A00E36E73 /* TestHeaderComponentViewModel.swift */,
+				237E5946276FC1D700E36E73 /* TestHeaderFooterView.swift */,
+			);
+			path = Valid;
+			sourceTree = "<group>";
+		};
+		237E594C276FC9DE00E36E73 /* Invalid */ = {
+			isa = PBXGroup;
+			children = (
+				237E594D276FC9ED00E36E73 /* TestHeaderFooterComponentInvalidModel.swift */,
+				237E5958276FD26900E36E73 /* TestHeaderFooterComponentnvalidView.swift */,
+				237E594E276FC9ED00E36E73 /* TestHeaderFooterInvalidView.swift */,
+			);
+			path = Invalid;
+			sourceTree = "<group>";
+		};
+		2390A108276FBA4600EFD92C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				235982A9276FBB9300FF0AA6 /* Package.swift */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		23D82C0227651FED00322193 = {
 			isa = PBXGroup;
 			children = (
@@ -96,6 +177,7 @@
 			isa = PBXGroup;
 			children = (
 				23D82C28276520DF00322193 /* Source */,
+				2390A108276FBA4600EFD92C /* Supporting Files */,
 				23D82C262765209900322193 /* Blocks.h */,
 			);
 			path = Blocks;
@@ -113,6 +195,7 @@
 		23D82C28276520DF00322193 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				237E5960276FDCCA00E36E73 /* BlocksError.swift */,
 				23D82C342765263000322193 /* Extensions */,
 				23D82C312765263000322193 /* Models */,
 				23D82C292765263000322193 /* Protocols */,
@@ -126,7 +209,6 @@
 			children = (
 				23D82C4F2765445D00322193 /* TableViewSection.swift */,
 				23D82C2A2765263000322193 /* TableViewRendererProtocol.swift */,
-				23D82C2B2765263000322193 /* HeaderFooterComponentViewProtocol.swift */,
 				23D82C2D2765263000322193 /* ComponentViewProtocol.swift */,
 				23D82C302765263000322193 /* ComponentViewModelProtocol.swift */,
 				23D82C2F2765263000322193 /* ComponentTypes.swift */,
@@ -170,8 +252,8 @@
 		23D82C52276546C000322193 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				23D82C532765482B00322193 /* TestComponentViewModel.swift */,
-				23D82C552765488F00322193 /* TestComponentCell.swift */,
+				237E5942276FC16C00E36E73 /* HeaderFooters */,
+				237E5941276FC16100E36E73 /* Cells */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -198,6 +280,7 @@
 				23D82C0827651FED00322193 /* Sources */,
 				23D82C0927651FED00322193 /* Frameworks */,
 				23D82C0A27651FED00322193 /* Resources */,
+				237E5948276FC42F00E36E73 /* SwiftLint */,
 			);
 			buildRules = (
 			);
@@ -218,6 +301,7 @@
 				23D82C1227651FEE00322193 /* Sources */,
 				23D82C1327651FEE00322193 /* Frameworks */,
 				23D82C1427651FEE00322193 /* Resources */,
+				2362336A2786F65300375A69 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -286,6 +370,44 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		2362336A2786F65300375A69 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"/opt/homebrew/bin:$PATH\"\nif which swiftlint >/dev/null; then\n  swiftlint \"$SRCROOT/Tests\" --strict\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+		237E5948276FC42F00E36E73 /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"/opt/homebrew/bin:$PATH\"\nif which swiftlint >/dev/null; then\n  swiftlint \"$SRCROOT/Source\" --strict\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		23D82C0827651FED00322193 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -296,10 +418,10 @@
 				23D82C4727652D5800322193 /* ComponentViewModel.swift in Sources */,
 				23D82C502765445D00322193 /* TableViewSection.swift in Sources */,
 				23D82C4627652D0A00322193 /* TableViewRendererProtocol.swift in Sources */,
-				23D82C4927652D5F00322193 /* HeaderFooterComponentViewProtocol.swift in Sources */,
 				23D82C4827652D5800322193 /* UITableView+FlexibleHeightCell.swift in Sources */,
 				23D82C4B27652D5F00322193 /* FlexibleHeightCellProtocol.swift in Sources */,
 				23D82C4D27652D5F00322193 /* ComponentViewProtocol.swift in Sources */,
+				237E5962276FDCD400E36E73 /* BlocksError.swift in Sources */,
 				23D82C4A27652D5F00322193 /* ComponentTypes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -308,9 +430,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				237E594A276FC8FE00E36E73 /* TestHeaderFooterView.swift in Sources */,
+				237E5959276FD26900E36E73 /* TestHeaderFooterComponentnvalidView.swift in Sources */,
 				23D82C542765482B00322193 /* TestComponentViewModel.swift in Sources */,
+				237E5949276FC8FB00E36E73 /* TestHeaderComponentViewModel.swift in Sources */,
+				2303DE1327863B1A00B17C0A /* TestComponentInvalidModel.swift in Sources */,
 				23D82C562765488F00322193 /* TestComponentCell.swift in Sources */,
+				2303DE1627863CB700B17C0A /* TestComponentInvalidView.swift in Sources */,
 				23D82C1C27651FEE00322193 /* TableViewRendererDataSourceTests.swift in Sources */,
+				237E594F276FC9F300E36E73 /* TestHeaderFooterComponentInvalidModel.swift in Sources */,
+				237E5950276FC9F500E36E73 /* TestHeaderFooterInvalidView.swift in Sources */,
+				2303DE1427863B1D00B17C0A /* TestComponentInvalidCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

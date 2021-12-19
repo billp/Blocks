@@ -1,4 +1,4 @@
-// ComponentTypes.swift
+// TestComponentViewModel.swift
 //
 // Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
 //
@@ -17,11 +17,38 @@
 // FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+@testable import Blocks
+
 import Foundation
 
-/// Type for defining nib initializable components.
-public typealias ComponentViewModelNibInitializable = ComponentViewModel & ComponentViewModelReusable &
-    ComponentViewModelNibInitializableProtocol & ComponentViewModelDifferentiable
-/// Type for defining class initializable components.
-public typealias ComponentViewModelClassInitializable = ComponentViewModel & ComponentViewModelReusable &
-    ComponentViewModelClassInitializableProtocol & ComponentViewModelDifferentiable
+class TestComponentViewModel: ComponentViewModelClassInitializable, ComponentViewModelSelectable {
+    static var beforeReuseCalled = false
+    static var isSelected: Bool = false
+
+    var viewClass: AnyClass {
+        TestComponentCell.self
+    }
+
+    var componentId: String {
+        "testComponent"
+    }
+
+    var reuseIdentifier: String {
+        "testComponent"
+    }
+
+    func isComponentEqual(to source: ComponentViewModel) -> Bool {
+        let model = source.value() as TestComponentViewModel
+        return model.componentId == self.componentId
+    }
+
+    override func beforeReuse() {
+        super.beforeReuse()
+
+        TestComponentViewModel.beforeReuseCalled = true
+    }
+
+    func onSelect(deselectRow: (Bool) -> Void) {
+        TestComponentViewModel.isSelected = true
+    }
+}
