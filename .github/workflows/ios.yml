@@ -12,5 +12,5 @@ jobs:
       run: sudo xcode-select -switch /Applications/Xcode_13.2.1.app && /usr/bin/xcodebuild -version
     - name: Run unit tests
       run: xcodebuild test -scheme Blocks -destination 'platform=iOS Simulator,name=iPhone 13 Pro,OS=15.2'
-    - name: GitHub Action for SwiftLint
-      uses: norio-nomura/action-swiftlint@3.2.1
+    - name: SwiftLint
+      run: swiftlint
