@@ -21,21 +21,12 @@ import Foundation
 
 import Blocks
 
-class TestHeaderFooterComponentInvalidModel: ComponentViewModel {
-    var reuseIdentifier: String {
-        String(describing: TestHeaderFooterView.self)
-    }
-
+struct TestHeaderFooterComponentInvalidModel: ClassComponent {
     var viewClass: AnyClass {
         TestHeaderFooterView.self
     }
 
     var componentId: String {
         String(describing: TestHeaderFooterView.self)
-    }
-
-    func isComponentEqual(to source: ComponentViewModel) -> Bool {
-        let model = source.value() as TestHeaderFooterComponentViewModel
-        return model.componentId == componentId
     }
 }

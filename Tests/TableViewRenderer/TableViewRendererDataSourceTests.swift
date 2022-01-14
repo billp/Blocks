@@ -42,11 +42,11 @@ class BlocksTests: XCTestCase {
         let section1 = Section(model: TableViewSection(sectionId: "test", header: nil, footer: nil),
                                elements: [TestComponentViewModel(),
                                           TestComponentViewModel(),
-                                          TestComponentViewModel()])
+                                          TestComponentViewModel()].map({ Block($0) }))
         let section2 = Section(model: TableViewSection(sectionId: "test2", header: nil, footer: nil),
                                elements: [TestComponentViewModel(),
                                           TestComponentViewModel(),
-                                          TestComponentViewModel()])
+                                          TestComponentViewModel()].map({ Block($0) }))
         let sections = [section1, section2]
 
         // When
@@ -70,42 +70,6 @@ class BlocksTests: XCTestCase {
 
         // Then
         XCTAssert(renderer.tableView(self.tableView, viewForHeaderInSection: 0) is TestHeaderFooterView)
-    }
-
-    func testViewForHeaderInSectionInvalidModel() {
-        // Given
-        let section = Section(model: TableViewSection(sectionId: "test",
-                                                      header: TestHeaderFooterComponentInvalidModel(),
-                                                      footer: nil),
-                              elements: [])
-
-        // When
-        renderer.setSections([section], animation: .none)
-
-        // Then
-        do {
-            _ = try self.renderer.headerView(for: self.tableView, inSection: 0)
-        } catch let error {
-            XCTAssert(error as? BlocksError == BlocksError.invalidModelClass)
-        }
-    }
-
-    func testViewForHeaderInSectionInvalidView() {
-        // Given
-        let section = Section(model: TableViewSection(sectionId: "test",
-                                                      header: TestHeaderFooterComponentInvalidView(),
-                                                      footer: nil),
-                              elements: [])
-
-        // When
-        renderer.setSections([section], animation: .none)
-
-        // Then
-        do {
-            _ = try self.renderer.headerView(for: self.tableView, inSection: 0)
-        } catch let error {
-            XCTAssert(error as? BlocksError == BlocksError.invalidViewClass)
-        }
     }
 
     // MARK: - Footer
@@ -142,24 +106,6 @@ class BlocksTests: XCTestCase {
         }
     }
 
-    func testViewForFooterInSectionInvalidView() {
-        // Given
-        let section = Section(model: TableViewSection(sectionId: "test",
-                                                      header: nil,
-                                                      footer: TestHeaderFooterComponentInvalidView()),
-                              elements: [])
-
-        // When
-        renderer.setSections([section], animation: .none)
-
-        // Then
-        do {
-            _ = try self.renderer.footerView(for: self.tableView, inSection: 0)
-        } catch let error {
-            XCTAssert(error as? BlocksError == BlocksError.invalidViewClass)
-        }
-    }
-
     // MARK: - Cell
 
     func testCellForRowAt() {
@@ -175,22 +121,6 @@ class BlocksTests: XCTestCase {
             XCTAssert(cell is TestComponentCell)
         } catch {
             XCTAssert(false)
-        }
-    }
-
-    func testCellForRowAtInvalidModel() {
-        // Given
-        let row = TestComponentInvalidModel()
-
-        // When
-        renderer.setRows([row])
-
-        // Then
-        do {
-            let cell = try self.renderer.cellView(for: self.tableView, at: IndexPath(row: 0, section: 0))
-            XCTAssert(cell is TestComponentCell)
-        } catch let error {
-            XCTAssert(error as? BlocksError == BlocksError.invalidModelClass)
         }
     }
 
@@ -376,7 +306,7 @@ class BlocksTests: XCTestCase {
 }
 
 extension BlocksTests: TableViewRendererDelegate {
-    func didSelectRow(_ viewModel: ComponentViewModel,
+    func didSelectRow(_ viewModel: Block,
                       tableView: UITableView,
                       indexPath: IndexPath) {
         BlocksTests.didSelectCalled = true

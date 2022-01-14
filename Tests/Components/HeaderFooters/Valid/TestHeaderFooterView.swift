@@ -21,8 +21,8 @@ import UIKit
 
 @testable import Blocks
 
-class TestHeaderFooterView: UITableViewHeaderFooterView, ComponentViewProtocol {
-    func configure(with model: ComponentViewModelProtocol) {
+class TestHeaderFooterView: UITableViewHeaderFooterView, ComponentViewConfigurable {
+    func configure(with model: Block) {
 
     }
 

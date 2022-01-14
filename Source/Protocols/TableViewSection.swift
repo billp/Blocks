@@ -20,19 +20,48 @@
 import Foundation
 import DifferenceKit
 
-struct TableViewSection: Differentiable {
+class TableViewSection: Differentiable {
     var sectionId: String
+
+    var blockHeader: Block?
+    var blockFooter: Block?
 
     var differenceIdentifier: String {
         sectionId
     }
 
-    var header: ComponentViewModel?
-    var footer: ComponentViewModel?
+    init(sectionId: String,
+         header: Component? = nil,
+         footer: Component? = nil) {
+        self.sectionId = sectionId
+        self.header = header
+        self.footer = footer
+    }
+
+    var header: Component? {
+        get {
+            blockHeader?.component
+        }
+        set {
+            if let header = newValue {
+                blockHeader = Block(header)
+            }
+        }
+    }
+    var footer: Component? {
+        get {
+            blockFooter?.component
+        }
+        set {
+            if let footer = newValue {
+                blockFooter = Block(footer)
+            }
+        }
+    }
 
     func isContentEqual(to source: TableViewSection) -> Bool {
-        header == source.header && footer == source.footer
+        blockHeader == source.blockHeader && blockFooter == source.blockFooter
     }
 }
 
-typealias Section = ArraySection<TableViewSection, ComponentViewModel>
+typealias Section = ArraySection<TableViewSection, Block>
