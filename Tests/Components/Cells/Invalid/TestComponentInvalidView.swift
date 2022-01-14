@@ -21,21 +21,12 @@
 
 import Foundation
 
-class TestComponentInvalidView: ComponentViewModelClassInitializable {
+class TestComponentInvalidView: ClassComponent {
     var viewClass: AnyClass {
         TestComponentInvalidCell.self
     }
 
     var componentId: String {
         "testComponent"
-    }
-
-    var reuseIdentifier: String {
-        "testComponent"
-    }
-
-    func isComponentEqual(to source: ComponentViewModel) -> Bool {
-        let model = source.value() as TestComponentViewModel
-        return model.componentId == self.componentId
     }
 }

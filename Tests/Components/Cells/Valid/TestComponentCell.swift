@@ -21,7 +21,7 @@ import UIKit
 
 @testable import Blocks
 
-class TestComponentCell: UITableViewCell, ComponentViewProtocol {
+class TestComponentCell: UITableViewCell, ComponentViewConfigurable {
     static var tableView: UITableView?
     static var configureCalled: Bool = false
 
@@ -45,7 +45,7 @@ class TestComponentCell: UITableViewCell, ComponentViewProtocol {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with model: ComponentViewModelProtocol) {
+    func configure(with model: Block) {
         TestComponentCell.tableView = tableView
         TestComponentCell.configureCalled = true
     }

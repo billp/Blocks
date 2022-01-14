@@ -67,16 +67,15 @@ final class TableViewRenderer: NSObject, TableViewRendererProtocol {
     private func registerHeaderFooterIfNeeded(for section: Section) {
         // Register Header/Footer nib/class
         [section.model.header, section.model.footer].compactMap({ $0 }).forEach { sectionElement in
-            if let nibInitializableElement = sectionElement as? ComponentViewModelNibInitializable,
-                !registeredNibNames.contains(nibInitializableElement.nibName) {
-                tableView.register(UINib(nibName: nibInitializableElement.nibName, bundle: bundle),
-                                   forHeaderFooterViewReuseIdentifier: nibInitializableElement.reuseIdentifier)
-                registeredNibNames.insert(nibInitializableElement.nibName)
-            } else if let classInitializableElement = sectionElement as? ComponentViewModelClassInitializable {
-                let className = String(describing: classInitializableElement.viewClass)
+            if let nibComponent = sectionElement as? NibComponent, !registeredNibNames.contains(nibComponent.nibName) {
+                tableView.register(UINib(nibName: nibComponent.nibName, bundle: bundle),
+                                   forHeaderFooterViewReuseIdentifier: sectionElement.reuseIdentifier)
+                registeredNibNames.insert(nibComponent.nibName)
+            } else if let classComponent = sectionElement as? ClassComponent {
+                let className = String(describing: classComponent.viewClass)
                 if !registeredClassNames.contains(className) {
-                    tableView.register(classInitializableElement.viewClass,
-                                       forHeaderFooterViewReuseIdentifier: classInitializableElement.reuseIdentifier)
+                    tableView.register(classComponent.viewClass,
+                                       forHeaderFooterViewReuseIdentifier: sectionElement.reuseIdentifier)
                     registeredClassNames.insert(className)
                 }
             }
@@ -87,16 +86,16 @@ final class TableViewRenderer: NSObject, TableViewRendererProtocol {
     private func registerElementsIfNeeded(for section: Section) {
         // Register cell nibNames
         section.elements.forEach { row in
-            if let nibInitializableRow = row as? ComponentViewModelNibInitializable,
-               !registeredNibNames.contains(nibInitializableRow.nibName) {
-                tableView.register(UINib(nibName: nibInitializableRow.nibName, bundle: bundle),
-                                   forCellReuseIdentifier: nibInitializableRow.reuseIdentifier)
-                registeredNibNames.insert(nibInitializableRow.nibName)
-            } else if let classInitializableRow = row as? ComponentViewModelClassInitializable {
-                let className = String(describing: classInitializableRow.viewClass)
+            if let nibComponent = row.component as? NibComponent,
+               !registeredNibNames.contains(nibComponent.nibName) {
+                tableView.register(UINib(nibName: nibComponent.nibName, bundle: bundle),
+                                   forCellReuseIdentifier: row.component.reuseIdentifier)
+                registeredNibNames.insert(nibComponent.nibName)
+            } else if let classComponent = row.component as? ClassComponent {
+                let className = String(describing: classComponent.viewClass)
                 if !registeredClassNames.contains(className) {
-                    tableView.register(classInitializableRow.viewClass,
-                                       forCellReuseIdentifier: classInitializableRow.reuseIdentifier)
+                    tableView.register(classComponent.viewClass,
+                                       forCellReuseIdentifier: row.component.reuseIdentifier)
                     registeredClassNames.insert(className)
                 }
             }
@@ -137,33 +136,33 @@ extension TableViewRenderer {
         updateSections(newSections, animation: animation)
     }
 
-    func setRows(_ viewModels: [ComponentViewModel]) {
+    func setRows(_ viewModels: [Component]) {
         let newSections = [
             Section(model: TableViewSection(sectionId: "1", header: nil, footer: nil),
-                    elements: viewModels)
+                    elements: viewModels.map({ Block($0) }))
 
         ]
         updateSections(newSections, animation: .none)
     }
 
-    func appendRow(_ viewModel: ComponentViewModel,
+    func appendRow(_ viewModel: Component,
                    with animation: UITableView.RowAnimation) {
         let lastSectionIndex = sections.count > 0 ? sections.count - 1 : 0
         let lastRowIndex = sections[lastSectionIndex].elements.count
 
         var newSections = sections
-        newSections[lastSectionIndex].elements.insert(viewModel, at: lastRowIndex)
+        newSections[lastSectionIndex].elements.insert(Block(viewModel), at: lastRowIndex)
         updateSections(newSections, animation: animation)
     }
 
-    func insertRows(_ viewModels: [ComponentViewModel],
+    func insertRows(_ viewModels: [Component],
                     at indexPath: IndexPath,
                     with animation: UITableView.RowAnimation) {
         var indexPaths = [IndexPath]()
         var newSections = sections
 
         viewModels.enumerated().forEach { index, viewModel in
-            newSections[indexPath.section].elements.insert(viewModel, at: indexPath.row + index)
+            newSections[indexPath.section].elements.insert(Block(viewModel), at: indexPath.row + index)
             indexPaths.append(IndexPath(row: indexPath.row + index,
                                         section: indexPath.section))
         }
@@ -172,7 +171,7 @@ extension TableViewRenderer {
         updateSections(newSections, animation: animation)
     }
 
-    func insertRow(_ viewModel: ComponentViewModel,
+    func insertRow(_ viewModel: Component,
                    at indexPath: IndexPath,
                    with animation: UITableView.RowAnimation) {
         insertRows([viewModel], at: indexPath, with: animation)
@@ -222,46 +221,50 @@ extension TableViewRenderer {
 
 extension TableViewRenderer {
     func headerView(for tableView: UITableView, inSection section: Int) throws -> UIView? {
-        guard let headerModel = sections[section].model.header
-                as? ComponentViewModel & ComponentViewModelReusable else {
+        let sectionModel = sections[section].model
+
+        guard let headerModel = sectionModel.header,
+              let blockheader = sectionModel.blockHeader else {
             throw BlocksError.invalidModelClass
         }
-        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerModel.reuseIdentifier)
-                as? UITableViewHeaderFooterView & ComponentViewProtocol else {
+        guard let header = tableView.dequeueReusableHeaderFooterView(
+            withIdentifier: headerModel.reuseIdentifier)
+                as? UITableViewHeaderFooterView & ComponentViewConfigurable else {
             throw BlocksError.invalidViewClass
         }
 
-        header.configure(with: headerModel)
+        header.configure(with: blockheader)
         tableView.setHeight(headerSection: section, view: header)
         return header
     }
 
     func footerView(for tableView: UITableView, inSection section: Int) throws -> UIView? {
-        guard let footerModel = sections[section].model.footer
-                as? ComponentViewModel & ComponentViewModelReusable else {
+        let sectionModel = sections[section].model
+
+        guard let footerModel = sections[section].model.footer,
+              let blockFooter = sectionModel.blockFooter else {
             throw BlocksError.invalidModelClass
         }
-        guard let footer = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerModel.reuseIdentifier)
-                as? UITableViewHeaderFooterView & ComponentViewProtocol else {
+        guard let footer = tableView.dequeueReusableHeaderFooterView(
+            withIdentifier: footerModel.reuseIdentifier)
+                as? UITableViewHeaderFooterView & ComponentViewConfigurable else {
             throw BlocksError.invalidViewClass
         }
 
-        footer.configure(with: footerModel)
+        footer.configure(with: blockFooter)
         return footer
     }
 
     func cellView(for tableView: UITableView, at indexPath: IndexPath) throws -> UITableViewCell? {
-        guard let cellModel = sections[indexPath.section].elements[indexPath.row]
-                as? ComponentViewModel & ComponentViewModelReusable else {
-            throw BlocksError.invalidModelClass
-        }
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellModel.reuseIdentifier,
+        let cellModel = sections[indexPath.section].elements[indexPath.row]
+
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellModel.component.reuseIdentifier,
                                                        for: indexPath)
-                as? UITableViewCell & ComponentViewProtocol else {
+                as? UITableViewCell & ComponentViewConfigurable else {
             throw BlocksError.invalidViewClass
         }
 
-        cellModel.beforeReuse()
+        cellModel.component.beforeReuse()
         cell.setTableView(tableView)
         cell.configure(with: cellModel)
         return cell
@@ -351,11 +354,9 @@ extension TableViewRenderer: UITableViewDelegate, UITableViewDataSource {
         let model = sections[indexPath.section].elements[indexPath.row]
 
         // Notify cell for didSelect action
-        if let modelSelectable = model as? ComponentViewModelSelectable {
-            modelSelectable.onSelect(deselectRow: { [weak self] animated in
-                self?.tableView.deselectRow(at: indexPath, animated: animated)
-            })
-        }
+        model.component.onSelect(deselectRow: { [weak self] animated in
+            self?.tableView.deselectRow(at: indexPath, animated: animated)
+        })
 
         // Notify delegate
         delegate?.didSelectRow(model,

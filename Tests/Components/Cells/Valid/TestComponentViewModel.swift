@@ -21,7 +21,7 @@
 
 import Foundation
 
-class TestComponentViewModel: ComponentViewModelClassInitializable, ComponentViewModelSelectable {
+struct TestComponentViewModel: ClassComponent {
     static var beforeReuseCalled = false
     static var isSelected: Bool = false
 
@@ -33,18 +33,7 @@ class TestComponentViewModel: ComponentViewModelClassInitializable, ComponentVie
         "testComponent"
     }
 
-    var reuseIdentifier: String {
-        "testComponent"
-    }
-
-    func isComponentEqual(to source: ComponentViewModel) -> Bool {
-        let model = source.value() as TestComponentViewModel
-        return model.componentId == self.componentId
-    }
-
-    override func beforeReuse() {
-        super.beforeReuse()
-
+    func beforeReuse() {
         TestComponentViewModel.beforeReuseCalled = true
     }
 

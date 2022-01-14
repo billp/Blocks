@@ -20,57 +20,54 @@
 import Foundation
 import DifferenceKit
 
-/// Protocol for base ComponentViewModel.
-public protocol ComponentViewModelProtocol {
-    /// Get the model with its actual object type.
-    func value<T>() -> T
+/// Protocol for Component.
+public protocol Component {
+    /// Defines a unique id of the component.
+    var componentId: String { get }
+
+    /// Sets the reuseIdentifier of cell/header/footer.
+    var reuseIdentifier: String { get }
 
     /// Called before cell/header/footer reuse.
     func beforeReuse()
-}
 
-/// Selectable protocol that enables didSelect functionality.
-public protocol ComponentViewModelSelectable {
     /// Called when cell is selected.
     ///
     /// Parameters:
-    /// - deselectRow: A closure that deselects the row when called. It takes an animated (BOOL) value.
+    /// - deselectRow: A closure that deselects the selected row when called. It takes an animated (BOOL) value.
     func onSelect(deselectRow: (Bool) -> Void)
 }
 
-/// Protocol which defines that the ListComponentViewModel is reusable.
-public protocol ComponentViewModelReusable {
-    /// Set the reuseIdentifier of cell/header/footer.
-    var reuseIdentifier: String { get }
-}
-
-/// Protocol which defines that the ListComponentViewModel is Nib initializable.
-public protocol ComponentViewModelNibInitializableProtocol {
-    /// Set the nibName to automatically register as UINib.
+/// Protocol for Nib-based Components.
+public protocol NibComponent: Component {
+    /// Sets the nibName to automatically register as UINib.
     var nibName: String { get }
 }
 
-/// Protocol which defines that the ListComponentViewModel is Class initializable.
-public protocol ComponentViewModelClassInitializableProtocol {
+/// Protocol for Class-based Components.
+public protocol ClassComponent: Component {
     /// Set the className to automatically register as Class.
     var viewClass: AnyClass { get }
 }
 
-/// Protocol which bridges the component with the DifferenceKit
-public protocol ComponentViewModelDifferentiable {
-    /// Defines a unique id of the component.
-    var componentId: String { get }
-    /// Defines how the components can be compared.
-    func isComponentEqual(to source: ComponentViewModel) -> Bool
+/// Add default implementation for Component.
+public extension Component {
+    func beforeReuse() { }
+    func onSelect(deselectRow: (Bool) -> Void) { }
 }
 
-public extension ComponentViewModelProtocol {
-    /// Returns model value casted to the given type.
-    func value<T>() -> T {
-        if let viewModel = self as? T {
-            return viewModel
-        }
+/// Add default implementation Nib-based Components.
+public extension NibComponent {
+    // Use nibName value for reuseIdentifier.
+    var reuseIdentifier: String {
+        return nibName
+    }
+}
 
-        fatalError("Invalid model class \(T.self). Please check the class type!")
+/// Add default implementation Class-based Components.
+public extension ClassComponent {
+    // Use viewClass type name for reuseIdentifier.
+    var reuseIdentifier: String {
+        return String(describing: type(of: viewClass))
     }
 }

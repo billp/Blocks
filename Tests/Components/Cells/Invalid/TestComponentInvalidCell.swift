@@ -21,7 +21,7 @@ import UIKit
 import Blocks
 
 class TestComponentInvalidCell: UITableViewCell {
-    func configure(with model: ComponentViewModelProtocol) {
+    func configure(with model: Block) {
 
     }
 }

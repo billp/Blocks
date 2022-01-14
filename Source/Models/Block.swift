@@ -1,4 +1,4 @@
-// TestHeaderFooterComponentInvalidView.swift
+// ComponentViewModel.swift
 //
 // Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
 //
@@ -18,24 +18,29 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
+import DifferenceKit
 
-import Blocks
+public struct Block: Equatable, Differentiable {
+    public let component: Component
 
-class TestHeaderFooterComponentInvalidView: ComponentViewModelClassInitializable {
-    var reuseIdentifier: String {
-        String(describing: TestHeaderFooterView.self)
+    init(_ component: Component) {
+        self.component = component
     }
 
-    var viewClass: AnyClass {
-        TestHeaderFooterInvalidView.self
+    public static func == (lhs: Block, rhs: Block) -> Bool {
+        lhs.isContentEqual(to: rhs)
     }
 
-    var componentId: String {
-        UUID().uuidString
+    public var differenceIdentifier: AnyHashable {
+        return self.component.componentId
     }
 
-    func isComponentEqual(to source: ComponentViewModel) -> Bool {
-        let model = source.value() as TestHeaderFooterComponentViewModel
-        return model.componentId == componentId
+    /// Returns model value casted to the given type.
+    public func value<T>() -> T {
+        if let viewModel = component as? T {
+            return viewModel
+        }
+
+        fatalError("Invalid model class \(T.self). Please check the class type!")
     }
 }
