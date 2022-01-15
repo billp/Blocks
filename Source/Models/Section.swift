@@ -1,4 +1,4 @@
-// TestComponentViewModel.swift
+// Section.swift
 //
 // Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
 //
@@ -17,27 +17,10 @@
 // FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@testable import Blocks
-
 import Foundation
 
-struct TestComponentViewModel: ClassComponent {
-    static var beforeReuseCalled = false
-    static var isSelected: Bool = false
-
-    var viewClass: AnyClass {
-        TestComponentCell.self
-    }
-
-    var componentId: String {
-        "testComponent"
-    }
-
-    func beforeReuse() {
-        TestComponentViewModel.beforeReuseCalled = true
-    }
-
-    func onSelect(deselectRow: (Bool) -> Void) {
-        TestComponentViewModel.isSelected = true
-    }
+public struct Section: Hashable {
+    var header: Block?
+    var footer: Block?
+    var items: [Block]?
 }

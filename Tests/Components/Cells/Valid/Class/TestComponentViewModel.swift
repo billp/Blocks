@@ -1,4 +1,4 @@
-// TableViewSection.swift
+// TestComponentViewModel.swift
 //
 // Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
 //
@@ -17,51 +17,25 @@
 // FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+@testable import Blocks
+
 import Foundation
-import DifferenceKit
 
-class TableViewSection: Differentiable {
-    var sectionId: String
+struct TestComponentViewModel: ClassComponent {
+    static var beforeReuseCalled = false
+    static var isSelected: Bool = false
 
-    var blockHeader: Block?
-    var blockFooter: Block?
+    var componentId: AnyHashable = UUID()
 
-    var differenceIdentifier: String {
-        sectionId
+    var viewClass: AnyClass {
+        TestComponentCell.self
     }
 
-    init(sectionId: String,
-         header: Component? = nil,
-         footer: Component? = nil) {
-        self.sectionId = sectionId
-        self.header = header
-        self.footer = footer
+    func beforeReuse() {
+        TestComponentViewModel.beforeReuseCalled = true
     }
 
-    var header: Component? {
-        get {
-            blockHeader?.component
-        }
-        set {
-            if let header = newValue {
-                blockHeader = Block(header)
-            }
-        }
-    }
-    var footer: Component? {
-        get {
-            blockFooter?.component
-        }
-        set {
-            if let footer = newValue {
-                blockFooter = Block(footer)
-            }
-        }
-    }
-
-    func isContentEqual(to source: TableViewSection) -> Bool {
-        blockHeader == source.blockHeader && blockFooter == source.blockFooter
+    func onSelect(deselectRow: (Bool) -> Void) {
+        TestComponentViewModel.isSelected = true
     }
 }
-
-typealias Section = ArraySection<TableViewSection, Block>

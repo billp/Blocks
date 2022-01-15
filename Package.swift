@@ -25,7 +25,6 @@ let package = Package(name: "Blocks",
                       platforms: [.iOS(.v10)],
                       products: [.library(name: "Blocks",
                                           targets: ["Blocks"])],
-                      dependencies: [.package(url: "https://github.com/ra1028/DifferenceKit.git", from: "1.2.0")],
                       targets: [.target(name: "Blocks",
                                         path: "Source")],
                       swiftLanguageVersions: [.v5])

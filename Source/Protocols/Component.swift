@@ -18,37 +18,54 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
-import DifferenceKit
 
-/// Protocol for Component.
-public protocol Component {
-    /// Defines a unique id of the component.
-    var componentId: String { get }
+/// Protocol for AnyComponent.
+public protocol AnyComponent {
+    /// Sets a unique id to component.
+    var componentId: AnyHashable { get }
 
-    /// Sets the reuseIdentifier of cell/header/footer.
+    /// Sets the reuseIdentifier of cell/header/footer. (Optional)
     var reuseIdentifier: String { get }
 
-    /// Called before cell/header/footer reuse.
+    /// Called before cell/header/footer reuse. (Optional)
     func beforeReuse()
 
-    /// Called when cell is selected.
+    /// Called when cell is selected. (Optional)
     ///
     /// Parameters:
     /// - deselectRow: A closure that deselects the selected row when called. It takes an animated (BOOL) value.
     func onSelect(deselectRow: (Bool) -> Void)
 }
 
-/// Protocol for Nib-based Components.
-public protocol NibComponent: Component {
+/// Protocol for Any Nib-based Components.
+public protocol AnyNibComponent: AnyComponent {
     /// Sets the nibName to automatically register as UINib.
     var nibName: String { get }
 }
 
-/// Protocol for Class-based Components.
-public protocol ClassComponent: Component {
+/// Protocol for Any Class-based Components.
+public protocol AnyClassComponent: AnyComponent {
     /// Set the className to automatically register as Class.
     var viewClass: AnyClass { get }
 }
+
+/// Protocol for Component.
+public protocol Component: Hashable, AnyComponent {
+    /// Quickly convert Component to a Block instance.
+    var asBlock: Block { get }
+}
+
+/// Default implementation for Component.
+public extension Component {
+    var asBlock: Block {
+        Block(self)
+    }
+}
+
+/// Protocol for Nib-based Components.
+public protocol NibComponent: Component, AnyNibComponent { }
+/// Protocol for Class-based Components.
+public protocol ClassComponent: Component, AnyClassComponent { }
 
 /// Add default implementation for Component.
 public extension Component {
@@ -60,7 +77,7 @@ public extension Component {
 public extension NibComponent {
     // Use nibName value for reuseIdentifier.
     var reuseIdentifier: String {
-        return nibName
+        nibName
     }
 }
 
@@ -68,6 +85,6 @@ public extension NibComponent {
 public extension ClassComponent {
     // Use viewClass type name for reuseIdentifier.
     var reuseIdentifier: String {
-        return String(describing: type(of: viewClass))
+        String(describing: viewClass.self)
     }
 }

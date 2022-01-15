@@ -30,16 +30,16 @@ protocol TableViewRendererProtocol: UITableViewDataSource, UITableViewDelegate {
     /// Sets an array of sections (replaces existing view models).
     func setSections(_ sections: [Section], animation: UITableView.RowAnimation)
     /// Sets an array of ViewModels (replaces existing view models).
-    func setRows(_ viewModels: [Component])
+    func setRows(_ viewModels: [Block])
     /// Appends a view model to the end of the UITableView with the given RowAnimation
-    func appendRow(_ viewModel: Component,
+    func appendRow(_ viewModel: Block,
                    with animation: UITableView.RowAnimation)
     /// Inserts a view model to the specified index with the given RowAnimation.
-    func insertRow(_ viewModel: Component,
+    func insertRow(_ viewModel: Block,
                    at indexPath: IndexPath,
                    with animation: UITableView.RowAnimation)
     /// Inserts view models to the specified index with the given RowAnimation.
-    func insertRows(_ viewModels: [Component],
+    func insertRows(_ viewModels: [Block],
                     at indexPath: IndexPath,
                     with animation: UITableView.RowAnimation)
     /// Removes a view model from the specified indexPaths with the given RowAnimation.

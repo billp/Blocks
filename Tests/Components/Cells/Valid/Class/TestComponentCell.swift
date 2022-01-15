@@ -22,6 +22,7 @@ import UIKit
 @testable import Blocks
 
 class TestComponentCell: UITableViewCell, ComponentViewConfigurable {
+    static var model: TestComponentViewModel?
     static var tableView: UITableView?
     static var configureCalled: Bool = false
 
@@ -46,7 +47,8 @@ class TestComponentCell: UITableViewCell, ComponentViewConfigurable {
     }
 
     func configure(with model: Block) {
-        TestComponentCell.tableView = tableView
-        TestComponentCell.configureCalled = true
+        Self.model = model.as(TestComponentViewModel.self)
+        Self.tableView = tableView
+        Self.configureCalled = true
     }
 }
