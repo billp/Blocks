@@ -19,14 +19,12 @@
 
 import Foundation
 
-@testable import Blocks
+import Blocks
 
 struct TestHeaderFooterComponentViewModel: ClassComponent {
+    var componentId: AnyHashable = UUID()
+
     var viewClass: AnyClass {
         TestHeaderFooterView.self
-    }
-
-    var componentId: String {
-        String(describing: TestHeaderFooterView.self)
     }
 }

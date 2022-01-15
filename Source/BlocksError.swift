@@ -12,7 +12,7 @@ enum BlocksError: Error {
     /// Thowed when invalid model class is provided.
     case invalidModelClass
     /// Thowed when invalid view class is provided.
-    case invalidViewClass
+    case invalidViewClass(reuseIdentifier: String)
 }
 
 extension BlocksError: LocalizedError {
@@ -20,11 +20,14 @@ extension BlocksError: LocalizedError {
         switch self {
         case .invalidModelClass:
             return NSLocalizedString("Invalid model class provided. Your model should conform to: " +
-                                     "ComponentViewModelNibInitializable or " +
-                                     "ComponentViewModelClassInitializable", comment: "Blocks")
-        case .invalidViewClass:
-            return NSLocalizedString("Invalid view class provided. Your view class model should conform to: " +
-                                     "ComponentViewProtocol", comment: "Blocks")
+                                     "NibComponent or ClassComponent", comment: "Blocks")
+        case .invalidViewClass(let reuseIdentifier):
+            return NSLocalizedString("Your view class with reuseIdentifier '\(reuseIdentifier)' should conform to '" +
+                                     String(describing: ComponentViewConfigurable.self) + "'", comment: "Blocks")
         }
+    }
+
+    func keyForProtocol<P>(aProtocol: P.Type) -> String {
+        return ("\(aProtocol)")
     }
 }

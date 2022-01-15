@@ -19,25 +19,25 @@
 
 import Foundation
 import UIKit.UITableView
-import DifferenceKit
 
-final class TableViewRenderer: NSObject, TableViewRendererProtocol {
+open class TableViewRenderer: NSObject, TableViewRendererProtocol {
     // MARK: - Properties
 
     unowned var tableView: UITableView
-    weak var delegate: TableViewRendererDelegate?
+    weak public var delegate: TableViewRendererDelegate?
     var bundle: Bundle?
 
     var sections = [Section]()
 
     // MARK: - Private Properties
 
+    private var dataSource: UITableViewDiffableDataSource<Section, Block>!
     private var registeredNibNames = Set<String>()
     private var registeredClassNames = Set<String>()
 
     // MARK: - Initializers
 
-    init(tableView: UITableView, bundle: Bundle? = nil) {
+    required public init(tableView: UITableView, bundle: Bundle? = nil) {
         self.tableView = tableView
         self.bundle = bundle
         super.init()
@@ -54,6 +54,32 @@ final class TableViewRenderer: NSObject, TableViewRendererProtocol {
         // Fix top and bottom empty space when UITableView is grouped
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: Double.leastNormalMagnitude))
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: Double.leastNormalMagnitude))
+
+        configureDataSource(for: tableView)
+    }
+
+    private func configureDataSource(for tableView: UITableView) {
+        dataSource = UITableViewDiffableDataSource<Section, Block>(
+                        tableView: tableView,
+                        cellProvider: { [unowned self] tableView, indexPath, _ in
+            do {
+                return try cellView(for: tableView, at: indexPath)
+            } catch let error {
+                fatalError(error.localizedDescription)
+            }
+        })
+    }
+
+    private func applyChanges(with newSections: [Section]) {
+        self.sections = newSections
+
+        var newSnapshot = NSDiffableDataSourceSnapshot<Section, Block>()
+        newSnapshot.appendSections(newSections)
+        newSections.forEach { section in
+            newSnapshot.appendItems(section.items ?? [], toSection: section)
+        }
+        dataSource.apply(newSnapshot, animatingDifferences: true)
+
     }
 
     private func registerNibNamesIfNeeded(sections: [Section]) {
@@ -66,16 +92,17 @@ final class TableViewRenderer: NSObject, TableViewRendererProtocol {
     /// Registers header, footer nib/class.
     private func registerHeaderFooterIfNeeded(for section: Section) {
         // Register Header/Footer nib/class
-        [section.model.header, section.model.footer].compactMap({ $0 }).forEach { sectionElement in
-            if let nibComponent = sectionElement as? NibComponent, !registeredNibNames.contains(nibComponent.nibName) {
+        [section.header, section.footer].compactMap({ $0 }).forEach { sectionElement in
+            if let nibComponent = sectionElement.component as? AnyNibComponent,
+                !registeredNibNames.contains(nibComponent.nibName) {
                 tableView.register(UINib(nibName: nibComponent.nibName, bundle: bundle),
-                                   forHeaderFooterViewReuseIdentifier: sectionElement.reuseIdentifier)
+                                   forHeaderFooterViewReuseIdentifier: nibComponent.reuseIdentifier)
                 registeredNibNames.insert(nibComponent.nibName)
-            } else if let classComponent = sectionElement as? ClassComponent {
+            } else if let classComponent = sectionElement.component as? AnyClassComponent {
                 let className = String(describing: classComponent.viewClass)
                 if !registeredClassNames.contains(className) {
                     tableView.register(classComponent.viewClass,
-                                       forHeaderFooterViewReuseIdentifier: sectionElement.reuseIdentifier)
+                                       forHeaderFooterViewReuseIdentifier: classComponent.reuseIdentifier)
                     registeredClassNames.insert(className)
                 }
             }
@@ -85,17 +112,17 @@ final class TableViewRenderer: NSObject, TableViewRendererProtocol {
     /// Registers each element's nib/class.
     private func registerElementsIfNeeded(for section: Section) {
         // Register cell nibNames
-        section.elements.forEach { row in
-            if let nibComponent = row.component as? NibComponent,
+        section.items?.forEach { row in
+            if let nibComponent = row.component as? AnyNibComponent,
                !registeredNibNames.contains(nibComponent.nibName) {
                 tableView.register(UINib(nibName: nibComponent.nibName, bundle: bundle),
-                                   forCellReuseIdentifier: row.component.reuseIdentifier)
+                                   forCellReuseIdentifier: nibComponent.reuseIdentifier)
                 registeredNibNames.insert(nibComponent.nibName)
-            } else if let classComponent = row.component as? ClassComponent {
+            } else if let classComponent = row.component as? AnyClassComponent {
                 let className = String(describing: classComponent.viewClass)
                 if !registeredClassNames.contains(className) {
                     tableView.register(classComponent.viewClass,
-                                       forCellReuseIdentifier: row.component.reuseIdentifier)
+                                       forCellReuseIdentifier: classComponent.reuseIdentifier)
                     registeredClassNames.insert(className)
                 }
             }
@@ -104,65 +131,44 @@ final class TableViewRenderer: NSObject, TableViewRendererProtocol {
 
     /// Helper for updating sections
     private func updateSections(_ newSections: [Section],
-                                animation: UITableView.RowAnimation,
-                                updateFlexibleHeightCellAsynchronusly: Bool = false) {
+                                animation: UITableView.RowAnimation) {
         registerNibNamesIfNeeded(sections: newSections)
-        let changeset = StagedChangeset(source: sections, target: newSections)
-
-        let completionClosure: ([Section]) -> Void = { [weak self] data in
-            self?.sections = data
-        }
-
-        if animation == .none {
-            UIView.performWithoutAnimation {
-                tableView.reload(using: changeset,
-                                 with: .none,
-                                 interrupt: nil,
-                                 setData: completionClosure)
-            }
-        } else {
-            tableView.reload(using: changeset,
-                             with: animation,
-                             interrupt: nil,
-                             setData: completionClosure)
-        }
+        applyChanges(with: newSections)
     }
 }
 
 // MARK: - TableViewRendererProtocol Implementation
 
-extension TableViewRenderer {
+public extension TableViewRenderer {
     func setSections(_ newSections: [Section], animation: UITableView.RowAnimation) {
         updateSections(newSections, animation: animation)
     }
 
-    func setRows(_ viewModels: [Component]) {
+    func setRows(_ viewModels: [Block]) {
         let newSections = [
-            Section(model: TableViewSection(sectionId: "1", header: nil, footer: nil),
-                    elements: viewModels.map({ Block($0) }))
-
+            Section(items: viewModels)
         ]
         updateSections(newSections, animation: .none)
     }
 
-    func appendRow(_ viewModel: Component,
+    func appendRow(_ viewModel: Block,
                    with animation: UITableView.RowAnimation) {
         let lastSectionIndex = sections.count > 0 ? sections.count - 1 : 0
-        let lastRowIndex = sections[lastSectionIndex].elements.count
+        let lastRowIndex = sections[lastSectionIndex].items?.count ?? 0
 
         var newSections = sections
-        newSections[lastSectionIndex].elements.insert(Block(viewModel), at: lastRowIndex)
+        newSections[lastSectionIndex].items?.insert(viewModel, at: lastRowIndex)
         updateSections(newSections, animation: animation)
     }
 
-    func insertRows(_ viewModels: [Component],
+    func insertRows(_ viewModels: [Block],
                     at indexPath: IndexPath,
                     with animation: UITableView.RowAnimation) {
         var indexPaths = [IndexPath]()
         var newSections = sections
 
         viewModels.enumerated().forEach { index, viewModel in
-            newSections[indexPath.section].elements.insert(Block(viewModel), at: indexPath.row + index)
+            newSections[indexPath.section].items?.insert(viewModel, at: indexPath.row + index)
             indexPaths.append(IndexPath(row: indexPath.row + index,
                                         section: indexPath.section))
         }
@@ -171,7 +177,7 @@ extension TableViewRenderer {
         updateSections(newSections, animation: animation)
     }
 
-    func insertRow(_ viewModel: Component,
+    func insertRow(_ viewModel: Block,
                    at indexPath: IndexPath,
                    with animation: UITableView.RowAnimation) {
         insertRows([viewModel], at: indexPath, with: animation)
@@ -182,7 +188,7 @@ extension TableViewRenderer {
         var newSections = sections
 
         indexPaths.forEach { indexPath in
-            newSections[indexPath.section].elements.remove(at: indexPath.row)
+            newSections[indexPath.section].items?.remove(at: indexPath.row)
         }
         registerNibNamesIfNeeded(sections: newSections)
         updateSections(newSections, animation: animation)
@@ -197,10 +203,10 @@ extension TableViewRenderer {
         var newSections = sections
 
         newSections.enumerated().forEach { index, section in
-            let newElements = section.elements.filter({
+            let newElements = section.items?.filter({
                 type(of: $0) != modelType
             })
-            newSections[index].elements = newElements
+            newSections[index].items = newElements
         }
 
         setSections(newSections, animation: animation)
@@ -221,50 +227,49 @@ extension TableViewRenderer {
 
 extension TableViewRenderer {
     func headerView(for tableView: UITableView, inSection section: Int) throws -> UIView? {
-        let sectionModel = sections[section].model
-
+        let sectionModel = sections[section]
         guard let headerModel = sectionModel.header,
-              let blockheader = sectionModel.blockHeader else {
+              let headerComponent = headerModel.component as? AnyComponent else {
             throw BlocksError.invalidModelClass
         }
-        guard let header = tableView.dequeueReusableHeaderFooterView(
-            withIdentifier: headerModel.reuseIdentifier)
-                as? UITableViewHeaderFooterView & ComponentViewConfigurable else {
-            throw BlocksError.invalidViewClass
-        }
 
-        header.configure(with: blockheader)
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerComponent.reuseIdentifier)
+        guard let header = header as? UITableViewHeaderFooterView & ComponentViewConfigurable else {
+            throw BlocksError.invalidViewClass(reuseIdentifier: headerComponent.reuseIdentifier)
+        }
+        header.configure(with: headerModel)
         tableView.setHeight(headerSection: section, view: header)
         return header
     }
 
     func footerView(for tableView: UITableView, inSection section: Int) throws -> UIView? {
-        let sectionModel = sections[section].model
-
-        guard let footerModel = sections[section].model.footer,
-              let blockFooter = sectionModel.blockFooter else {
+        let sectionModel = sections[section]
+        guard let footerModel = sectionModel.footer,
+              let footerComponent = footerModel.component as? AnyComponent else {
             throw BlocksError.invalidModelClass
         }
-        guard let footer = tableView.dequeueReusableHeaderFooterView(
-            withIdentifier: footerModel.reuseIdentifier)
-                as? UITableViewHeaderFooterView & ComponentViewConfigurable else {
-            throw BlocksError.invalidViewClass
+
+        let footer = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerComponent.reuseIdentifier)
+        guard let footer = footer as? UITableViewHeaderFooterView & ComponentViewConfigurable else {
+            throw BlocksError.invalidViewClass(reuseIdentifier: footerComponent.reuseIdentifier)
         }
 
-        footer.configure(with: blockFooter)
+        footer.configure(with: footerModel)
         return footer
     }
 
     func cellView(for tableView: UITableView, at indexPath: IndexPath) throws -> UITableViewCell? {
-        let cellModel = sections[indexPath.section].elements[indexPath.row]
-
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellModel.component.reuseIdentifier,
-                                                       for: indexPath)
-                as? UITableViewCell & ComponentViewConfigurable else {
-            throw BlocksError.invalidViewClass
+        guard let cellModel = sections[indexPath.section].items?[indexPath.row],
+              let component = cellModel.component as? AnyComponent else {
+            throw BlocksError.invalidModelClass
         }
 
-        cellModel.component.beforeReuse()
+        let cell = tableView.dequeueReusableCell(withIdentifier: component.reuseIdentifier, for: indexPath)
+        guard let cell = cell as? UITableViewCell & ComponentViewConfigurable else {
+            throw BlocksError.invalidViewClass(reuseIdentifier: component.reuseIdentifier)
+        }
+
+        component.beforeReuse()
         cell.setTableView(tableView)
         cell.configure(with: cellModel)
         return cell
@@ -275,17 +280,17 @@ extension TableViewRenderer {
 
 extension TableViewRenderer: UITableViewDelegate, UITableViewDataSource {
 
-    func numberOfSections(in tableView: UITableView) -> Int {
+    public func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
     }
 
-    func tableView(_ tableView: UITableView,
-                   numberOfRowsInSection section: Int) -> Int {
-        sections[section].elements.count
+    public func tableView(_ tableView: UITableView,
+                          numberOfRowsInSection section: Int) -> Int {
+        sections[section].items?.count ?? 0
     }
 
-    func tableView(_ tableView: UITableView,
-                   viewForHeaderInSection section: Int) -> UIView? {
+    public func tableView(_ tableView: UITableView,
+                          viewForHeaderInSection section: Int) -> UIView? {
         do {
             return try headerView(for: tableView, inSection: section)
         } catch let error {
@@ -293,7 +298,7 @@ extension TableViewRenderer: UITableViewDelegate, UITableViewDataSource {
         }
     }
 
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         do {
             return try footerView(for: tableView, inSection: section)
         } catch let error {
@@ -301,8 +306,8 @@ extension TableViewRenderer: UITableViewDelegate, UITableViewDataSource {
         }
     }
 
-    func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView,
+                          cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         do {
             return try cellView(for: tableView, at: indexPath) ?? UITableViewCell()
         } catch let error {
@@ -312,49 +317,52 @@ extension TableViewRenderer: UITableViewDelegate, UITableViewDataSource {
 
     // MARK: Set Heights
 
-    func tableView(_ tableView: UITableView,
-                   heightForRowAt indexPath: IndexPath) -> CGFloat {
+    public func tableView(_ tableView: UITableView,
+                          heightForRowAt indexPath: IndexPath) -> CGFloat {
         UITableView.automaticDimension
     }
 
-    func tableView(_ tableView: UITableView,
-                   estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+    public func tableView(_ tableView: UITableView,
+                          estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         UITableView.automaticDimension
     }
 
-    func tableView(_ tableView: UITableView,
-                   heightForHeaderInSection section: Int) -> CGFloat {
-        if sections[section].model.header == nil {
+    public func tableView(_ tableView: UITableView,
+                          heightForHeaderInSection section: Int) -> CGFloat {
+        if sections[section].header == nil {
             return Double.leastNormalMagnitude
         }
         return UITableView.automaticDimension
     }
 
-    func tableView(_ tableView: UITableView,
-                   estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+    public func tableView(_ tableView: UITableView,
+                          estimatedHeightForHeaderInSection section: Int) -> CGFloat {
         UITableView.automaticDimension
     }
 
-    func tableView(_ tableView: UITableView,
-                   heightForFooterInSection section: Int) -> CGFloat {
-        if sections[section].model.footer == nil {
+    public func tableView(_ tableView: UITableView,
+                          heightForFooterInSection section: Int) -> CGFloat {
+        if sections[section].footer == nil {
             return Double.leastNormalMagnitude
         }
         return UITableView.automaticDimension
     }
 
-    func tableView(_ tableView: UITableView,
-                   estimatedHeightForFooterInSection section: Int) -> CGFloat {
+    public func tableView(_ tableView: UITableView,
+                          estimatedHeightForFooterInSection section: Int) -> CGFloat {
         UITableView.automaticDimension
     }
 
     // MARK: - User Events
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let model = sections[indexPath.section].elements[indexPath.row]
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let model = sections[indexPath.section].items?[indexPath.row],
+              let component = model.component as? AnyComponent else {
+            return
+        }
 
         // Notify cell for didSelect action
-        model.component.onSelect(deselectRow: { [weak self] animated in
+        component.onSelect(deselectRow: { [weak self] animated in
             self?.tableView.deselectRow(at: indexPath, animated: animated)
         })
 

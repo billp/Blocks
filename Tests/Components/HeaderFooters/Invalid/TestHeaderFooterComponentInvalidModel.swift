@@ -22,11 +22,9 @@ import Foundation
 import Blocks
 
 struct TestHeaderFooterComponentInvalidModel: ClassComponent {
+    var componentId: AnyHashable = UUID()
+
     var viewClass: AnyClass {
         TestHeaderFooterView.self
-    }
-
-    var componentId: String {
-        String(describing: TestHeaderFooterView.self)
     }
 }

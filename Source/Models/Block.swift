@@ -18,25 +18,16 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
-import DifferenceKit
 
-public struct Block: Equatable, Differentiable {
-    public let component: Component
+public struct Block: Hashable {
+    public let component: AnyHashable
 
-    init(_ component: Component) {
+    init<C: Component>(_ component: C) {
         self.component = component
     }
 
-    public static func == (lhs: Block, rhs: Block) -> Bool {
-        lhs.isContentEqual(to: rhs)
-    }
-
-    public var differenceIdentifier: AnyHashable {
-        return self.component.componentId
-    }
-
     /// Returns model value casted to the given type.
-    public func value<T>() -> T {
+    public func `as`<T>(_ type: T.Type) -> T {
         if let viewModel = component as? T {
             return viewModel
         }

@@ -21,12 +21,10 @@
 
 import Foundation
 
-class TestComponentInvalidView: ClassComponent {
+struct TestComponentInvalidView: ClassComponent {
+    var componentId: AnyHashable = UUID()
+
     var viewClass: AnyClass {
         TestComponentInvalidCell.self
-    }
-
-    var componentId: String {
-        "testComponent"
     }
 }
