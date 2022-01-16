@@ -62,11 +62,8 @@ open class TableViewRenderer: NSObject, TableViewRendererProtocol {
         dataSource = UITableViewDiffableDataSource<Section, Block>(
                         tableView: tableView,
                         cellProvider: { [unowned self] tableView, indexPath, _ in
-            do {
-                return try cellView(for: tableView, at: indexPath)
-            } catch let error {
-                fatalError(error.localizedDescription)
-            }
+            // Use the default method for providing cells
+            self.tableView(tableView, cellForRowAt: indexPath)
         })
     }
 
