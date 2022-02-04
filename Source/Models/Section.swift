@@ -20,7 +20,27 @@
 import Foundation
 
 public struct Section: Hashable {
-    var header: Block?
-    var footer: Block?
-    var items: [Block]?
+    public let id: AnyHashable
+
+    public static func == (lhs: Section, rhs: Section) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
+    public var header: Block?
+    public var footer: Block?
+    public var items: [Block]?
+
+    public init(id: AnyHashable,
+                header: Block? = nil,
+                footer: Block? = nil,
+                items: [Block]? = nil) {
+        self.id = id
+        self.header = header
+        self.footer = footer
+        self.items = items
+    }
 }

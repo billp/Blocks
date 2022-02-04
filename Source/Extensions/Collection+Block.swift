@@ -19,9 +19,21 @@
 
 import Foundation
 
-extension Collection where Element: Component {
+public extension Collection where Element == AnyHashable {
     /// Convenience method for converting Component(s) to Block(s)
     var asBlocks: [Block] {
-        map({ $0.asBlock })
+        compactMap({ ($0 as? Component)?.asBlock })
+    }
+}
+
+public extension Collection where Element: Component {
+    /// Convenience method for converting Component(s) to Block(s)
+    var asAnyHashable: [AnyHashable] {
+        compactMap({ $0 })
+    }
+
+    /// Convenience method for converting Component(s) to Block(s)
+    var asBlocks: [Block] {
+        self.asAnyHashable.asBlocks
     }
 }

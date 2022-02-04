@@ -21,9 +21,6 @@ import Foundation
 
 /// Protocol for AnyComponent.
 public protocol AnyComponent {
-    /// Sets a unique id to component.
-    var componentId: AnyHashable { get }
-
     /// Sets the reuseIdentifier of cell/header/footer. (Optional)
     var reuseIdentifier: String { get }
 
@@ -64,7 +61,6 @@ public protocol ClassComponent: Component, AnyClassComponent { }
 /// Add default implementation for Component.
 public extension Component {
     func beforeReuse() { }
-    func onSelect(deselectRow: (Bool) -> Void) { }
 }
 
 /// Add default implementation Nib-based Components.
