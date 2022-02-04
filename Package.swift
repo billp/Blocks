@@ -22,7 +22,7 @@
 import PackageDescription
 
 let package = Package(name: "Blocks",
-                      platforms: [.iOS(.v10)],
+                      platforms: [.iOS(.v13)],
                       products: [.library(name: "Blocks",
                                           targets: ["Blocks"])],
                       targets: [.target(name: "Blocks",
