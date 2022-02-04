@@ -23,44 +23,92 @@ import UIKit.UITableView
 protocol TableViewRendererProtocol: UITableViewDataSource, UITableViewDelegate {
     /// The associated UITableView.
     var tableView: UITableView { get }
-    /// Renderer's delegate
-    var delegate: TableViewRendererDelegate? { get set }
     /// The cell view models of the UITableView.
     var sections: [Section] { get }
-    /// Sets an array of sections (replaces existing view models).
+
+    /// Sets and updates the sections of the renderer.
+    /// Each section consists of header, footer and items.
+    ///
+    /// - Parameters:
+    ///     - newSections: The new sections of the renderer.
+    ///     - animation: The table view animation when instert/update/delete actions are needed.
     func setSections(_ sections: [Section], animation: UITableView.RowAnimation)
-    /// Sets an array of ViewModels (replaces existing view models).
-    func setRows(_ viewModels: [Block])
-    /// Appends a view model to the end of the UITableView with the given RowAnimation
-    func appendRow(_ viewModel: Block,
+
+    /// Creates a default Section and sets its items to the given rows.
+    /// It finally applies the changes using diffable data source.
+    ///
+    /// - Parameters:
+    ///     - rows: The new sections of the renderer.
+    ///     - animation: The table view animation applied when insert/update/delete actions are made.
+    func setRows(_ rows: [Block],
+                 with animation: UITableView.RowAnimation)
+
+    /// Appends a row to the given Section Index. If no Section Index is given,
+    /// it appends the row to the last Section. It finally applies the changes using diffable data source.
+    ///
+    /// - Parameters:
+    ///     - newSections: The new sections of the renderer.
+    ///     - animation: The table view animation applied when insert/update/delete actions are made.
+    func appendRow(_ row: Block,
+                   atSectionIndex index: Int?,
                    with animation: UITableView.RowAnimation)
-    /// Inserts a view model to the specified index with the given RowAnimation.
-    func insertRow(_ viewModel: Block,
+
+    /// Inserts a row to the given IndexPath and also applies the changes using diffable data source.
+    ///
+    /// - Parameters:
+    ///     - row: The row which will be inserted at the given index path.
+    ///     - indexPath: The index path where the row will be inserted.
+    ///     - animation: The table view animation applied when insert/update/delete actions are made.
+    func insertRow(_ row: Block,
                    at indexPath: IndexPath,
                    with animation: UITableView.RowAnimation)
-    /// Inserts view models to the specified index with the given RowAnimation.
-    func insertRows(_ viewModels: [Block],
+
+    /// Inserts a rows to the given IndexPath and also applies the changes using diffable data source.
+    ///
+    /// - Parameters:
+    ///     - rows: The rows which will be inserted at the given index path.
+    ///     - indexPath: The index path where the row will be inserted.
+    ///     - animation: The table view animation applied when insert/update/delete actions are made.
+    func insertRows(_ rows: [Block],
                     at indexPath: IndexPath,
                     with animation: UITableView.RowAnimation)
-    /// Removes a view model from the specified indexPaths with the given RowAnimation.
+
+    /// Removes the row from the fiven IndexPath and also applies the changes using diffable data source.
+    ///
+    /// - Parameters:
+    ///     - indexPath: The index path where the row will be removed.
+    ///     - animation: The table view animation applied when insert/update/delete actions are made.
     func removeRow(from indexPath: IndexPath,
                    with animation: UITableView.RowAnimation)
-    /// Removes a view model from the specified indexPaths with the given RowAnimation.
+
+    /// Removes the rows from the fiven IndexPaths and also applies the changes using diffable data source.
+    ///
+    /// - Parameters:
+    ///     - indexPaths: The index path where the row will be removed.
+    ///     - animation: The table view animation applied when insert/update/delete actions are made.
     func removeRows(from indexPaths: [IndexPath],
                     with animation: UITableView.RowAnimation)
-    /// Removes rows of the given type, regardless section.
+
+    /// Removes the rows of the given type and also applies the changes using diffable data source.
+    ///
+    /// - Parameters:
+    ///     - type: The type of the rows that will be removed.
+    ///     - animation: The table view animation applied when insert/update/delete actions are made.
     func removeModels<T>(ofType type: T.Type, animation: UITableView.RowAnimation)
-    /// Expands the flexible height cells as needed to fill the screen height.
-    func expandFlexibleCells(animated: Bool, asynchronously: Bool)
 
-    // Initializer
+    /// Expands the flexible cells if needed.
+    /// Flexible cells are special type of cells which can be expanded in height as needed to fill the blank space.
+    ///
+    /// - Parameters:
+    ///     - animated: Defines whether the height of the cell is changed using the default height animation.
+    ///     - asunchronously: Defines whether the expandable height is changed asynchronously on main thread.
+    func expandFlexibleCellsIfNeeded(animated: Bool, asynchronously: Bool)
+
+    /// Default initializer.
+    ///
+    /// - Parameters:
+    ///     - tableView: The table view that is used as a container of rendering Components
+    ///     - bundle: The bundle of the xibs that are used by the Components. If this value
+    ///               is nil, the default bundle is used.
     init(tableView: UITableView, bundle: Bundle?)
-}
-
-/// Renderer delegate
-public protocol TableViewRendererDelegate: AnyObject {
-    /// Called when tableView:didSelectRowAtIndexPath: is called.
-    func didSelectRow(_ viewModel: Block,
-                      tableView: UITableView,
-                      indexPath: IndexPath)
 }
