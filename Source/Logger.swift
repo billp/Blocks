@@ -1,4 +1,4 @@
-// TestHeaderFooterComponentInvalidModel.swift
+// Logger.swift
 //
 // Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
 //
@@ -18,13 +18,23 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
+import os.log
 
-import Blocks
+struct Logger {
+    static let log = OSLog(subsystem: "blocks", category: "ui")
 
-struct TestHeaderFooterComponentInvalidModel: ClassComponent {
-    var componentId: AnyHashable = UUID()
+    static func info(_ message: StaticString,
+                     _ args: CVarArg = NSNull()) {
+        os_log(.info, message, args)
+    }
 
-    var viewClass: AnyClass {
-        TestHeaderFooterView.self
+    static func debug(_ message: StaticString,
+                      _ args: CVarArg = NSNull()) {
+        os_log(.debug, message, args)
+    }
+
+    static func error(_ message: StaticString,
+                      _ args: CVarArg = NSNull()) {
+        os_log(.error, message, args)
     }
 }

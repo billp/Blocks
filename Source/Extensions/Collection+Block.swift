@@ -1,4 +1,4 @@
-// TestNibComponentViewModel.swift
+// Collection+Block.swift
 //
 // Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
 //
@@ -18,12 +18,10 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
-import Blocks
 
-struct TestNibComponentViewModel: NibComponent {
-    var componentId: AnyHashable = UUID()
-
-    var nibName: String {
-        String(describing: TestNibComponentViewCell.self)
+extension Collection where Element: Component {
+    /// Convenience method for converting Component(s) to Block(s)
+    var asBlocks: [Block] {
+        map({ $0.asBlock })
     }
 }

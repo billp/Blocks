@@ -29,12 +29,6 @@ public protocol AnyComponent {
 
     /// Called before cell/header/footer reuse. (Optional)
     func beforeReuse()
-
-    /// Called when cell is selected. (Optional)
-    ///
-    /// Parameters:
-    /// - deselectRow: A closure that deselects the selected row when called. It takes an animated (BOOL) value.
-    func onSelect(deselectRow: (Bool) -> Void)
 }
 
 /// Protocol for Any Nib-based Components.

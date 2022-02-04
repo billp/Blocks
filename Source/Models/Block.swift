@@ -20,7 +20,7 @@
 import Foundation
 
 public struct Block: Hashable {
-    public let component: AnyHashable
+    let component: AnyHashable
 
     init<C: Component>(_ component: C) {
         self.component = component
