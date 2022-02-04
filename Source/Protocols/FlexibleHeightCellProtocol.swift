@@ -25,12 +25,12 @@ enum FlexibleHeightConstants {
     static let leastAvailableCellHeight: CGFloat = 0.3
 }
 
-protocol FlexibleHeightCellProtocol: ComponentViewConfigurable {
+public protocol FlexibleHeightCellProtocol: ComponentViewConfigurable {
     var heightConstraint: NSLayoutConstraint { get }
     func expandAsNeeded(tableView: UITableView, numberOfFlexibleCells: Int, animated: Bool)
 }
 
-extension FlexibleHeightCellProtocol where Self: UITableViewCell {
+public extension FlexibleHeightCellProtocol where Self: UITableViewCell {
     var heightConstraint: NSLayoutConstraint {
         get {
             guard let heightConstraint = objc_getAssociatedObject(self, &heightConstraintHandle)

@@ -20,7 +20,7 @@
 import UIKit.UITableView
 
 /// Protocol for UITableView implementation
-protocol TableViewRendererProtocol: UITableViewDataSource, UITableViewDelegate {
+public protocol TableViewRendererProtocol: UITableViewDataSource, UITableViewDelegate {
     /// The associated UITableView.
     var tableView: UITableView { get }
     /// The cell view models of the UITableView.

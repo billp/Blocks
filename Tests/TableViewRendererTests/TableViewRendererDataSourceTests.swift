@@ -71,10 +71,12 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testNumberOfSections() {
         // Given
-        let section1 = Section(items: [TestComponentViewModel(),
+        let section1 = Section(id: "section1",
+                               items: [TestComponentViewModel(),
                                        TestComponentViewModel(),
                                        TestComponentViewModel()].asBlocks)
-        let section2 = Section(items: [TestComponentViewModel(),
+        let section2 = Section(id: "section2",
+                               items: [TestComponentViewModel(),
                                        TestComponentViewModel(),
                                        TestComponentViewModel()].asBlocks)
         let sections = [section1, section2]
@@ -90,7 +92,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testRendererViewForHeaderInSection() {
         // Given
-        let section = Section(header: TestHeaderFooterComponentViewModel().asBlock)
+        let section = Section(id: "section", header: TestHeaderFooterComponentViewModel().asBlock)
 
         // When
         renderer.setSections([section], animation: .none)
@@ -106,7 +108,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testTableViewHeaderViewForSection() {
         // Given
-        let section = Section(header: TestHeaderFooterComponentViewModel().asBlock)
+        let section = Section(id: "section", header: TestHeaderFooterComponentViewModel().asBlock)
 
         // When
         renderer.setSections([section], animation: .none)
@@ -118,7 +120,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testRendererInvalidModelForHeaderViewInSection() {
         // Given
-        let section = Section(header: nil)
+        let section = Section(id: "section", header: nil)
 
         // When
         renderer.setSections([section], animation: .none)
@@ -138,7 +140,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testTableViewInvalidModelViewForSection() {
         // Given
-        let section = Section(header: nil)
+        let section = Section(id: "section", header: nil)
 
         // When
         renderer.setSections([section], animation: .none)
@@ -152,7 +154,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testRendererViewForFooterInSection() {
         // Given
-        let section = Section(footer: TestHeaderFooterComponentViewModel().asBlock)
+        let section = Section(id: "section", footer: TestHeaderFooterComponentViewModel().asBlock)
 
         // When
         renderer.setSections([section], animation: .none)
@@ -168,7 +170,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testTableViewFooterForSection() {
         // Given
-        let section = Section(footer: TestHeaderFooterComponentViewModel().asBlock)
+        let section = Section(id: "section", footer: TestHeaderFooterComponentViewModel().asBlock)
 
         // When
         renderer.setSections([section], animation: .none)
@@ -180,7 +182,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testRendererInvalidModelForFooterInSection() {
         // Given
-        let section = Section(footer: nil)
+        let section = Section(id: "section", footer: nil)
 
         // When
         renderer.setSections([section], animation: .none)
@@ -200,7 +202,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testTableViewInvalidModelForFooterInSection() {
         // Given
-        let section = Section(footer: nil)
+        let section = Section(id: "section", footer: nil)
 
         // When
         renderer.setSections([section], animation: .none)
@@ -279,7 +281,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let row = TestComponentInvalidView().asBlock
 
         // When
-        renderer.sections = [Section(items: [row])]
+        renderer.sections = [Section(id: "section", items: [row])]
         tableView.register(TestComponentInvalidCell.self, forCellReuseIdentifier: "TestComponentInvalidCell")
 
         // Then
@@ -301,7 +303,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let row = TestComponentInvalidView().asBlock
 
         // When
-        renderer.sections = [Section(items: [row])]
+        renderer.sections = [Section(id: "section", items: [row])]
         let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0))
 
         // Then
@@ -426,7 +428,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testRendererHeightForHeaderInSection() {
         // Given
-        let section = [Section(header: TestHeaderFooterComponentViewModel().asBlock)]
+        let section = [Section(id: "section", header: TestHeaderFooterComponentViewModel().asBlock)]
 
         // When
         renderer.setSections(section,
@@ -446,7 +448,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testTableHeightForHeaderInSection() {
         // Given
-        let section = [Section(header: TestHeaderFooterComponentViewModel().asBlock)]
+        let section = [Section(id: "section", header: TestHeaderFooterComponentViewModel().asBlock)]
 
         // When
         renderer.setSections(section,
@@ -461,7 +463,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testRendererHeightForFooterInSection() {
         // Given
-        let section = Section(footer: TestHeaderFooterComponentViewModel().asBlock)
+        let section = Section(id: "section", footer: TestHeaderFooterComponentViewModel().asBlock)
 
         // When
         renderer.setSections([section], animation: .none)
@@ -480,7 +482,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testTableViewHeightForFooterInSection() {
         // Given
-        let section = Section(footer: TestHeaderFooterComponentViewModel().asBlock)
+        let section = Section(id: "section", footer: TestHeaderFooterComponentViewModel().asBlock)
 
         // When
         renderer.setSections([section], animation: .none)

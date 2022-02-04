@@ -21,17 +21,17 @@ import UIKit.UITableView
 
 /// The renderer that uses UITableView as the container
 /// of rendering components.
-open class TableViewRenderer: NSObject {
+open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSource {
     // MARK: - Properties
 
     /// Holds an unowned reference of table view.
-    unowned var tableView: UITableView
+    unowned public var tableView: UITableView
     /// Defines a bundle that the xibs are loaded from.
     private var bundle: Bundle?
 
     /// The main data source of TableViewRenderer.
     /// This is where the view models are held.
-    var sections = [Section]()
+    public var sections = [Section]()
 
     // MARK: - Private Properties
 
@@ -65,6 +65,7 @@ open class TableViewRenderer: NSObject {
     /// - Parameters:
     ///     - tableView: The associated with renderer table view.
     private func configureTableView(_ tableView: UITableView) {
+        tableView.dataSource = self
         tableView.delegate = self
 
         // Fix top and bottom empty space when UITableView is grouped
@@ -91,8 +92,14 @@ open class TableViewRenderer: NSObject {
         newSections.forEach { section in
             newSnapshot.appendItems(section.items ?? [], toSection: section)
         }
-        dataSource.apply(newSnapshot, animatingDifferences: true)
 
+        if dataSource.defaultRowAnimation != .none {
+            DispatchQueue.main.async {
+                self.dataSource.apply(newSnapshot, animatingDifferences: true)
+            }
+        } else {
+            self.dataSource.apply(newSnapshot, animatingDifferences: false)
+        }
     }
 
     /// Used to register nibs or classes with the given sections for cells and headers/footers.
@@ -160,6 +167,7 @@ open class TableViewRenderer: NSObject {
     private func updateSections(_ newSections: [Section],
                                 animation: UITableView.RowAnimation) {
         registerNibsOrClassesIfNeeded(sections: newSections)
+        dataSource.defaultRowAnimation = animation
         applyChanges(with: newSections)
     }
 }
@@ -167,21 +175,22 @@ open class TableViewRenderer: NSObject {
 // MARK: - TableViewRendererProtocol Implementation
 
 extension TableViewRenderer: TableViewRendererProtocol {
-    func setSections(_ newSections: [Section], animation: UITableView.RowAnimation) {
+    public func setSections(_ newSections: [Section], animation: UITableView.RowAnimation) {
         updateSections(newSections, animation: animation)
     }
 
-    func setRows(_ rows: [Block],
-                 with animation: UITableView.RowAnimation = .none) {
+    public func setRows(_ rows: [Block],
+                        with animation: UITableView.RowAnimation = .none) {
         let newSections = [
-            Section(items: rows)
+            Section(id: "default",
+                    items: rows)
         ]
         updateSections(newSections, animation: .none)
     }
 
-    func appendRow(_ row: Block,
-                   atSectionIndex index: Int? = nil,
-                   with animation: UITableView.RowAnimation = .none) {
+    public func appendRow(_ row: Block,
+                          atSectionIndex index: Int? = nil,
+                          with animation: UITableView.RowAnimation = .none) {
         let lastSectionIndex = index ?? sections.count > 0 ? sections.count - 1 : 0
         let lastRowIndex = sections[lastSectionIndex].items?.count ?? 0
 
@@ -190,9 +199,9 @@ extension TableViewRenderer: TableViewRendererProtocol {
         updateSections(newSections, animation: animation)
     }
 
-    func insertRows(_ rows: [Block],
-                    at indexPath: IndexPath,
-                    with animation: UITableView.RowAnimation) {
+    public func insertRows(_ rows: [Block],
+                           at indexPath: IndexPath,
+                           with animation: UITableView.RowAnimation) {
         var indexPaths = [IndexPath]()
         var newSections = sections
 
@@ -205,14 +214,14 @@ extension TableViewRenderer: TableViewRendererProtocol {
         updateSections(newSections, animation: animation)
     }
 
-    func insertRow(_ viewModel: Block,
-                   at indexPath: IndexPath,
-                   with animation: UITableView.RowAnimation) {
+    public func insertRow(_ viewModel: Block,
+                          at indexPath: IndexPath,
+                          with animation: UITableView.RowAnimation) {
         insertRows([viewModel], at: indexPath, with: animation)
     }
 
-    func removeRows(from indexPaths: [IndexPath],
-                    with animation: UITableView.RowAnimation) {
+    public func removeRows(from indexPaths: [IndexPath],
+                           with animation: UITableView.RowAnimation) {
         var newSections = sections
 
         indexPaths.forEach { indexPath in
@@ -221,17 +230,17 @@ extension TableViewRenderer: TableViewRendererProtocol {
         updateSections(newSections, animation: animation)
     }
 
-    func removeRow(from indexPath: IndexPath,
-                   with animation: UITableView.RowAnimation) {
+    public func removeRow(from indexPath: IndexPath,
+                          with animation: UITableView.RowAnimation) {
         removeRows(from: [indexPath], with: animation)
     }
 
-    func removeModels<T>(ofType modelType: T.Type, animation: UITableView.RowAnimation) {
+    public func removeModels<T>(ofType modelType: T.Type, animation: UITableView.RowAnimation) {
         var newSections = sections
 
         newSections.enumerated().forEach { index, section in
             let newElements = section.items?.filter({
-                type(of: $0) != modelType
+                !($0.component is T)
             })
             newSections[index].items = newElements
         }
@@ -239,7 +248,7 @@ extension TableViewRenderer: TableViewRendererProtocol {
         setSections(newSections, animation: animation)
     }
 
-    func expandFlexibleCellsIfNeeded(animated: Bool, asynchronously: Bool) {
+    public func expandFlexibleCellsIfNeeded(animated: Bool, asynchronously: Bool) {
         if asynchronously {
             DispatchQueue.main.async { [weak self] in
                 self?.tableView.expandFlexibleCells(animated: animated)
@@ -306,7 +315,7 @@ extension TableViewRenderer {
 
 // MARK: - UITableView Delegate
 
-extension TableViewRenderer: UITableViewDelegate, UITableViewDataSource {
+extension TableViewRenderer {
 
     public func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
