@@ -12,7 +12,3 @@ jobs:
       run: sudo xcode-select -switch /Applications/Xcode_13.2.1.app && /usr/bin/xcodebuild -version
     - name: Run unit tests
       run: xcodebuild test -scheme Blocks -destination 'platform=iOS Simulator,name=iPhone 13 Pro,OS=15.2'
-    - name: Lint Source
-      run: swiftlint ./Source --strict
-    - name: Lint Tests
-      run: swiftlint ./Tests --strict
