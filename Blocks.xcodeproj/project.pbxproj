@@ -142,7 +142,6 @@
 		237E5942276FC16C00E36E73 /* HeaderFooters */ = {
 			isa = PBXGroup;
 			children = (
-				237E594C276FC9DE00E36E73 /* Invalid */,
 				237E594B276FC9D800E36E73 /* Valid */,
 			);
 			path = HeaderFooters;
@@ -155,13 +154,6 @@
 				237E5946276FC1D700E36E73 /* TestHeaderFooterView.swift */,
 			);
 			path = Valid;
-			sourceTree = "<group>";
-		};
-		237E594C276FC9DE00E36E73 /* Invalid */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Invalid;
 			sourceTree = "<group>";
 		};
 		238F4EBC27946CA100706E08 /* Misc */ = {

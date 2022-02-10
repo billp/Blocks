@@ -38,9 +38,9 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
     /// Holds a reference of UITableViewDiffableDataSource.
     private var dataSource: UITableViewDiffableDataSource<Section, Block>!
     /// Holds a reference registered nib names in case of NibComponent.
-    private var registeredNibNames = Set<String>()
+    var registeredNibNames = Set<String>()
     /// Holds a reference registered class names in case of ClassComponent.
-    private var registeredClassNames = Set<String>()
+    var registeredClassNames = Set<String>()
 
     // MARK: - Initializers
 
@@ -122,16 +122,15 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
         // Register Header/Footer nib/class
         [section.header, section.footer].compactMap({ $0 }).forEach { sectionElement in
             if let nibComponent = sectionElement.component as? AnyNibComponent,
-                !registeredNibNames.contains(nibComponent.nibName) {
+                !registeredNibNames.contains(nibComponent.reuseIdentifier) {
                 tableView.register(UINib(nibName: nibComponent.nibName, bundle: bundle),
                                    forHeaderFooterViewReuseIdentifier: nibComponent.reuseIdentifier)
-                registeredNibNames.insert(nibComponent.nibName)
+                registeredNibNames.insert(nibComponent.reuseIdentifier)
             } else if let classComponent = sectionElement.component as? AnyClassComponent {
-                let className = String(describing: classComponent.viewClass)
-                if !registeredClassNames.contains(className) {
+                if !registeredClassNames.contains(classComponent.reuseIdentifier) {
                     tableView.register(classComponent.viewClass,
                                        forHeaderFooterViewReuseIdentifier: classComponent.reuseIdentifier)
-                    registeredClassNames.insert(className)
+                    registeredClassNames.insert(classComponent.reuseIdentifier)
                 }
             }
         }
@@ -145,16 +144,15 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
         // Register cell nibNames
         section.items?.forEach { row in
             if let nibComponent = row.component as? AnyNibComponent,
-               !registeredNibNames.contains(nibComponent.nibName) {
+               !registeredNibNames.contains(nibComponent.reuseIdentifier) {
                 tableView.register(UINib(nibName: nibComponent.nibName, bundle: bundle),
                                    forCellReuseIdentifier: nibComponent.reuseIdentifier)
-                registeredNibNames.insert(nibComponent.nibName)
+                registeredNibNames.insert(nibComponent.reuseIdentifier)
             } else if let classComponent = row.component as? AnyClassComponent {
-                let className = String(describing: classComponent.viewClass)
-                if !registeredClassNames.contains(className) {
+                if !registeredClassNames.contains(classComponent.reuseIdentifier) {
                     tableView.register(classComponent.viewClass,
                                        forCellReuseIdentifier: classComponent.reuseIdentifier)
-                    registeredClassNames.insert(className)
+                    registeredClassNames.insert(classComponent.reuseIdentifier)
                 }
             }
         }

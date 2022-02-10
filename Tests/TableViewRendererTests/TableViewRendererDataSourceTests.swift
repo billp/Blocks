@@ -54,6 +54,46 @@ class TableViewRendererDataSourceTests: XCTestCase {
         XCTAssertEqual(tableView, renderer.tableView)
     }
 
+    func testRegisterNibForReuseIdentifier() {
+        // Given
+        struct TestComponent: NibComponent {
+            var nibName = "TestNibComponentViewCell"
+            var reuseIdentifier: String
+        }
+        class TestComponentCell: UITableViewCell { }
+
+        // When
+        renderer.setRows([TestComponent(reuseIdentifier: "id1").asBlock,
+                          TestComponent(reuseIdentifier: "id2").asBlock])
+
+        // Then
+        XCTAssert(renderer.registeredNibNames.contains("id1"))
+        XCTAssert(renderer.registeredNibNames.contains("id2"))
+        XCTAssertNotNil(tableView.cellForRow(at: IndexPath.init(row: 0, section: 0)))
+        XCTAssertNotNil(tableView.cellForRow(at: IndexPath.init(row: 1, section: 0)))
+    }
+
+    func testRegisterClassForReuseIdentifier() {
+        // Given
+        struct TestComponent: ClassComponent {
+            var viewClass: AnyClass {
+                TestComponentCell.self
+            }
+            var reuseIdentifier: String
+        }
+        class TestComponentCell: UITableViewCell { }
+
+        // When
+        renderer.setRows([TestComponent(reuseIdentifier: "id1").asBlock,
+                          TestComponent(reuseIdentifier: "id2").asBlock])
+
+        // Then
+        XCTAssert(renderer.registeredClassNames.contains("id1"))
+        XCTAssert(renderer.registeredClassNames.contains("id2"))
+        XCTAssertNotNil(tableView.cellForRow(at: IndexPath.init(row: 0, section: 0)))
+        XCTAssertNotNil(tableView.cellForRow(at: IndexPath.init(row: 1, section: 0)))
+    }
+
     // MARK: - Number of Rows/Sections
 
     func testNumberOfRowsInSection() {
@@ -127,8 +167,8 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
         // Then
         do {
-            let header = try renderer.headerView(for: tableView, inSection: 0)
-            XCTAssertNil(header)
+            _ = try renderer.headerView(for: tableView, inSection: 0)
+            XCTAssert(false)
         } catch let error {
             if case .invalidModelClass = error.as(BlocksError.self) {
                 XCTAssert(true)
@@ -189,8 +229,8 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
         // Then
         do {
-            let footer = try renderer.footerView(for: tableView, inSection: 0)
-            XCTAssert(footer is TestHeaderFooterView)
+            _ = try renderer.footerView(for: tableView, inSection: 0)
+            XCTAssert(false)
         } catch {
             if case .invalidModelClass = error.as(BlocksError.self) {
                 XCTAssert(true)
@@ -224,7 +264,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         // Then
         do {
             let cell = try self.renderer.cellView(for: tableView,
-                                                     at: IndexPath(row: 0, section: 0))
+                                                  at: IndexPath(row: 0, section: 0))
             XCTAssert(cell is TestComponentCell)
         } catch {
             XCTAssert(false)
