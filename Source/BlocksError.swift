@@ -38,10 +38,6 @@ extension BlocksError: LocalizedError {
                                      String(describing: ComponentViewConfigurable.self) + "'", comment: "Blocks")
         }
     }
-
-    func keyForProtocol<P>(aProtocol: P.Type) -> String {
-        return ("\(aProtocol)")
-    }
 }
 
 extension Error {
