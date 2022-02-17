@@ -39,7 +39,7 @@ public protocol TableViewRendererProtocol: UITableViewDataSource, UITableViewDel
     ///
     /// - Parameters:
     ///     - rows: The new sections of the renderer.
-    ///     - animation: The table view animation applied when insert/update/delete actions are made.
+    ///     - animation: The table view animation applied when update actions are made.
     func setRows(_ rows: [Block],
                  with animation: UITableView.RowAnimation)
 
@@ -48,7 +48,7 @@ public protocol TableViewRendererProtocol: UITableViewDataSource, UITableViewDel
     ///
     /// - Parameters:
     ///     - newSections: The new sections of the renderer.
-    ///     - animation: The table view animation applied when insert/update/delete actions are made.
+    ///     - animation: The table view animation applied when update actions are made.
     func appendRow(_ row: Block,
                    atSectionIndex index: Int?,
                    with animation: UITableView.RowAnimation)
@@ -58,7 +58,7 @@ public protocol TableViewRendererProtocol: UITableViewDataSource, UITableViewDel
     /// - Parameters:
     ///     - row: The row which will be inserted at the given index path.
     ///     - indexPath: The index path where the row will be inserted.
-    ///     - animation: The table view animation applied when insert/update/delete actions are made.
+    ///     - animation: The table view animation applied when update actions are made.
     func insertRow(_ row: Block,
                    at indexPath: IndexPath,
                    with animation: UITableView.RowAnimation)
@@ -68,33 +68,26 @@ public protocol TableViewRendererProtocol: UITableViewDataSource, UITableViewDel
     /// - Parameters:
     ///     - rows: The rows which will be inserted at the given index path.
     ///     - indexPath: The index path where the row will be inserted.
-    ///     - animation: The table view animation applied when insert/update/delete actions are made.
+    ///     - animation: The table view animation applied when update actions are made.
     func insertRows(_ rows: [Block],
                     at indexPath: IndexPath,
                     with animation: UITableView.RowAnimation)
 
-    /// Removes the row from the fiven IndexPath and also applies the changes using diffable data source.
+    /// Removes the row from the given IndexPath and also applies the changes using diffable data source.
     ///
     /// - Parameters:
     ///     - indexPath: The index path where the row will be removed.
-    ///     - animation: The table view animation applied when insert/update/delete actions are made.
+    ///     - animation: The table view animation applied when update actions are made.
     func removeRow(from indexPath: IndexPath,
                    with animation: UITableView.RowAnimation)
 
-    /// Removes the rows from the fiven IndexPaths and also applies the changes using diffable data source.
+    /// Removes the rows with the given predicate and also applies the changes using diffable data source.
     ///
     /// - Parameters:
-    ///     - indexPaths: The index path where the row will be removed.
-    ///     - animation: The table view animation applied when insert/update/delete actions are made.
-    func removeRows(from indexPaths: [IndexPath],
-                    with animation: UITableView.RowAnimation)
-
-    /// Removes the rows of the given type and also applies the changes using diffable data source.
-    ///
-    /// - Parameters:
-    ///     - type: The type of the rows that will be removed.
-    ///     - animation: The table view animation applied when insert/update/delete actions are made.
-    func removeModels<T>(ofType type: T.Type, animation: UITableView.RowAnimation)
+    ///     - predicate: A closure that takes an element as its argument and
+    ///     returns a Boolean value that indicates whether the passed element represents a match.
+    ///     - animation: The table view animation applied when update actions are made.
+    func removeRows(where predicate: (Block) -> Bool, animation: UITableView.RowAnimation)
 
     /// Expands the flexible cells if needed.
     /// Flexible cells are special type of cells which can be expanded in height as needed to fill the blank space.

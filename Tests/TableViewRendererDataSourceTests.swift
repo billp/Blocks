@@ -24,10 +24,7 @@ import XCTest
 @testable import Blocks
 
 class TableViewRendererDataSourceTests: XCTestCase {
-    static var didSelectCalled = false
-
     lazy var sampleViewController: SampleViewController = {
-
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
         let viewController = SampleViewController()
         viewController.view.bounds = window.bounds
@@ -56,15 +53,10 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testRegisterNibForReuseIdentifier() {
         // Given
-        struct TestComponent: NibComponent {
-            var nibName = "TestNibComponentViewCell"
-            var reuseIdentifier: String
-        }
-        class TestComponentCell: UITableViewCell { }
-
+        let models = [TestNibComponentViewModel(reuseIdentifier: "id1"),
+                      TestNibComponentViewModel(reuseIdentifier: "id2")].asBlocks
         // When
-        renderer.setRows([TestComponent(reuseIdentifier: "id1").asBlock,
-                          TestComponent(reuseIdentifier: "id2").asBlock])
+        renderer.setRows(models)
 
         // Then
         XCTAssert(renderer.registeredNibNames.contains("id1"))
@@ -285,7 +277,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testRendererNibCellForRowAt() {
         // Given
-        let row = TestNibComponentViewModel().asBlock
+        let row = TestNibComponentViewModel(reuseIdentifier: "test").asBlock
 
         // When
         renderer.setRows([row])
@@ -293,7 +285,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         // Then
         do {
             let cell = try self.renderer.cellView(for: tableView,
-                                                     at: IndexPath(row: 0, section: 0))
+                                                  at: IndexPath(row: 0, section: 0))
                 as? TestNibComponentViewCell
             XCTAssertNotNil(cell)
             XCTAssertNotNil(cell?.testLabel)
@@ -304,7 +296,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testTableViewNibCellForRowAt() {
         // Given
-        let row = TestNibComponentViewModel().asBlock
+        let row = TestNibComponentViewModel(reuseIdentifier: "test").asBlock
 
         // When
         renderer.setRows([row])

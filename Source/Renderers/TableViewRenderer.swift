@@ -16,6 +16,8 @@
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
 // FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+// swiftlint:disable file_length
 
 import UIKit.UITableView
 
@@ -168,6 +170,18 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
         dataSource.defaultRowAnimation = animation
         applyChanges(with: newSections)
     }
+
+    /// Creates an IndexPath mapping for each component for quick access.
+    ///
+    private func createIndexPathMapping() -> [IndexPath: Block] {
+        var result = [IndexPath: Block]()
+        sections.enumerated().forEach { sectionIndex, section in
+            section.items?.enumerated().forEach { rowIndex, block in
+                result[IndexPath(row: rowIndex, section: sectionIndex)] = block
+            }
+        }
+        return result
+    }
 }
 
 // MARK: - TableViewRendererProtocol Implementation
@@ -218,32 +232,32 @@ extension TableViewRenderer: TableViewRendererProtocol {
         insertRows([viewModel], at: indexPath, with: animation)
     }
 
-    public func removeRows(from indexPaths: [IndexPath],
-                           with animation: UITableView.RowAnimation) {
+    public func removeRow(from indexPath: IndexPath,
+                          with animation: UITableView.RowAnimation) {
         var newSections = sections
-
-        indexPaths.forEach { indexPath in
-            newSections[indexPath.section].items?.remove(at: indexPath.row)
-        }
+        newSections[indexPath.section].items?.remove(at: indexPath.row)
         updateSections(newSections, animation: animation)
     }
 
-    public func removeRow(from indexPath: IndexPath,
-                          with animation: UITableView.RowAnimation) {
-        removeRows(from: [indexPath], with: animation)
-    }
+    public func removeRows(where predicate: (Block) -> Bool,
+                           animation: UITableView.RowAnimation) {
+        var blocksToRemove = [Block]()
+        let allRows = createIndexPathMapping().map({ $1 })
 
-    public func removeModels<T>(ofType modelType: T.Type, animation: UITableView.RowAnimation) {
-        var newSections = sections
-
-        newSections.enumerated().forEach { index, section in
-            let newElements = section.items?.filter({
-                !($0.component is T)
-            })
-            newSections[index].items = newElements
+        allRows.forEach { item in
+            if predicate(item) {
+                blocksToRemove.append(item)
+            }
         }
 
-        setSections(newSections, animation: animation)
+        while !blocksToRemove.isEmpty {
+            let currentBlock = blocksToRemove.removeFirst()
+            let currentMappings = createIndexPathMapping()
+
+            if let mapping = currentMappings.first(where: { $1.component == currentBlock.component }) {
+                removeRow(from: mapping.key, with: animation)
+            }
+        }
     }
 
     public func expandFlexibleCellsIfNeeded(animated: Bool, asynchronously: Bool) {

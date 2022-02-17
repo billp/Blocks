@@ -1,4 +1,4 @@
-// BlockTests.swift
+// ExtensionTests.swift
 //
 // Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
 //
@@ -20,13 +20,11 @@
 import XCTest
 @testable import Blocks
 
-class BlockTests: XCTestCase {
-
+class ExtensionTests: XCTestCase {
     lazy var sampleViewController: SampleViewController = {
-
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
-
         let viewController = SampleViewController()
+
         viewController.view.bounds = CGRect(x: 0, y: 0, width: 375, height: 667)
         viewController.tableView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -45,16 +43,39 @@ class BlockTests: XCTestCase {
         return renderer
     }()
 
-    func testBlocksAs() {
+    func testAsBlock() {
         // Given
         let component = TestComponentViewModel().asBlock
+        TestComponentCell.models.removeAll()
+
         // When
         renderer.setRows([component])
 
         // Then
         do {
             _ = try self.renderer.cellView(for: tableView, at: IndexPath(row: 0, section: 0))
-            XCTAssertNotNil(TestComponentCell.model)
+            XCTAssertEqual(TestComponentCell
+                            .models
+                            .compactMap({ return String(describing: $0) }).count, 1)
+        } catch {
+            XCTAssert(false)
+        }
+    }
+
+    func testAsBlocks() {
+        // Given
+        let blocks = [TestComponentViewModel(), TestComponentViewModel()].asBlocks
+        TestComponentCell.models.removeAll()
+
+        // When
+        renderer.setRows(blocks)
+
+        // Then
+        do {
+            _ = try self.renderer.cellView(for: tableView, at: IndexPath(row: 0, section: 0))
+            XCTAssertEqual(TestComponentCell
+                            .models
+                            .compactMap({ return String(describing: $0) }).count, 2)
         } catch {
             XCTAssert(false)
         }

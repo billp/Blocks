@@ -24,6 +24,7 @@ class TestNibComponentViewCell: UITableViewCell, ComponentViewConfigurable {
     @IBOutlet weak var testLabel: UILabel!
 
     func configure(with model: Block) {
-
+        let model = model.as(TestNibComponentViewModel.self)
+        testLabel.text = model.title
     }
 }
