@@ -22,6 +22,8 @@ import Blocks
 
 struct TestNibComponentViewModel: NibComponent {
     var componentId: AnyHashable = UUID()
+    var reuseIdentifier: String
+    var title: String?
 
     var nibName: String {
         String(describing: TestNibComponentViewCell.self)
