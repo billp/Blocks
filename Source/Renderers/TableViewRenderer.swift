@@ -74,6 +74,11 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: Double.leastNormalMagnitude))
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: Double.leastNormalMagnitude))
 
+        // Remove strage empty space on occured in iOS Version >= 15.0
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = .leastNormalMagnitude
+        }
+
         dataSource = UITableViewDiffableDataSource<Section, Block>(
                         tableView: tableView,
                         cellProvider: { [unowned self] tableView, indexPath, _ in
