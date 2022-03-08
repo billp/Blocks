@@ -25,12 +25,13 @@ enum FlexibleHeightConstants {
     static let leastAvailableCellHeight: CGFloat = 0.3
 }
 
-public protocol FlexibleHeightCellProtocol: ComponentViewConfigurable {
-    var heightConstraint: NSLayoutConstraint { get }
-    func expandAsNeeded(tableView: UITableView, numberOfFlexibleCells: Int, animated: Bool)
+public protocol FlexibleViewHeightProtocol: AnyObject {
+    var contentView: UIView { get }
+    var heightConstraint: NSLayoutConstraint { get set }
+    func expandAsNeeded(tableView: UITableView, count: Int, animated: Bool)
 }
 
-public extension FlexibleHeightCellProtocol where Self: UITableViewCell {
+public extension FlexibleViewHeightProtocol {
     var heightConstraint: NSLayoutConstraint {
         get {
             guard let heightConstraint = objc_getAssociatedObject(self, &heightConstraintHandle)
@@ -61,8 +62,8 @@ public extension FlexibleHeightCellProtocol where Self: UITableViewCell {
 
     /// It calculates the correct height for this cell based on UITableView's blank horizontal space.
     /// It should be called only after the rederer has completed rendering.
-    func expandAsNeeded(tableView: UITableView, numberOfFlexibleCells: Int, animated: Bool) {
-        var space = tableView.blankSpace / CGFloat(numberOfFlexibleCells)
+    func expandAsNeeded(tableView: UITableView, count: Int, animated: Bool) {
+        var space = tableView.blankSpace / CGFloat(count)
 
         if space < 0 {
             space = FlexibleHeightConstants.leastAvailableCellHeight

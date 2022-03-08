@@ -19,21 +19,49 @@
 
 import Foundation
 
-public struct Section: Hashable {
+/// A Section is a group of components that includes a header, a footer and its items.
+///
+/// Find bellow an example of Section initialization:
+///
+///     Section(id: "section1",
+///                 header: MyHeaderFooterComponent(title: "Header 1").asBlock,
+///                 footer: MyHeaderFooterComponent(title: "Footer 1").asBlock,
+///                 items: [
+///                     MyLabelComponent(title: "Row 1"),
+///                     MyLabelComponent(title: "Row 2"),
+///                     MyLabelComponent(title: "Row 3"),
+///                     MyButtonComponent(title: "Button 1", onTap: {
+///                        print("Button 1 tapped")
+///                     })
+///                 ].asBlocks)
+public struct Section: Hashable, Identifiable {
+    /// A unique id of the hashable
     public let id: AnyHashable
 
+    /// Tell Equatable to only take id into account.
     public static func == (lhs: Section, rhs: Section) -> Bool {
         lhs.id == rhs.id
     }
 
+    /// Tell hasher to use only the id of the Section.
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
 
+    /// The header component of the Section.
     public var header: Block?
+    /// The footer component of the Section.
     public var footer: Block?
+    /// The item components of the Section.
     public var items: [Block]?
 
+    /// Default initializer of the Section.
+    ///
+    /// Parameters:
+    ///    - id: A unique id of the section.
+    ///    - header: The header component of the Section.
+    ///    - footer: The footer component of the Section.
+    ///    - items: The item components of the Section.
     public init(id: AnyHashable,
                 header: Block? = nil,
                 footer: Block? = nil,

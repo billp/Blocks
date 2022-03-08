@@ -25,12 +25,12 @@ private var tableViewHandle: UInt8 = 0
 /// Protocol for UITableViewCell subclasses.
 public protocol ComponentViewConfigurable: AnyObject {
     /// Required for cell configuration with the given model (e.g. setup MVVM Bindings)
-    /// - parameters:
+    /// - Parameters:
     ///   - model: The corresponding view model.
     func configure(with model: Block)
 
     /// Notifies the parent UITableView to update its cell heights.
-    /// - parameters:
+    /// - Parameters:
     ///   - animated: If true, the UITableView will animate the cell height change.
     func updateCellHeight(animated: Bool)
 }

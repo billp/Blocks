@@ -27,6 +27,8 @@ public struct Block: Hashable {
     }
 
     /// Returns model value casted to the given type.
+    /// - Parameters:
+    ///   - type: The type to be casted with.
     public func `as`<T: Component>(_ type: T.Type) -> T {
         if let viewModel = component as? T {
             return viewModel
