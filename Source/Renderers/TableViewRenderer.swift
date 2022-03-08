@@ -174,6 +174,7 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
         registerNibsOrClassesIfNeeded(sections: newSections)
         dataSource.defaultRowAnimation = animation
         applyChanges(with: newSections)
+        expandFlexibleViewsIfNeeded(animated: animation != .none)
     }
 
     /// Creates an IndexPath mapping for each component for quick access.
@@ -186,6 +187,17 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
             }
         }
         return result
+    }
+
+    /// Expands the flexible cells if needed.
+    /// Flexible cells are special type of cells which can be expanded in height as needed to fill the blank space.
+    ///
+    /// - Parameters:
+    ///     - animated: True to animate while expanding.
+    private func expandFlexibleViewsIfNeeded(animated: Bool) {
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView.expandFlexibleViews(animated: animated)
+        }
     }
 }
 
@@ -262,16 +274,6 @@ extension TableViewRenderer: TableViewRendererProtocol {
             if let mapping = currentMappings.first(where: { $1.component == currentBlock.component }) {
                 removeRow(from: mapping.key, with: animation)
             }
-        }
-    }
-
-    public func expandFlexibleCellsIfNeeded(animated: Bool, asynchronously: Bool) {
-        if asynchronously {
-            DispatchQueue.main.async { [weak self] in
-                self?.tableView.expandFlexibleCells(animated: animated)
-            }
-        } else {
-            tableView.expandFlexibleCells(animated: animated)
         }
     }
 }

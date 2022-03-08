@@ -89,14 +89,6 @@ public protocol TableViewRendererProtocol: UITableViewDataSource, UITableViewDel
     ///     - animation: The table view animation applied when update actions are made.
     func removeRows(where predicate: (Block) -> Bool, animation: UITableView.RowAnimation)
 
-    /// Expands the flexible cells if needed.
-    /// Flexible cells are special type of cells which can be expanded in height as needed to fill the blank space.
-    ///
-    /// - Parameters:
-    ///     - animated: Defines whether the height of the cell is changed using the default height animation.
-    ///     - asunchronously: Defines whether the expandable height is changed asynchronously on main thread.
-    func expandFlexibleCellsIfNeeded(animated: Bool, asynchronously: Bool)
-
     /// Default initializer.
     ///
     /// - Parameters:

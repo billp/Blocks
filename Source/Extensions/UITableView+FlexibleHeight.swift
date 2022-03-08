@@ -20,6 +20,7 @@
 import UIKit
 
 private var totalCellsHeightHandle: UInt8 = 0
+typealias FlexibleView = UIView & FlexibleViewHeightProtocol
 
 extension UITableView {
     var cellHeights: [String: CGFloat] {
@@ -39,14 +40,14 @@ extension UITableView {
     }
 
     func setHeight(indexPath: IndexPath, view: UIView) {
-        guard !(view is FlexibleHeightCellProtocol) else {
+        guard !(view is FlexibleViewHeightProtocol) else {
             return
         }
         cellHeights[String(describing: indexPath)] = view.frame.height
     }
 
     func setHeight(headerSection: Int, view: UIView) {
-        guard !(view is FlexibleHeightCellProtocol) else {
+        guard !(view is FlexibleViewHeightProtocol) else {
             return
         }
         let height = view.systemLayoutSizeFitting(UIView.layoutFittingExpandedSize).height
@@ -54,31 +55,46 @@ extension UITableView {
 
     }
     func setHeight(footerSection: Int, view: UIView) {
-        guard !(view is FlexibleHeightCellProtocol) else {
+        guard !(view is FlexibleViewHeightProtocol) else {
             return
         }
         let height = view.systemLayoutSizeFitting(UIView.layoutFittingExpandedSize).height
         cellHeights["f" + String(describing: footerSection)] = height
     }
 
-    func expandFlexibleCells(animated: Bool) {
+    func expandFlexibleViews(animated: Bool) {
         // Clear old heights
         cellHeights = [:]
         let flexibleHeightCells = self.indexPathsForVisibleRows?
-                                    .compactMap({ self.cellForRow(at: $0) as? FlexibleHeightCellProtocol }) ?? []
+            .compactMap({ self.cellForRow(at: $0) as? FlexibleView }) ?? []
+        let flexibleHeightHeaders = self.indexPathsForVisibleRows?
+            .compactMap({ self.headerView(forSection: $0.section) as? FlexibleView }) ?? []
+        let flexibleHeightFooters = self.indexPathsForVisibleRows?
+            .compactMap({ self.footerView(forSection: $0.section) as? FlexibleView }) ?? []
+
+        let allViews = flexibleHeightCells + flexibleHeightHeaders + flexibleHeightFooters
+
+        var uniqueViews = [FlexibleView]()
+        allViews.forEach { view in
+            if !uniqueViews.contains(where: { currentView in
+                view == currentView
+            }) {
+                uniqueViews.append(view)
+            }
+        }
 
         // Iterate through all of sections and calculate the new heights
-        updateTotalCellHeight()
+        updateTotalViewHeight()
 
         // Notify flexible cells to expand
-        flexibleHeightCells.forEach({ cell in
-            cell.expandAsNeeded(tableView: self,
-                                numberOfFlexibleCells: flexibleHeightCells.count,
+        uniqueViews.forEach({ view in
+            view.expandAsNeeded(tableView: self,
+                                count: uniqueViews.count,
                                 animated: animated)
         })
     }
 
-    func updateTotalCellHeight() {
+    func updateTotalViewHeight() {
         // Iterate through all of sections and calculate the new heights
         (0..<self.numberOfSections).forEach { section in
             let headerView = headerView(forSection: section)

@@ -54,8 +54,25 @@ public extension Component {
 }
 
 /// Protocol for Nib-based Components.
+///
+/// Example of a nib component:
+///
+///     struct TestNibComponentViewModel: NibComponent {
+///        var nibName: String {
+///           String(describing: TestNibComponentViewCell.self)
+///        }
+///     }
 public protocol NibComponent: Component, AnyNibComponent { }
+
 /// Protocol for Class-based Components.
+///
+/// Example of a class component:
+///
+///     struct TestClassComponentViewModel: ClassComponent {
+///        var viewClass: AnyClass {
+///           MyHeaderFooterView.self
+///        }
+///     }
 public protocol ClassComponent: Component, AnyClassComponent { }
 
 /// Add default implementation for Component.

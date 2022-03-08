@@ -25,7 +25,7 @@
 		23D82C272765209900322193 /* Blocks.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D82C262765209900322193 /* Blocks.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23D82C4627652D0A00322193 /* TableViewRendererProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C2A2765263000322193 /* TableViewRendererProtocol.swift */; };
 		23D82C4727652D5800322193 /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C322765263000322193 /* Block.swift */; };
-		23D82C4827652D5800322193 /* UITableView+FlexibleHeightCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C352765263000322193 /* UITableView+FlexibleHeightCell.swift */; };
+		23D82C4827652D5800322193 /* UITableView+FlexibleHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C352765263000322193 /* UITableView+FlexibleHeight.swift */; };
 		23D82C4B27652D5F00322193 /* FlexibleHeightCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C2E2765263000322193 /* FlexibleHeightCellProtocol.swift */; };
 		23D82C4C27652D5F00322193 /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C302765263000322193 /* Component.swift */; };
 		23D82C4D27652D5F00322193 /* ComponentViewConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C2D2765263000322193 /* ComponentViewConfigurable.swift */; };
@@ -69,7 +69,7 @@
 		23D82C2E2765263000322193 /* FlexibleHeightCellProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlexibleHeightCellProtocol.swift; sourceTree = "<group>"; };
 		23D82C302765263000322193 /* Component.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Component.swift; sourceTree = "<group>"; };
 		23D82C322765263000322193 /* Block.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
-		23D82C352765263000322193 /* UITableView+FlexibleHeightCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+FlexibleHeightCell.swift"; sourceTree = "<group>"; };
+		23D82C352765263000322193 /* UITableView+FlexibleHeight.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+FlexibleHeight.swift"; sourceTree = "<group>"; };
 		23D82C372765263000322193 /* TableViewRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewRenderer.swift; sourceTree = "<group>"; };
 		23D82C4F2765445D00322193 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
 		23D82C532765482B00322193 /* TestComponentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestComponentViewModel.swift; sourceTree = "<group>"; };
@@ -250,7 +250,7 @@
 		23D82C342765263000322193 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				23D82C352765263000322193 /* UITableView+FlexibleHeightCell.swift */,
+				23D82C352765263000322193 /* UITableView+FlexibleHeight.swift */,
 				23A85890279951A100019970 /* Collection+Block.swift */,
 			);
 			path = Extensions;
@@ -435,7 +435,7 @@
 				238F4EBE27946D1D00706E08 /* SampleViewController.swift in Sources */,
 				23D82C4627652D0A00322193 /* TableViewRendererProtocol.swift in Sources */,
 				23332B9F27AC23FC0007493E /* Logger.swift in Sources */,
-				23D82C4827652D5800322193 /* UITableView+FlexibleHeightCell.swift in Sources */,
+				23D82C4827652D5800322193 /* UITableView+FlexibleHeight.swift in Sources */,
 				23D82C4B27652D5F00322193 /* FlexibleHeightCellProtocol.swift in Sources */,
 				23D82C4D27652D5F00322193 /* ComponentViewConfigurable.swift in Sources */,
 				237E5962276FDCD400E36E73 /* BlocksError.swift in Sources */,
