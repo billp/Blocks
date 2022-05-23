@@ -56,7 +56,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let models = [TestNibComponentViewModel(reuseIdentifier: "id1"),
                       TestNibComponentViewModel(reuseIdentifier: "id2")].asBlocks
         // When
-        renderer.setRows(models)
+        renderer.updateRows(models)
 
         // Then
         XCTAssert(renderer.registeredNibNames.contains("id1"))
@@ -76,7 +76,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         class TestComponentCell: UITableViewCell { }
 
         // When
-        renderer.setRows([TestComponent(reuseIdentifier: "id1").asBlock,
+        renderer.updateRows([TestComponent(reuseIdentifier: "id1").asBlock,
                           TestComponent(reuseIdentifier: "id2").asBlock])
 
         // Then
@@ -95,7 +95,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
                           TestComponentViewModel()].asBlocks
 
         // When
-        renderer.setRows(components)
+        renderer.updateRows(components)
 
         // Then
         XCTAssertEqual(tableView.numberOfRows(inSection: 0), components.count)
@@ -114,7 +114,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let sections = [section1, section2]
 
         // When
-        renderer.setSections(sections, animation: .none)
+        renderer.updateSections(sections, animation: .none)
 
         // Then
         XCTAssertEqual(tableView.numberOfSections, sections.count)
@@ -127,7 +127,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let section = Section(id: "section", header: TestHeaderFooterComponentViewModel().asBlock)
 
         // When
-        renderer.setSections([section], animation: .none)
+        renderer.updateSections([section], animation: .none)
 
         // Then
         do {
@@ -143,7 +143,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let section = Section(id: "section", header: TestHeaderFooterComponentViewModel().asBlock)
 
         // When
-        renderer.setSections([section], animation: .none)
+        renderer.updateSections([section], animation: .none)
         let header = tableView.headerView(forSection: 0)
 
         // Then
@@ -155,7 +155,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let section = Section(id: "section", header: nil)
 
         // When
-        renderer.setSections([section], animation: .none)
+        renderer.updateSections([section], animation: .none)
 
         // Then
         do {
@@ -175,7 +175,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let section = Section(id: "section", header: nil)
 
         // When
-        renderer.setSections([section], animation: .none)
+        renderer.updateSections([section], animation: .none)
         let header = tableView.headerView(forSection: 0)
 
         // Then
@@ -189,7 +189,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let section = Section(id: "section", footer: TestHeaderFooterComponentViewModel().asBlock)
 
         // When
-        renderer.setSections([section], animation: .none)
+        renderer.updateSections([section], animation: .none)
 
         // Then
         do {
@@ -205,7 +205,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let section = Section(id: "section", footer: TestHeaderFooterComponentViewModel().asBlock)
 
         // When
-        renderer.setSections([section], animation: .none)
+        renderer.updateSections([section], animation: .none)
         let footer = tableView.footerView(forSection: 0)
 
         // Then
@@ -217,7 +217,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let section = Section(id: "section", footer: nil)
 
         // When
-        renderer.setSections([section], animation: .none)
+        renderer.updateSections([section], animation: .none)
 
         // Then
         do {
@@ -237,7 +237,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let section = Section(id: "section", footer: nil)
 
         // When
-        renderer.setSections([section], animation: .none)
+        renderer.updateSections([section], animation: .none)
         let footer = tableView.footerView(forSection: 0)
 
         // Then
@@ -251,7 +251,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let row = TestComponentViewModel().asBlock
 
         // When
-        renderer.setRows([row])
+        renderer.updateRows([row])
 
         // Then
         do {
@@ -268,7 +268,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let row = TestComponentViewModel().asBlock
 
         // When
-        renderer.setRows([row])
+        renderer.updateRows([row])
         let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0))
 
         // Then
@@ -280,7 +280,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let row = TestNibComponentViewModel(reuseIdentifier: "test").asBlock
 
         // When
-        renderer.setRows([row])
+        renderer.updateRows([row])
 
         // Then
         do {
@@ -299,7 +299,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let row = TestNibComponentViewModel(reuseIdentifier: "test").asBlock
 
         // When
-        renderer.setRows([row])
+        renderer.updateRows([row])
         let cell = tableView.cellForRow(
             at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
 
@@ -347,7 +347,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let row = TestComponentViewModel().asBlock
 
         // When
-        renderer.setRows([row])
+        renderer.updateRows([row])
 
         // Then
         do {
@@ -363,7 +363,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let row = TestComponentViewModel().asBlock
 
         // When
-        renderer.setRows([row])
+        renderer.updateRows([row])
         _ = tableView.cellForRow(at: IndexPath(row: 0, section: 0))
 
         // Then
@@ -375,7 +375,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let row = TestComponentViewModel().asBlock
 
         // When
-        renderer.setRows([row])
+        renderer.updateRows([row])
 
         // Then
         do {
@@ -391,7 +391,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let row = TestComponentViewModel().asBlock
 
         // When
-        renderer.setRows([row])
+        renderer.updateRows([row])
 
         // Then
         _ = tableView.cellForRow(at: IndexPath(row: 0, section: 0))
@@ -403,7 +403,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let row = TestComponentViewModel().asBlock
 
         // When
-        renderer.setRows([row])
+        renderer.updateRows([row])
 
         // Then
         do {
@@ -419,7 +419,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let row = TestComponentViewModel().asBlock
 
         // When
-        renderer.setRows([row])
+        renderer.updateRows([row])
         _ = tableView.cellForRow(at: IndexPath(row: 0, section: 0))
 
         // Then
@@ -431,7 +431,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let row = TestComponentViewModel().asBlock
 
         // When
-        renderer.setRows([row])
+        renderer.updateRows([row])
 
         // Then
         do {
@@ -450,7 +450,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let row = TestComponentViewModel().asBlock
 
         // When
-        renderer.setRows([row])
+        renderer.updateRows([row])
         let cell = self.renderer.tableView.cellForRow(at: IndexPath(row: 0, section: 0))
         let size = cell?.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize) ?? .zero
 
@@ -463,7 +463,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let section = [Section(id: "section", header: TestHeaderFooterComponentViewModel().asBlock)]
 
         // When
-        renderer.setSections(section,
+        renderer.updateSections(section,
                              animation: .none)
 
         // Then
@@ -483,7 +483,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let section = [Section(id: "section", header: TestHeaderFooterComponentViewModel().asBlock)]
 
         // When
-        renderer.setSections(section,
+        renderer.updateSections(section,
                              animation: .none)
 
         // Then
@@ -498,7 +498,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let section = Section(id: "section", footer: TestHeaderFooterComponentViewModel().asBlock)
 
         // When
-        renderer.setSections([section], animation: .none)
+        renderer.updateSections([section], animation: .none)
 
         // Then
         do {
@@ -517,7 +517,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let section = Section(id: "section", footer: TestHeaderFooterComponentViewModel().asBlock)
 
         // When
-        renderer.setSections([section], animation: .none)
+        renderer.updateSections([section], animation: .none)
 
         // Then
         let footer = self.renderer.tableView.footerView(forSection: 0)
@@ -533,7 +533,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let row = TestComponentViewModel().asBlock
 
         // When
-        renderer.setRows([row])
+        renderer.updateRows([row])
 
         // Then
         let estimatedHeight = renderer.tableView(tableView,
@@ -547,7 +547,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let row = TestComponentViewModel().asBlock
 
         // When
-        renderer.setRows([row])
+        renderer.updateRows([row])
 
         // Then
         let estimatedHeight = renderer.tableView(tableView, estimatedHeightForFooterInSection: 0)
@@ -560,7 +560,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let row = TestComponentViewModel().asBlock
 
         // When
-        renderer.setRows([row])
+        renderer.updateRows([row])
 
         // Then
         let estimatedHeight = renderer.tableView(tableView, estimatedHeightForFooterInSection: 0)

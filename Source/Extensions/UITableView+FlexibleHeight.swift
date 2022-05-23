@@ -20,6 +20,8 @@
 import UIKit
 
 private var totalCellsHeightHandle: UInt8 = 0
+private var lastSpacerIndexHandle: UInt8 = 0
+
 typealias FlexibleView = UIView & FlexibleViewHeightProtocol
 
 extension UITableView {
@@ -35,12 +37,29 @@ extension UITableView {
         }
     }
 
+    var lastSpacerIndex: Int {
+        get {
+            guard let lastSpacerIndex = objc_getAssociatedObject(self, &lastSpacerIndexHandle) as? Int else {
+                let lastSpacerIndex = 0
+                self.lastSpacerIndex = lastSpacerIndex
+                return lastSpacerIndex
+            }
+            return lastSpacerIndex
+        }
+        set {
+            objc_setAssociatedObject(self,
+                                     &lastSpacerIndexHandle,
+                                     newValue,
+                                     objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+
     var totalCellHeight: CGFloat {
         cellHeights.values.reduce(0) { $0 + $1 }
     }
 
     func setHeight(indexPath: IndexPath, view: UIView) {
-        guard !(view is FlexibleViewHeightProtocol) else {
+        guard let flexibleCell = view as? FlexibleViewHeightProtocol, !flexibleCell.isFlexible else {
             return
         }
         cellHeights[String(describing: indexPath)] = view.frame.height
@@ -54,6 +73,7 @@ extension UITableView {
         cellHeights["h" + String(describing: headerSection)] = height
 
     }
+
     func setHeight(footerSection: Int, view: UIView) {
         guard !(view is FlexibleViewHeightProtocol) else {
             return
@@ -65,8 +85,10 @@ extension UITableView {
     func expandFlexibleViews(animated: Bool) {
         // Clear old heights
         cellHeights = [:]
+
         let flexibleHeightCells = self.indexPathsForVisibleRows?
-            .compactMap({ self.cellForRow(at: $0) as? FlexibleView }) ?? []
+            .compactMap({ self.cellForRow(at: $0) as? FlexibleView })
+            .filter({ $0.isFlexible }) ?? []
         let flexibleHeightHeaders = self.indexPathsForVisibleRows?
             .compactMap({ self.headerView(forSection: $0.section) as? FlexibleView }) ?? []
         let flexibleHeightFooters = self.indexPathsForVisibleRows?
@@ -94,7 +116,7 @@ extension UITableView {
         })
     }
 
-    func updateTotalViewHeight() {
+    private func updateTotalViewHeight() {
         // Iterate through all of sections and calculate the new heights
         (0..<self.numberOfSections).forEach { section in
             let headerView = headerView(forSection: section)

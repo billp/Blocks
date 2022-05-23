@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2303DE1427863B1D00B17C0A /* TestComponentInvalidCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2303DE1227863ACC00B17C0A /* TestComponentInvalidCell.swift */; };
 		2303DE1627863CB700B17C0A /* TestComponentInvalidView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2303DE1527863CB700B17C0A /* TestComponentInvalidView.swift */; };
+		23175BC6280555FA00D9D209 /* FlexibleHeightCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23175BC5280555FA00D9D209 /* FlexibleHeightCellTests.swift */; };
+		23175BC728057B2D00D9D209 /* SampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238F4EBD27946D1D00706E08 /* SampleViewController.swift */; };
 		23332B9F27AC23FC0007493E /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23332B9E27AC23FC0007493E /* Logger.swift */; };
 		234BCBB4279397F200DC77BA /* TestNibComponentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234BCBAC2793977300DC77BA /* TestNibComponentViewModel.swift */; };
 		234BCBB5279397F500DC77BA /* TestNibComponentViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234BCBB0279397B600DC77BA /* TestNibComponentViewCell.swift */; };
@@ -17,7 +19,8 @@
 		237E594A276FC8FE00E36E73 /* TestHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237E5946276FC1D700E36E73 /* TestHeaderFooterView.swift */; };
 		237E5962276FDCD400E36E73 /* BlocksError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237E5960276FDCCA00E36E73 /* BlocksError.swift */; };
 		2388AA3427BE6025007EF24E /* DiffableDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2388AA3327BE6025007EF24E /* DiffableDataSourceTests.swift */; };
-		238F4EBE27946D1D00706E08 /* SampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238F4EBD27946D1D00706E08 /* SampleViewController.swift */; };
+		239136812833E79E0066A579 /* SpacerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239136802833E79E0066A579 /* SpacerCell.swift */; };
+		239136832834D40A0066A579 /* Spacer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239136822834D40A0066A579 /* Spacer.swift */; };
 		23A85891279951A100019970 /* Collection+Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A85890279951A100019970 /* Collection+Block.swift */; };
 		23AB4F8127933982003A324C /* ExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AB4F8027933982003A324C /* ExtensionTests.swift */; };
 		23D82C1727651FEE00322193 /* Blocks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23D82C0C27651FED00322193 /* Blocks.framework */; };
@@ -33,6 +36,8 @@
 		23D82C502765445D00322193 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C4F2765445D00322193 /* Section.swift */; };
 		23D82C542765482B00322193 /* TestComponentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C532765482B00322193 /* TestComponentViewModel.swift */; };
 		23D82C562765488F00322193 /* TestComponentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C552765488F00322193 /* TestComponentCell.swift */; };
+		23E1A21E283B6A8800230874 /* TestHeaderComponentFlexibleHeightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E1A21D283B6A8800230874 /* TestHeaderComponentFlexibleHeightView.swift */; };
+		23E1A220283B6A9F00230874 /* TestHeaderComponentFlexibleHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E1A21F283B6A9F00230874 /* TestHeaderComponentFlexibleHeight.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +53,7 @@
 /* Begin PBXFileReference section */
 		2303DE1227863ACC00B17C0A /* TestComponentInvalidCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestComponentInvalidCell.swift; sourceTree = "<group>"; };
 		2303DE1527863CB700B17C0A /* TestComponentInvalidView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestComponentInvalidView.swift; sourceTree = "<group>"; };
+		23175BC5280555FA00D9D209 /* FlexibleHeightCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexibleHeightCellTests.swift; sourceTree = "<group>"; };
 		23332B9E27AC23FC0007493E /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		234BCBAC2793977300DC77BA /* TestNibComponentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNibComponentViewModel.swift; sourceTree = "<group>"; };
 		234BCBB0279397B600DC77BA /* TestNibComponentViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNibComponentViewCell.swift; sourceTree = "<group>"; };
@@ -58,6 +64,8 @@
 		237E5960276FDCCA00E36E73 /* BlocksError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlocksError.swift; sourceTree = "<group>"; };
 		2388AA3327BE6025007EF24E /* DiffableDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffableDataSourceTests.swift; sourceTree = "<group>"; };
 		238F4EBD27946D1D00706E08 /* SampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleViewController.swift; sourceTree = "<group>"; };
+		239136802833E79E0066A579 /* SpacerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpacerCell.swift; sourceTree = "<group>"; };
+		239136822834D40A0066A579 /* Spacer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spacer.swift; sourceTree = "<group>"; };
 		23A85890279951A100019970 /* Collection+Block.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Block.swift"; sourceTree = "<group>"; };
 		23AB4F8027933982003A324C /* ExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionTests.swift; sourceTree = "<group>"; };
 		23D82C0C27651FED00322193 /* Blocks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Blocks.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -74,6 +82,8 @@
 		23D82C4F2765445D00322193 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
 		23D82C532765482B00322193 /* TestComponentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestComponentViewModel.swift; sourceTree = "<group>"; };
 		23D82C552765488F00322193 /* TestComponentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestComponentCell.swift; sourceTree = "<group>"; };
+		23E1A21D283B6A8800230874 /* TestHeaderComponentFlexibleHeightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHeaderComponentFlexibleHeightView.swift; sourceTree = "<group>"; };
+		23E1A21F283B6A9F00230874 /* TestHeaderComponentFlexibleHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHeaderComponentFlexibleHeight.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,6 +164,8 @@
 			children = (
 				237E5944276FC19A00E36E73 /* TestHeaderComponentViewModel.swift */,
 				237E5946276FC1D700E36E73 /* TestHeaderFooterView.swift */,
+				23E1A21D283B6A8800230874 /* TestHeaderComponentFlexibleHeightView.swift */,
+				23E1A21F283B6A9F00230874 /* TestHeaderComponentFlexibleHeight.swift */,
 			);
 			path = Valid;
 			sourceTree = "<group>";
@@ -172,6 +184,15 @@
 				235982A9276FBB9300FF0AA6 /* Package.swift */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2391367F2833E7710066A579 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				239136802833E79E0066A579 /* SpacerCell.swift */,
+				239136822834D40A0066A579 /* Spacer.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		23D82C0227651FED00322193 = {
@@ -210,6 +231,7 @@
 				23AB4F8027933982003A324C /* ExtensionTests.swift */,
 				23D82C1B27651FEE00322193 /* TableViewRendererDataSourceTests.swift */,
 				2388AA3327BE6025007EF24E /* DiffableDataSourceTests.swift */,
+				23175BC5280555FA00D9D209 /* FlexibleHeightCellTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -223,6 +245,7 @@
 				23D82C312765263000322193 /* Models */,
 				23D82C292765263000322193 /* Protocols */,
 				23D82C362765263000322193 /* Renderers */,
+				2391367F2833E7710066A579 /* Components */,
 			);
 			path = Source;
 			sourceTree = SOURCE_ROOT;
@@ -432,11 +455,12 @@
 				23D82C4727652D5800322193 /* Block.swift in Sources */,
 				23D82C502765445D00322193 /* Section.swift in Sources */,
 				23A85891279951A100019970 /* Collection+Block.swift in Sources */,
-				238F4EBE27946D1D00706E08 /* SampleViewController.swift in Sources */,
+				239136812833E79E0066A579 /* SpacerCell.swift in Sources */,
 				23D82C4627652D0A00322193 /* TableViewRendererProtocol.swift in Sources */,
 				23332B9F27AC23FC0007493E /* Logger.swift in Sources */,
 				23D82C4827652D5800322193 /* UITableView+FlexibleHeight.swift in Sources */,
 				23D82C4B27652D5F00322193 /* FlexibleHeightCellProtocol.swift in Sources */,
+				239136832834D40A0066A579 /* Spacer.swift in Sources */,
 				23D82C4D27652D5F00322193 /* ComponentViewConfigurable.swift in Sources */,
 				237E5962276FDCD400E36E73 /* BlocksError.swift in Sources */,
 			);
@@ -449,14 +473,18 @@
 				237E594A276FC8FE00E36E73 /* TestHeaderFooterView.swift in Sources */,
 				23D82C542765482B00322193 /* TestComponentViewModel.swift in Sources */,
 				237E5949276FC8FB00E36E73 /* TestHeaderComponentViewModel.swift in Sources */,
+				23175BC6280555FA00D9D209 /* FlexibleHeightCellTests.swift in Sources */,
 				23D82C562765488F00322193 /* TestComponentCell.swift in Sources */,
 				234BCBB4279397F200DC77BA /* TestNibComponentViewModel.swift in Sources */,
+				23E1A220283B6A9F00230874 /* TestHeaderComponentFlexibleHeight.swift in Sources */,
 				2303DE1627863CB700B17C0A /* TestComponentInvalidView.swift in Sources */,
+				23175BC728057B2D00D9D209 /* SampleViewController.swift in Sources */,
 				23D82C1C27651FEE00322193 /* TableViewRendererDataSourceTests.swift in Sources */,
 				23AB4F8127933982003A324C /* ExtensionTests.swift in Sources */,
 				2303DE1427863B1D00B17C0A /* TestComponentInvalidCell.swift in Sources */,
 				2388AA3427BE6025007EF24E /* DiffableDataSourceTests.swift in Sources */,
 				234BCBB5279397F500DC77BA /* TestNibComponentViewCell.swift in Sources */,
+				23E1A21E283B6A8800230874 /* TestHeaderComponentFlexibleHeightView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -26,22 +26,22 @@ public protocol TableViewRendererProtocol: UITableViewDataSource, UITableViewDel
     /// The cell view models of the UITableView.
     var sections: [Section] { get }
 
-    /// Sets and updates the sections of the renderer.
+    /// Updates the sections on the associated UITableView.
     /// Each section consists of header, footer and items.
     ///
     /// - Parameters:
     ///     - newSections: The new sections of the renderer.
     ///     - animation: The table view animation when instert/update/delete actions are needed.
-    func setSections(_ sections: [Section], animation: UITableView.RowAnimation)
+    func updateSections(_ sections: [Section], animation: UITableView.RowAnimation)
 
-    /// Creates a default Section and sets its items to the given rows.
-    /// It finally applies the changes using diffable data source.
+    /// Creates a default Section and updates its items to the given rows.
+    /// It also updates only the required to change rows.
     ///
     /// - Parameters:
     ///     - rows: The new sections of the renderer.
     ///     - animation: The table view animation applied when update actions are made.
-    func setRows(_ rows: [Block],
-                 with animation: UITableView.RowAnimation)
+    func updateRows(_ rows: [Block],
+                    with animation: UITableView.RowAnimation)
 
     /// Appends a row to the given Section Index. If no Section Index is given,
     /// it appends the row to the last Section. It finally applies the changes using diffable data source.
