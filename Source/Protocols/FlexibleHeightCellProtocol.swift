@@ -20,6 +20,7 @@
 import UIKit
 
 private var heightConstraintHandle: UInt8 = 0
+private var isFlexibleHandle: UInt8 = 0
 
 enum FlexibleHeightConstants {
     static let leastAvailableCellHeight: CGFloat = 0.3
@@ -28,6 +29,8 @@ enum FlexibleHeightConstants {
 public protocol FlexibleViewHeightProtocol: AnyObject {
     var contentView: UIView { get }
     var heightConstraint: NSLayoutConstraint { get set }
+    var isFlexible: Bool { get }
+
     func expandAsNeeded(tableView: UITableView, count: Int, animated: Bool)
 }
 
@@ -45,6 +48,23 @@ public extension FlexibleViewHeightProtocol {
         set {
             objc_setAssociatedObject(self,
                                      &heightConstraintHandle,
+                                     newValue,
+                                     objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+
+    var isFlexible: Bool {
+        get {
+            guard let isFlexible = objc_getAssociatedObject(self, &isFlexibleHandle) as? Bool else {
+                let isFlexibleInitialValue = true
+                self.isFlexible = isFlexibleInitialValue
+                return isFlexibleInitialValue
+            }
+            return isFlexible
+        }
+        set {
+            objc_setAssociatedObject(self,
+                                     &isFlexibleHandle,
                                      newValue,
                                      objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }

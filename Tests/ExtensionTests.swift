@@ -49,7 +49,7 @@ class ExtensionTests: XCTestCase {
         TestComponentCell.models.removeAll()
 
         // When
-        renderer.setRows([component])
+        renderer.updateRows([component])
 
         // Then
         do {
@@ -68,7 +68,7 @@ class ExtensionTests: XCTestCase {
         TestComponentCell.models.removeAll()
 
         // When
-        renderer.setRows(blocks)
+        renderer.updateRows(blocks)
 
         // Then
         do {

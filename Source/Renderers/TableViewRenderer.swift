@@ -97,7 +97,7 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
         var newSnapshot = NSDiffableDataSourceSnapshot<Section, Block>()
         newSnapshot.appendSections(newSections)
         newSections.forEach { section in
-            newSnapshot.appendItems(section.items ?? [], toSection: section)
+            newSnapshot.appendItems(section.rows ?? [], toSection: section)
         }
 
         if dataSource.defaultRowAnimation != .none {
@@ -149,7 +149,7 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
     ///     - sections: The sections that the nibs or classes will be registered on.
     private func registerNibsOrClassesForRowsIfNeeded(for section: Section) {
         // Register cell nibNames
-        section.items?.forEach { row in
+        section.rows?.forEach { row in
             if let nibComponent = row.component as? AnyNibComponent,
                !registeredNibNames.contains(nibComponent.reuseIdentifier) {
                 tableView.register(UINib(nibName: nibComponent.nibName, bundle: bundle),
@@ -169,12 +169,23 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
     ///
     /// - Parameters:
     ///     - newSections: The new sections that are used to find differences and apply changes.
-    private func updateSections(_ newSections: [Section],
-                                animation: UITableView.RowAnimation) {
+    private func applySectionsUpdate(_ newSections: [Section],
+                                     animation: UITableView.RowAnimation) {
         registerNibsOrClassesIfNeeded(sections: newSections)
+        setSpacerIdsIfNeeded(sections: newSections)
         dataSource.defaultRowAnimation = animation
         applyChanges(with: newSections)
         expandFlexibleViewsIfNeeded(animated: animation != .none)
+    }
+
+    private func setSpacerIdsIfNeeded(sections: [Section]) {
+        sections.forEach { section in
+            section.rows?.compactMap({ $0.component as? Spacer }).forEach({ spacerRow in
+                spacerRow.id = tableView.lastSpacerIndex
+                tableView.lastSpacerIndex += 1
+            })
+
+        }
     }
 
     /// Creates an IndexPath mapping for each component for quick access.
@@ -182,7 +193,7 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
     private func createIndexPathMapping() -> [IndexPath: Block] {
         var result = [IndexPath: Block]()
         sections.enumerated().forEach { sectionIndex, section in
-            section.items?.enumerated().forEach { rowIndex, block in
+            section.rows?.enumerated().forEach { rowIndex, block in
                 result[IndexPath(row: rowIndex, section: sectionIndex)] = block
             }
         }
@@ -204,28 +215,28 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
 // MARK: - TableViewRendererProtocol Implementation
 
 extension TableViewRenderer: TableViewRendererProtocol {
-    public func setSections(_ newSections: [Section], animation: UITableView.RowAnimation) {
-        updateSections(newSections, animation: animation)
+    public func updateSections(_ newSections: [Section], animation: UITableView.RowAnimation) {
+        applySectionsUpdate(newSections, animation: animation)
     }
 
-    public func setRows(_ rows: [Block],
-                        with animation: UITableView.RowAnimation = .none) {
+    public func updateRows(_ rows: [Block],
+                           with animation: UITableView.RowAnimation = .none) {
         let newSections = [
             Section(id: "default",
                     items: rows)
         ]
-        updateSections(newSections, animation: .none)
+        applySectionsUpdate(newSections, animation: .none)
     }
 
     public func appendRow(_ row: Block,
                           atSectionIndex index: Int? = nil,
                           with animation: UITableView.RowAnimation = .none) {
         let lastSectionIndex = index ?? sections.count > 0 ? sections.count - 1 : 0
-        let lastRowIndex = sections[lastSectionIndex].items?.count ?? 0
+        let lastRowIndex = sections[lastSectionIndex].rows?.count ?? 0
 
         var newSections = sections
-        newSections[lastSectionIndex].items?.insert(row, at: lastRowIndex)
-        updateSections(newSections, animation: animation)
+        newSections[lastSectionIndex].rows?.insert(row, at: lastRowIndex)
+        applySectionsUpdate(newSections, animation: animation)
     }
 
     public func insertRows(_ rows: [Block],
@@ -235,12 +246,12 @@ extension TableViewRenderer: TableViewRendererProtocol {
         var newSections = sections
 
         rows.enumerated().forEach { index, viewModel in
-            newSections[indexPath.section].items?.insert(viewModel, at: indexPath.row + index)
+            newSections[indexPath.section].rows?.insert(viewModel, at: indexPath.row + index)
             indexPaths.append(IndexPath(row: indexPath.row + index,
                                         section: indexPath.section))
         }
 
-        updateSections(newSections, animation: animation)
+        applySectionsUpdate(newSections, animation: animation)
     }
 
     public func insertRow(_ viewModel: Block,
@@ -252,8 +263,8 @@ extension TableViewRenderer: TableViewRendererProtocol {
     public func removeRow(from indexPath: IndexPath,
                           with animation: UITableView.RowAnimation) {
         var newSections = sections
-        newSections[indexPath.section].items?.remove(at: indexPath.row)
-        updateSections(newSections, animation: animation)
+        newSections[indexPath.section].rows?.remove(at: indexPath.row)
+        applySectionsUpdate(newSections, animation: animation)
     }
 
     public func removeRows(where predicate: (Block) -> Bool,
@@ -315,7 +326,7 @@ extension TableViewRenderer {
     }
 
     func cellView(for tableView: UITableView, at indexPath: IndexPath) throws -> UITableViewCell? {
-        guard let cellModel = sections[indexPath.section].items?[indexPath.row],
+        guard let cellModel = sections[indexPath.section].rows?[indexPath.row],
               let component = cellModel.component as? AnyComponent else {
             throw BlocksError.invalidModelClass
         }
@@ -342,7 +353,7 @@ extension TableViewRenderer {
 
     public func tableView(_ tableView: UITableView,
                           numberOfRowsInSection section: Int) -> Int {
-        sections[section].items?.count ?? 0
+        sections[section].rows?.count ?? 0
     }
 
     public func tableView(_ tableView: UITableView,

@@ -52,8 +52,8 @@ public struct Section: Hashable, Identifiable {
     public var header: Block?
     /// The footer component of the Section.
     public var footer: Block?
-    /// The item components of the Section.
-    public var items: [Block]?
+    /// The row components of the Section.
+    public var rows: [Block]?
 
     /// Default initializer of the Section.
     ///
@@ -69,6 +69,6 @@ public struct Section: Hashable, Identifiable {
         self.id = id
         self.header = header
         self.footer = footer
-        self.items = items
+        self.rows = items
     }
 }

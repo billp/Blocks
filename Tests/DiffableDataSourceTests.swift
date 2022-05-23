@@ -50,7 +50,7 @@ class DiffableDataSourceTests: XCTestCase {
         ]
 
         // When
-        renderer.setRows(models.asBlocks)
+        renderer.updateRows(models.asBlocks)
         let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
         let cell2 = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TestNibComponentViewCell
 
@@ -66,7 +66,7 @@ class DiffableDataSourceTests: XCTestCase {
         super.tearDown()
 
         // When
-        renderer.setRows([].asBlocks)
+        renderer.updateRows([].asBlocks)
 
         // Then
         XCTAssertEqual(tableView.numberOfSections, 1)
@@ -82,7 +82,7 @@ class DiffableDataSourceTests: XCTestCase {
         let newModel = TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello3")
 
         // When
-        renderer.setRows(models.asBlocks)
+        renderer.updateRows(models.asBlocks)
         renderer.cellForRowCallCount = 0
         renderer.insertRow(newModel.asBlock, at: IndexPath(row: 1, section: 0), with: .none)
         let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
@@ -109,7 +109,7 @@ class DiffableDataSourceTests: XCTestCase {
         let newModel = TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello3")
 
         // When
-        renderer.setRows(models.asBlocks)
+        renderer.updateRows(models.asBlocks)
         renderer.cellForRowCallCount = 0
         renderer.insertRow(newModel.asBlock, at: IndexPath(row: 2, section: 0), with: .none)
         let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
@@ -138,7 +138,7 @@ class DiffableDataSourceTests: XCTestCase {
         let newModel2 = TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello4")
 
         // When
-        renderer.setRows(models.asBlocks)
+        renderer.updateRows(models.asBlocks)
         renderer.cellForRowCallCount = 0
         renderer.insertRows([newModel, newModel2].asBlocks, at: IndexPath(row: 0, section: 0), with: .none)
         let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
@@ -170,7 +170,7 @@ class DiffableDataSourceTests: XCTestCase {
         let newModel2 = TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello4")
 
         // When
-        renderer.setRows(models.asBlocks)
+        renderer.updateRows(models.asBlocks)
         renderer.cellForRowCallCount = 0
         renderer.insertRows([newModel, newModel2].asBlocks, at: IndexPath(row: 1, section: 0), with: .none)
         let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
@@ -202,7 +202,7 @@ class DiffableDataSourceTests: XCTestCase {
         let newModel2 = TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello4")
 
         // When
-        renderer.setRows(models.asBlocks)
+        renderer.updateRows(models.asBlocks)
         renderer.cellForRowCallCount = 0
         renderer.insertRows([newModel, newModel2].asBlocks, at: IndexPath(row: 2, section: 0), with: .none)
         let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
@@ -233,7 +233,7 @@ class DiffableDataSourceTests: XCTestCase {
         let newModel = TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello3")
 
         // When
-        renderer.setRows(models.asBlocks)
+        renderer.updateRows(models.asBlocks)
         renderer.cellForRowCallCount = 0
         renderer.appendRow(newModel.asBlock)
         let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
@@ -302,9 +302,9 @@ class DiffableDataSourceTests: XCTestCase {
         ]
 
         // When
-        renderer.setRows(models.asBlocks)
+        renderer.updateRows(models.asBlocks)
         renderer.cellForRowCallCount = 0
-        renderer.setRows([models[1], models[0]].asBlocks)
+        renderer.updateRows([models[1], models[0]].asBlocks)
 
         let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
         let cell2 = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TestNibComponentViewCell
@@ -328,7 +328,7 @@ class DiffableDataSourceTests: XCTestCase {
         ]
 
         // When
-        renderer.setRows(models.asBlocks)
+        renderer.updateRows(models.asBlocks)
         renderer.removeRows(where: { block in
             guard let reuseIdentifier = (block.component as? AnyComponent)?.reuseIdentifier else {
                 return false
@@ -351,9 +351,9 @@ class DiffableDataSourceTests: XCTestCase {
         ]
 
         // When
-        renderer.setRows(models.asBlocks)
+        renderer.updateRows(models.asBlocks)
         renderer.cellForRowCallCount = 0
-        renderer.setRows([models[0], models[1]].asBlocks)
+        renderer.updateRows([models[0], models[1]].asBlocks)
 
         let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
         let cell2 = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TestNibComponentViewCell

@@ -23,7 +23,7 @@ import UIKit
 private var tableViewHandle: UInt8 = 0
 
 /// Protocol for UITableViewCell subclasses.
-public protocol ComponentViewConfigurable: AnyObject {
+public protocol ComponentViewConfigurable: UIView {
     /// Required for cell configuration with the given model (e.g. setup MVVM Bindings)
     /// - Parameters:
     ///   - model: The corresponding view model.
