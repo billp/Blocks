@@ -22,7 +22,7 @@ import Foundation
 public extension Collection where Element == AnyHashable {
     /// Convenience method for converting Component(s) to Block(s)
     var asBlocks: [Block] {
-        compactMap({ ($0 as? Component)?.asBlock })
+        compactMap({ ($0 as? any Component)?.asBlock })
     }
 }
 
