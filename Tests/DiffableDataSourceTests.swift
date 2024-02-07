@@ -377,3 +377,5 @@ class FakeRenderer: TableViewRenderer {
         return super.tableView(tableView, cellForRowAt: indexPath)
     }
 }
+
+// swiftlint:enable type_body_length
