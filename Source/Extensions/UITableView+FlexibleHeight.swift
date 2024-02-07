@@ -124,7 +124,7 @@ extension UITableView {
 
             (0..<numberOfRows(inSection: section)).forEach { [weak self] row in
                 let indexPath = IndexPath(row: row, section: section)
-                let cell = cellForRow(at: indexPath) ?? UITableViewCell()
+                let cell = self?.cellForRow(at: indexPath) ?? UITableViewCell()
                 self?.setHeight(indexPath: self?.indexPath(for: cell) ?? IndexPath(), view: cell)
             }
 

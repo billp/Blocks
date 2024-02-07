@@ -568,3 +568,5 @@ class TableViewRendererDataSourceTests: XCTestCase {
         XCTAssert(estimatedHeight == UITableView.automaticDimension)
     }
 }
+
+// swiftlint:enable file_length type_body_length

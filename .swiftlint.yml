@@ -1,6 +1,7 @@
 excluded:
   - Pods
   - .build
+  - DemoApplication
 identifier_name:
   excluded:
     - id
