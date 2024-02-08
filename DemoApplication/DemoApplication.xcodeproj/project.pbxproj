@@ -7,36 +7,50 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2391A00D2B7812E300122065 /* TodoListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2391A0072B7812E300122065 /* TodoListHeaderView.swift */; };
+		2391A00E2B7812E300122065 /* TodoListHeaderComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2391A0082B7812E300122065 /* TodoListHeaderComponent.swift */; };
+		F303B8762B7D075500DBF296 /* TodosViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F303B8752B7D075500DBF296 /* TodosViewModel.swift */; };
+		F31D5DC22B7E712F0038EC69 /* TodoComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31D5DC12B7E712F0038EC69 /* TodoComponent.swift */; };
+		F31D5DC42B7E71360038EC69 /* TodoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31D5DC32B7E71360038EC69 /* TodoView.swift */; };
+		F31D5DC62B7E7E4E0038EC69 /* TodoListHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F31D5DC52B7E7E4E0038EC69 /* TodoListHeaderView.xib */; };
+		F324827F2B7D0F1A00CE4941 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F324827E2B7D0F1A00CE4941 /* Todo.swift */; };
+		F32482822B7D183900CE4941 /* TodoTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32482812B7D183900CE4941 /* TodoTextFieldView.swift */; };
+		F32482842B7D184F00CE4941 /* TodoTextFieldComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32482832B7D184F00CE4941 /* TodoTextFieldComponent.swift */; };
+		F3843BF12B7F9FFE00A61B74 /* EmptyResultsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3843BEF2B7F9FFE00A61B74 /* EmptyResultsViewCell.swift */; };
+		F3843BF22B7F9FFE00A61B74 /* EmptyResultsViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F3843BF02B7F9FFE00A61B74 /* EmptyResultsViewCell.xib */; };
+		F385E5E42B7E24FC00EB2C99 /* TestFieldWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F385E5E32B7E24FC00EB2C99 /* TestFieldWrapper.swift */; };
+		F3D5B1772B7B87F70080E3C4 /* EmptyResultsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D5B1762B7B87F70080E3C4 /* EmptyResultsComponent.swift */; };
 		F3DC00AD2B73D92100217EB0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DC00AC2B73D92100217EB0 /* AppDelegate.swift */; };
 		F3DC00AF2B73D92100217EB0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DC00AE2B73D92100217EB0 /* SceneDelegate.swift */; };
-		F3DC00B12B73D92100217EB0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DC00B02B73D92100217EB0 /* ViewController.swift */; };
+		F3DC00B12B73D92100217EB0 /* TodosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DC00B02B73D92100217EB0 /* TodosViewController.swift */; };
 		F3DC00B42B73D92100217EB0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F3DC00B22B73D92100217EB0 /* Main.storyboard */; };
 		F3DC00B62B73D92200217EB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3DC00B52B73D92200217EB0 /* Assets.xcassets */; };
 		F3DC00B92B73D92200217EB0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F3DC00B72B73D92200217EB0 /* LaunchScreen.storyboard */; };
 		F3EEC3F42B73DA0D00FF1595 /* Blocks in Frameworks */ = {isa = PBXBuildFile; productRef = F3EEC3F32B73DA0D00FF1595 /* Blocks */; };
-		F3EEC3FF2B73DA4000FF1595 /* MyButtonViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3EEC3F72B73DA4000FF1595 /* MyButtonViewCell.swift */; };
-		F3EEC4002B73DA4000FF1595 /* MyButtonComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3EEC3F82B73DA4000FF1595 /* MyButtonComponent.swift */; };
-		F3EEC4012B73DA4000FF1595 /* MyHeaderFooterComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3EEC3FA2B73DA4000FF1595 /* MyHeaderFooterComponent.swift */; };
-		F3EEC4022B73DA4000FF1595 /* MyHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3EEC3FB2B73DA4000FF1595 /* MyHeaderFooterView.swift */; };
-		F3EEC4032B73DA4000FF1595 /* LabelViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3EEC3FD2B73DA4000FF1595 /* LabelViewCell.swift */; };
-		F3EEC4042B73DA4000FF1595 /* MyLabelComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3EEC3FE2B73DA4000FF1595 /* MyLabelComponent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2391A0072B7812E300122065 /* TodoListHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodoListHeaderView.swift; sourceTree = "<group>"; };
+		2391A0082B7812E300122065 /* TodoListHeaderComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodoListHeaderComponent.swift; sourceTree = "<group>"; };
+		F303B8752B7D075500DBF296 /* TodosViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosViewModel.swift; sourceTree = "<group>"; };
+		F31D5DC12B7E712F0038EC69 /* TodoComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoComponent.swift; sourceTree = "<group>"; };
+		F31D5DC32B7E71360038EC69 /* TodoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoView.swift; sourceTree = "<group>"; };
+		F31D5DC52B7E7E4E0038EC69 /* TodoListHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TodoListHeaderView.xib; sourceTree = "<group>"; };
+		F324827E2B7D0F1A00CE4941 /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
+		F32482812B7D183900CE4941 /* TodoTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoTextFieldView.swift; sourceTree = "<group>"; };
+		F32482832B7D184F00CE4941 /* TodoTextFieldComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoTextFieldComponent.swift; sourceTree = "<group>"; };
+		F3843BEF2B7F9FFE00A61B74 /* EmptyResultsViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResultsViewCell.swift; sourceTree = "<group>"; };
+		F3843BF02B7F9FFE00A61B74 /* EmptyResultsViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyResultsViewCell.xib; sourceTree = "<group>"; };
+		F385E5E32B7E24FC00EB2C99 /* TestFieldWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFieldWrapper.swift; sourceTree = "<group>"; };
+		F3D5B1762B7B87F70080E3C4 /* EmptyResultsComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResultsComponent.swift; sourceTree = "<group>"; };
 		F3DC00A92B73D92100217EB0 /* DemoApplication.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoApplication.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3DC00AC2B73D92100217EB0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F3DC00AE2B73D92100217EB0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		F3DC00B02B73D92100217EB0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F3DC00B02B73D92100217EB0 /* TodosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosViewController.swift; sourceTree = "<group>"; };
 		F3DC00B32B73D92100217EB0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F3DC00B52B73D92200217EB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F3DC00B82B73D92200217EB0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F3DC00BA2B73D92200217EB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F3EEC3F72B73DA4000FF1595 /* MyButtonViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyButtonViewCell.swift; sourceTree = "<group>"; };
-		F3EEC3F82B73DA4000FF1595 /* MyButtonComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyButtonComponent.swift; sourceTree = "<group>"; };
-		F3EEC3FA2B73DA4000FF1595 /* MyHeaderFooterComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyHeaderFooterComponent.swift; sourceTree = "<group>"; };
-		F3EEC3FB2B73DA4000FF1595 /* MyHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyHeaderFooterView.swift; sourceTree = "<group>"; };
-		F3EEC3FD2B73DA4000FF1595 /* LabelViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelViewCell.swift; sourceTree = "<group>"; };
-		F3EEC3FE2B73DA4000FF1595 /* MyLabelComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyLabelComponent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +65,80 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		23919FFF2B7812E300122065 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				F31D5DC02B7E71190038EC69 /* TodoView */,
+				F32482802B7D181D00CE4941 /* TodoTextField */,
+				F3D5B1752B7B87E80080E3C4 /* EmptyResults */,
+				2391A0062B7812E300122065 /* TodoListHeader */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		2391A0062B7812E300122065 /* TodoListHeader */ = {
+			isa = PBXGroup;
+			children = (
+				2391A0072B7812E300122065 /* TodoListHeaderView.swift */,
+				F31D5DC52B7E7E4E0038EC69 /* TodoListHeaderView.xib */,
+				2391A0082B7812E300122065 /* TodoListHeaderComponent.swift */,
+			);
+			path = TodoListHeader;
+			sourceTree = "<group>";
+		};
+		F303B8732B7D073B00DBF296 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				F3DC00B02B73D92100217EB0 /* TodosViewController.swift */,
+				F303B8752B7D075500DBF296 /* TodosViewModel.swift */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		F31D5DC02B7E71190038EC69 /* TodoView */ = {
+			isa = PBXGroup;
+			children = (
+				F31D5DC12B7E712F0038EC69 /* TodoComponent.swift */,
+				F31D5DC32B7E71360038EC69 /* TodoView.swift */,
+			);
+			path = TodoView;
+			sourceTree = "<group>";
+		};
+		F324827D2B7D0F1100CE4941 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F324827E2B7D0F1A00CE4941 /* Todo.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F32482802B7D181D00CE4941 /* TodoTextField */ = {
+			isa = PBXGroup;
+			children = (
+				F32482812B7D183900CE4941 /* TodoTextFieldView.swift */,
+				F32482832B7D184F00CE4941 /* TodoTextFieldComponent.swift */,
+			);
+			path = TodoTextField;
+			sourceTree = "<group>";
+		};
+		F385E5E22B7E24E300EB2C99 /* SwiftUIWrappers */ = {
+			isa = PBXGroup;
+			children = (
+				F385E5E32B7E24FC00EB2C99 /* TestFieldWrapper.swift */,
+			);
+			path = SwiftUIWrappers;
+			sourceTree = "<group>";
+		};
+		F3D5B1752B7B87E80080E3C4 /* EmptyResults */ = {
+			isa = PBXGroup;
+			children = (
+				F3D5B1762B7B87F70080E3C4 /* EmptyResultsComponent.swift */,
+				F3843BEF2B7F9FFE00A61B74 /* EmptyResultsViewCell.swift */,
+				F3843BF02B7F9FFE00A61B74 /* EmptyResultsViewCell.xib */,
+			);
+			path = EmptyResults;
+			sourceTree = "<group>";
+		};
 		F3DC00A02B73D92100217EB0 = {
 			isa = PBXGroup;
 			children = (
@@ -71,10 +159,12 @@
 		F3DC00AB2B73D92100217EB0 /* DemoApplication */ = {
 			isa = PBXGroup;
 			children = (
-				F3EEC3F52B73DA4000FF1595 /* Components */,
+				F385E5E22B7E24E300EB2C99 /* SwiftUIWrappers */,
+				F324827D2B7D0F1100CE4941 /* Models */,
+				F303B8732B7D073B00DBF296 /* Screens */,
+				23919FFF2B7812E300122065 /* Components */,
 				F3DC00AC2B73D92100217EB0 /* AppDelegate.swift */,
 				F3DC00AE2B73D92100217EB0 /* SceneDelegate.swift */,
-				F3DC00B02B73D92100217EB0 /* ViewController.swift */,
 				F3DC00B22B73D92100217EB0 /* Main.storyboard */,
 				F3DC00B52B73D92200217EB0 /* Assets.xcassets */,
 				F3DC00B72B73D92200217EB0 /* LaunchScreen.storyboard */,
@@ -88,44 +178,6 @@
 			children = (
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		F3EEC3F52B73DA4000FF1595 /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				F3EEC3F62B73DA4000FF1595 /* MyButton */,
-				F3EEC3F92B73DA4000FF1595 /* MyHeaderFooter */,
-				F3EEC3FC2B73DA4000FF1595 /* MyLabel */,
-			);
-			name = Components;
-			path = "../../../../Desktop/untitled folder/Components";
-			sourceTree = "<group>";
-		};
-		F3EEC3F62B73DA4000FF1595 /* MyButton */ = {
-			isa = PBXGroup;
-			children = (
-				F3EEC3F72B73DA4000FF1595 /* MyButtonViewCell.swift */,
-				F3EEC3F82B73DA4000FF1595 /* MyButtonComponent.swift */,
-			);
-			path = MyButton;
-			sourceTree = "<group>";
-		};
-		F3EEC3F92B73DA4000FF1595 /* MyHeaderFooter */ = {
-			isa = PBXGroup;
-			children = (
-				F3EEC3FA2B73DA4000FF1595 /* MyHeaderFooterComponent.swift */,
-				F3EEC3FB2B73DA4000FF1595 /* MyHeaderFooterView.swift */,
-			);
-			path = MyHeaderFooter;
-			sourceTree = "<group>";
-		};
-		F3EEC3FC2B73DA4000FF1595 /* MyLabel */ = {
-			isa = PBXGroup;
-			children = (
-				F3EEC3FD2B73DA4000FF1595 /* LabelViewCell.swift */,
-				F3EEC3FE2B73DA4000FF1595 /* MyLabelComponent.swift */,
-			);
-			path = MyLabel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -192,9 +244,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3843BF22B7F9FFE00A61B74 /* EmptyResultsViewCell.xib in Resources */,
 				F3DC00B92B73D92200217EB0 /* LaunchScreen.storyboard in Resources */,
 				F3DC00B62B73D92200217EB0 /* Assets.xcassets in Resources */,
 				F3DC00B42B73D92100217EB0 /* Main.storyboard in Resources */,
+				F31D5DC62B7E7E4E0038EC69 /* TodoListHeaderView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,15 +259,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F3EEC4022B73DA4000FF1595 /* MyHeaderFooterView.swift in Sources */,
-				F3EEC4032B73DA4000FF1595 /* LabelViewCell.swift in Sources */,
-				F3EEC4002B73DA4000FF1595 /* MyButtonComponent.swift in Sources */,
-				F3DC00B12B73D92100217EB0 /* ViewController.swift in Sources */,
-				F3EEC4042B73DA4000FF1595 /* MyLabelComponent.swift in Sources */,
+				2391A00D2B7812E300122065 /* TodoListHeaderView.swift in Sources */,
+				F3DC00B12B73D92100217EB0 /* TodosViewController.swift in Sources */,
+				2391A00E2B7812E300122065 /* TodoListHeaderComponent.swift in Sources */,
 				F3DC00AD2B73D92100217EB0 /* AppDelegate.swift in Sources */,
-				F3EEC4012B73DA4000FF1595 /* MyHeaderFooterComponent.swift in Sources */,
-				F3EEC3FF2B73DA4000FF1595 /* MyButtonViewCell.swift in Sources */,
+				F31D5DC42B7E71360038EC69 /* TodoView.swift in Sources */,
+				F32482842B7D184F00CE4941 /* TodoTextFieldComponent.swift in Sources */,
+				F3D5B1772B7B87F70080E3C4 /* EmptyResultsComponent.swift in Sources */,
+				F3843BF12B7F9FFE00A61B74 /* EmptyResultsViewCell.swift in Sources */,
+				F31D5DC22B7E712F0038EC69 /* TodoComponent.swift in Sources */,
 				F3DC00AF2B73D92100217EB0 /* SceneDelegate.swift in Sources */,
+				F32482822B7D183900CE4941 /* TodoTextFieldView.swift in Sources */,
+				F385E5E42B7E24FC00EB2C99 /* TestFieldWrapper.swift in Sources */,
+				F324827F2B7D0F1A00CE4941 /* Todo.swift in Sources */,
+				F303B8762B7D075500DBF296 /* TodosViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -373,6 +432,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -401,6 +461,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

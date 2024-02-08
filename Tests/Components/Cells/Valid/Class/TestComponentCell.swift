@@ -1,6 +1,6 @@
 // TestComponentCell.swift
 //
-// Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -26,19 +26,21 @@ class TestComponentCell: UITableViewCell, ComponentViewConfigurable {
     static var tableView: UITableView?
     static var configureCalled: Bool = false
 
+    var label: UILabel!
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        let view = UIView()
-        contentView.addSubview(view)
-        view.translatesAutoresizingMaskIntoConstraints = false
+        label = UILabel()
+        contentView.addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            view.heightAnchor.constraint(equalToConstant: 152),
-            view.topAnchor.constraint(equalTo: contentView.topAnchor),
-            view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            view.leftAnchor.constraint(equalTo: contentView.leftAnchor),
-            view.rightAnchor.constraint(equalTo: contentView.rightAnchor)
+            label.heightAnchor.constraint(equalToConstant: 152),
+            label.topAnchor.constraint(equalTo: contentView.topAnchor),
+            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            label.leftAnchor.constraint(equalTo: contentView.leftAnchor),
+            label.rightAnchor.constraint(equalTo: contentView.rightAnchor)
          ])
     }
 
@@ -46,9 +48,11 @@ class TestComponentCell: UITableViewCell, ComponentViewConfigurable {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with model: Block) {
+    func configure(with model: any Component) {
         Self.models.insert(model.as(TestComponentViewModel.self))
-        Self.tableView = tableView
+        Self.tableView = renderer?.tableView
         Self.configureCalled = true
+
+        label.text = model.as(TestComponentViewModel.self).text
     }
 }

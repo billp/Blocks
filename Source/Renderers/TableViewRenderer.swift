@@ -1,6 +1,6 @@
 // TableViewRenderer.swift
 //
-// Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -20,6 +20,7 @@
 // swiftlint:disable file_length
 
 import UIKit.UITableView
+import SwiftUI
 
 /// The renderer that uses UITableView as the container
 /// of rendering components.
@@ -31,6 +32,11 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
     /// Defines a bundle that the xibs are loaded from.
     private var bundle: Bundle?
 
+    /// Provides closures for computing estimations
+    public var estimatedHeightForRowComponent: ((any Component) -> CGFloat)?
+    public var estimatedHeightForHeaderComponent: ((any Component) -> CGFloat)?
+    public var estimatedHeightForFooterComponent: ((any Component) -> CGFloat)?
+
     /// The main data source of TableViewRenderer.
     /// This is where the view models are held.
     public var sections = [Section]()
@@ -38,11 +44,21 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
     // MARK: - Private Properties
 
     /// Holds a reference of UITableViewDiffableDataSource.
-    private var dataSource: UITableViewDiffableDataSource<Section, Block>!
+    private var dataSource: UITableViewDiffableDataSource<Section, Box>!
     /// Holds a reference registered nib names in case of NibComponent.
-    var registeredNibNames = Set<String>()
+    internal var registeredNibNames = Set<String>()
     /// Holds a reference registered class names in case of ClassComponent.
-    var registeredClassNames = Set<String>()
+    internal var registeredClassNames = Set<String>()
+
+    // Dictionary to hold the association between component types
+    // and nib names
+    internal var nibRegistrations: [ObjectIdentifier: String] = [:]
+    // Dictionary to hold the association between component types
+    // and class types
+    internal var classRegistrations: [ObjectIdentifier: AnyClass] = [:]
+    // Dictionary to hold the association between component types
+    // and SwiftUI types
+    internal var swiftUIRegistrations: [ObjectIdentifier: any ComponentSwiftUIViewConfigurable.Type] = [:]
 
     // MARK: - Initializers
 
@@ -74,12 +90,15 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: Double.leastNormalMagnitude))
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: Double.leastNormalMagnitude))
 
+        // Register Spacer
+        register(viewModelType: Spacer.self, classType: SpacerCell.self)
+
         // Remove strage empty space on occured in iOS Version >= 15.0
         if #available(iOS 15.0, *) {
             tableView.sectionHeaderTopPadding = .leastNormalMagnitude
         }
 
-        dataSource = UITableViewDiffableDataSource<Section, Block>(
+        dataSource = UITableViewDiffableDataSource<Section, Box>(
                         tableView: tableView,
                         cellProvider: { [unowned self] tableView, indexPath, _ in
             // Use the default method for providing cells
@@ -94,10 +113,10 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
     private func applyChanges(with newSections: [Section]) {
         self.sections = newSections
 
-        var newSnapshot = NSDiffableDataSourceSnapshot<Section, Block>()
+        var newSnapshot = NSDiffableDataSourceSnapshot<Section, Box>()
         newSnapshot.appendSections(newSections)
         newSections.forEach { section in
-            newSnapshot.appendItems(section.rows ?? [], toSection: section)
+            newSnapshot.appendItems(section.rows?.asBoxes ?? [], toSection: section)
         }
 
         if dataSource.defaultRowAnimation != .none {
@@ -118,6 +137,7 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
         sections.forEach { section in
             registerNibsOrClassesForHeadersFootersIfNeeded(for: section)
             registerNibsOrClassesForRowsIfNeeded(for: section)
+            registerSwiftUIClassesIfNeeded(for: section)
         }
     }
 
@@ -127,19 +147,25 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
     ///     - sections: The sections that the nibs or classes will be registered on.
     private func registerNibsOrClassesForHeadersFootersIfNeeded(for section: Section) {
         // Register Header/Footer nib/class
-        [section.header, section.footer].compactMap({ $0 }).forEach { sectionElement in
-            if let nibComponent = sectionElement.component as? AnyNibComponent,
-                !registeredNibNames.contains(nibComponent.reuseIdentifier) {
-                tableView.register(UINib(nibName: nibComponent.nibName, bundle: bundle),
-                                   forHeaderFooterViewReuseIdentifier: nibComponent.reuseIdentifier)
-                registeredNibNames.insert(nibComponent.reuseIdentifier)
-            } else if let classComponent = sectionElement.component as? AnyClassComponent {
-                if !registeredClassNames.contains(classComponent.reuseIdentifier) {
-                    tableView.register(classComponent.viewClass,
-                                       forHeaderFooterViewReuseIdentifier: classComponent.reuseIdentifier)
-                    registeredClassNames.insert(classComponent.reuseIdentifier)
+        [section.header, section.footer]
+            .compactMap({ $0 })
+            .forEach { headerFooter in
+                if let nibName = try? self.nibName(for: headerFooter),
+                   !registeredNibNames.contains(nibName) {
+                    tableView.register(UINib(nibName: nibName, bundle: bundle),
+                                       forHeaderFooterViewReuseIdentifier: nibName)
+                    registeredNibNames.insert(nibName)
+                } else if let viewClass = try? self.viewClass(for: headerFooter),
+                          !registeredClassNames.contains(String(describing: viewClass.self)) {
+                    tableView.register(viewClass,
+                                       forHeaderFooterViewReuseIdentifier: String(describing: viewClass.self))
+                    registeredClassNames.insert(String(describing: viewClass.self))
                 }
-            }
+
+                let reuseIdentifier = try? reuseIdentifier(for: headerFooter)
+                if reuseIdentifier == nil {
+                    fatalError("\(type(of: headerFooter)) is not registered")
+                }
         }
     }
 
@@ -150,48 +176,87 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
     private func registerNibsOrClassesForRowsIfNeeded(for section: Section) {
         // Register cell nibNames
         section.rows?.forEach { row in
-            if let nibComponent = row.component as? AnyNibComponent,
-               !registeredNibNames.contains(nibComponent.reuseIdentifier) {
-                tableView.register(UINib(nibName: nibComponent.nibName, bundle: bundle),
-                                   forCellReuseIdentifier: nibComponent.reuseIdentifier)
-                registeredNibNames.insert(nibComponent.reuseIdentifier)
-            } else if let classComponent = row.component as? AnyClassComponent {
-                if !registeredClassNames.contains(classComponent.reuseIdentifier) {
-                    tableView.register(classComponent.viewClass,
-                                       forCellReuseIdentifier: classComponent.reuseIdentifier)
-                    registeredClassNames.insert(classComponent.reuseIdentifier)
-                }
+            if let nibName = try? nibName(for: row),
+               !registeredNibNames.contains(nibName) {
+                tableView.register(UINib(nibName: nibName, bundle: bundle),
+                                   forCellReuseIdentifier: nibName)
+                registeredNibNames.insert(nibName)
+            } else if let viewClass = try? self.viewClass(for: row),
+                      !registeredClassNames.contains(String(describing: viewClass)) {
+                tableView.register(viewClass,
+                                   forCellReuseIdentifier: String(describing: viewClass))
+                registeredClassNames.insert(String(describing: viewClass))
+            }
+
+            let reuseIdentifier = try? reuseIdentifier(for: row)
+            if reuseIdentifier == nil {
+                fatalError("\(type(of: row)) is not registered")
             }
         }
     }
 
-    /// Helper method that updates sections by finding differences.
+    /// Registers nibs or classes for header and footers if needed.
     ///
     /// - Parameters:
-    ///     - newSections: The new sections that are used to find differences and apply changes.
-    private func applySectionsUpdate(_ newSections: [Section],
-                                     animation: UITableView.RowAnimation) {
+    ///     - sections: The sections that the nibs or classes will be registered on.
+    private func registerSwiftUIClassesIfNeeded(for section: Section) {
+        let allComopnents = [section.header, section.footer] + (section.rows ?? [])
+
+        // Register Header/Footer nib/class
+        allComopnents
+            .compactMap({ $0 })
+            .forEach { component in
+                if let swiftUIView = try? self.swiftUIView(for: component),
+                   !registeredClassNames.contains(String(describing: swiftUIView)) {
+                    tableView.register(SwiftUIHostingTableViewCell.self,
+                                       forCellReuseIdentifier: String(describing: type(of: swiftUIView)))
+                    tableView.register(SwiftUIHostingTableHeaderFooterView.self,
+                                       forHeaderFooterViewReuseIdentifier: String(describing: type(of: swiftUIView)))
+                }
+
+                let reuseIdentifier = try? reuseIdentifier(for: component)
+                if reuseIdentifier == nil {
+                    fatalError("\(type(of: component)) is not registered")
+                }
+            }
+    }
+
+    /// Helper method that updates sections by finding differences and applying changes to the table view.
+    ///
+    /// This method performs several operations to update the table view sections:
+    /// 1. Registers any nibs or classes that are needed for new sections. 
+    /// This ensures that all cell types used in the new sections are available to the table view.
+    /// 2. Sets spacer identifiers for sections if needed. 
+    /// This is typically used for managing spacing or separator cells within sections.
+    /// 3. Updates the default row animation for the data source. 
+    /// This animation is used for insertions, deletions, and updates that are applied to the sections.
+    /// 4. Applies changes to the table view based on the new sections. 
+    /// This step involves calculating the differences between 
+    /// the current and new sections and applying those differences to
+    /// update the table view.
+    /// 5. Expands flexible views within the table view if needed.
+    /// If there are any views within the table view sections that 
+    /// need to adjust their size or layout based on the new content,
+    /// this step ensures those adjustments are made. The expansion can
+    /// be animated depending on the animation parameter.
+    ///
+    /// - Parameters:
+    ///   - newSections: The new sections that are used to find differences 
+    ///   and apply changes. This array of `Section` objects represents the
+    ///   updated state of the table view sections.
+    ///   - animation: The animation to use when applying updates to the table view. 
+    ///   If `.none` is specified, updates will not be animated.
+    private func applySectionsUpdate(_ newSections: [Section], animation: UITableView.RowAnimation) {
         registerNibsOrClassesIfNeeded(sections: newSections)
-        setSpacerIdsIfNeeded(sections: newSections)
         dataSource.defaultRowAnimation = animation
         applyChanges(with: newSections)
         expandFlexibleViewsIfNeeded(animated: animation != .none)
     }
 
-    private func setSpacerIdsIfNeeded(sections: [Section]) {
-        sections.forEach { section in
-            section.rows?.compactMap({ $0.component as? Spacer }).forEach({ spacerRow in
-                spacerRow.id = tableView.lastSpacerIndex
-                tableView.lastSpacerIndex += 1
-            })
-
-        }
-    }
-
     /// Creates an IndexPath mapping for each component for quick access.
     ///
-    private func createIndexPathMapping() -> [IndexPath: Block] {
-        var result = [IndexPath: Block]()
+    private func createIndexPathMapping() -> [IndexPath: any Component] {
+        var result = [IndexPath: any Component]()
         sections.enumerated().forEach { sectionIndex, section in
             section.rows?.enumerated().forEach { rowIndex, block in
                 result[IndexPath(row: rowIndex, section: sectionIndex)] = block
@@ -215,20 +280,85 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
 // MARK: - TableViewRendererProtocol Implementation
 
 extension TableViewRenderer: TableViewRendererProtocol {
-    public func updateSections(_ newSections: [Section], animation: UITableView.RowAnimation) {
+    public func register(viewModelType: any Component.Type, nibName: String) {
+        let typeId = ObjectIdentifier(viewModelType)
+        nibRegistrations[typeId] = nibName
+    }
+
+    public func register(viewModelType: any Component.Type, classType: AnyClass) {
+        let typeId = ObjectIdentifier(viewModelType)
+        classRegistrations[typeId] = classType
+    }
+
+    public func register<View: ComponentSwiftUIViewConfigurable>(viewModelType: any Component.Type,
+                                                                 viewType: View.Type) {
+        let typeId = ObjectIdentifier(viewModelType)
+        swiftUIRegistrations[typeId] = viewType
+    }
+
+    // MARK: Sections Update
+
+    public func updateSections(_ newSections: [Section],
+                               animation: UITableView.RowAnimation) {
         applySectionsUpdate(newSections, animation: animation)
     }
 
-    public func updateRows(_ rows: [Block],
+    public func insertSection(_ section: Section,
+                              at index: Int,
+                              with animation: UITableView.RowAnimation = .none) {
+        var newSections = sections
+        newSections.insert(section, at: index)
+        applySectionsUpdate(newSections, animation: animation)
+    }
+
+    public func insertSections(_ newSections: [Section],
+                               at startIndex: Int,
+                               with animation: UITableView.RowAnimation = .none) {
+        var updatedSections = sections
+        updatedSections.insert(contentsOf: newSections, at: startIndex)
+        applySectionsUpdate(updatedSections, animation: animation)
+    }
+
+    public func appendSection(_ section: Section,
+                              with animation: UITableView.RowAnimation = .none) {
+        var newSections = sections
+        newSections.append(section)
+        applySectionsUpdate(newSections, animation: animation)
+    }
+
+    public func appendSections(_ newSections: [Section],
+                               with animation: UITableView.RowAnimation = .none) {
+        var updatedSections = sections
+        updatedSections.append(contentsOf: newSections)
+        applySectionsUpdate(updatedSections, animation: animation)
+    }
+
+    public func removeSection(at index: Int,
+                              with animation: UITableView.RowAnimation = .none) {
+        var newSections = sections
+        guard index < newSections.count else { return }
+        newSections.remove(at: index)
+        applySectionsUpdate(newSections, animation: animation)
+    }
+
+    public func removeSections(where shouldBeRemoved: (Section) -> Bool,
+                               with animation: UITableView.RowAnimation = .none) {
+        var newSections = sections
+        newSections.removeAll(where: shouldBeRemoved)
+        applySectionsUpdate(newSections, animation: animation)
+    }
+
+    // MARK: Rows Update
+
+    public func updateRows(_ rows: [any Component],
                            with animation: UITableView.RowAnimation = .none) {
         let newSections = [
-            Section(id: "default",
-                    items: rows)
+            Section(id: "0", rows: rows)
         ]
         applySectionsUpdate(newSections, animation: .none)
     }
 
-    public func appendRow(_ row: Block,
+    public func appendRow(_ row: any Component,
                           atSectionIndex index: Int? = nil,
                           with animation: UITableView.RowAnimation = .none) {
         let lastSectionIndex = index ?? sections.count > 0 ? sections.count - 1 : 0
@@ -239,7 +369,7 @@ extension TableViewRenderer: TableViewRendererProtocol {
         applySectionsUpdate(newSections, animation: animation)
     }
 
-    public func insertRows(_ rows: [Block],
+    public func insertRows(_ rows: [any Component],
                            at indexPath: IndexPath,
                            with animation: UITableView.RowAnimation) {
         var indexPaths = [IndexPath]()
@@ -254,36 +384,36 @@ extension TableViewRenderer: TableViewRendererProtocol {
         applySectionsUpdate(newSections, animation: animation)
     }
 
-    public func insertRow(_ viewModel: Block,
+    public func insertRow(_ viewModel: any Component,
                           at indexPath: IndexPath,
                           with animation: UITableView.RowAnimation) {
         insertRows([viewModel], at: indexPath, with: animation)
     }
 
-    public func removeRow(from indexPath: IndexPath,
+    public func removeRow(at indexPath: IndexPath,
                           with animation: UITableView.RowAnimation) {
         var newSections = sections
         newSections[indexPath.section].rows?.remove(at: indexPath.row)
         applySectionsUpdate(newSections, animation: animation)
     }
 
-    public func removeRows(where predicate: (Block) -> Bool,
+    public func removeRows(where predicate: (any Component) -> Bool,
                            animation: UITableView.RowAnimation) {
-        var blocksToRemove = [Block]()
+        var componentsToRemove = [any Component]()
         let allRows = createIndexPathMapping().map({ $1 })
 
         allRows.forEach { item in
             if predicate(item) {
-                blocksToRemove.append(item)
+                componentsToRemove.append(item)
             }
         }
 
-        while !blocksToRemove.isEmpty {
-            let currentBlock = blocksToRemove.removeFirst()
+        while !componentsToRemove.isEmpty {
+            let currentComponent = componentsToRemove.removeFirst()
             let currentMappings = createIndexPathMapping()
 
-            if let mapping = currentMappings.first(where: { $1.component == currentBlock.component }) {
-                removeRow(from: mapping.key, with: animation)
+            if let mapping = currentMappings.first(where: { $1.asBox == currentComponent.asBox }) {
+                removeRow(at: mapping.key, with: animation)
             }
         }
     }
@@ -294,50 +424,75 @@ extension TableViewRenderer: TableViewRendererProtocol {
 extension TableViewRenderer {
     func headerView(for tableView: UITableView, inSection section: Int) throws -> UIView? {
         let sectionModel = sections[section]
-        guard let headerModel = sectionModel.header,
-              let headerComponent = headerModel.component as? AnyComponent else {
-            throw BlocksError.invalidModelClass
+
+        guard let headerComponent = sectionModel.header else {
+            return nil
         }
 
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerComponent.reuseIdentifier)
+        let reuseIdentifier = try reuseIdentifier(for: headerComponent)
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: reuseIdentifier)
+
         guard let header = header as? UITableViewHeaderFooterView & ComponentViewConfigurable else {
-            throw BlocksError.invalidViewClass(reuseIdentifier: headerComponent.reuseIdentifier)
+            throw BlocksError.invalidViewClass(reuseIdentifier: reuseIdentifier)
         }
 
-        header.configure(with: headerModel)
+        if #available(iOS 14.0, *) {
+            var backgroundConfig = UIBackgroundConfiguration.listPlainHeaderFooter()
+            backgroundConfig.backgroundColor = .clear
+            header.backgroundConfiguration = backgroundConfig
+        } else {
+            header.backgroundColor = .clear
+        }
+
+        headerComponent.prepare()
+        header.setRenderer(self)
+        header.configure(with: headerComponent)
         tableView.setHeight(headerSection: section, view: header)
         return header
     }
 
     func footerView(for tableView: UITableView, inSection section: Int) throws -> UIView? {
         let sectionModel = sections[section]
-        guard let footerModel = sectionModel.footer,
-              let footerComponent = footerModel.component as? AnyComponent else {
-            throw BlocksError.invalidModelClass
+
+        guard let footerComponent = sectionModel.footer else {
+            return nil
         }
 
-        let footer = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerComponent.reuseIdentifier)
+        let reuseIdentifier = try reuseIdentifier(for: footerComponent)
+
+        let footer = tableView.dequeueReusableHeaderFooterView(withIdentifier: reuseIdentifier)
         guard let footer = footer as? UITableViewHeaderFooterView & ComponentViewConfigurable else {
-            throw BlocksError.invalidViewClass(reuseIdentifier: footerComponent.reuseIdentifier)
+            throw BlocksError.invalidViewClass(reuseIdentifier: reuseIdentifier)
         }
 
-        footer.configure(with: footerModel)
+        if #available(iOS 14.0, *) {
+            var backgroundConfig = UIBackgroundConfiguration.listPlainHeaderFooter()
+            backgroundConfig.backgroundColor = .clear
+            footer.backgroundConfiguration = backgroundConfig
+        } else {
+            footer.backgroundColor = .clear
+        }
+
+        footerComponent.prepare()
+        footer.setRenderer(self)
+        footer.configure(with: footerComponent)
         return footer
     }
 
     func cellView(for tableView: UITableView, at indexPath: IndexPath) throws -> UITableViewCell? {
-        guard let cellModel = sections[indexPath.section].rows?[indexPath.row],
-              let component = cellModel.component as? AnyComponent else {
+        guard let cellModel = sections[indexPath.section].rows?[indexPath.row] else {
             throw BlocksError.invalidModelClass
         }
 
-        let cell = tableView.dequeueReusableCell(withIdentifier: component.reuseIdentifier, for: indexPath)
+        let reuseIdentifier = try reuseIdentifier(for: cellModel)
+
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
         guard let cell = cell as? UITableViewCell & ComponentViewConfigurable else {
-            throw BlocksError.invalidViewClass(reuseIdentifier: component.reuseIdentifier)
+            throw BlocksError.invalidViewClass(reuseIdentifier: reuseIdentifier)
         }
 
-        component.beforeReuse()
-        cell.setTableView(tableView)
+        cellModel.prepare()
+        cell.setRenderer(self)
         cell.configure(with: cellModel)
         return cell
     }
@@ -346,6 +501,8 @@ extension TableViewRenderer {
 // MARK: - UITableView Delegate
 
 extension TableViewRenderer {
+
+    // MARK: - Header/Footer/Cell Handling
 
     public func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
@@ -394,7 +551,11 @@ extension TableViewRenderer {
 
     public func tableView(_ tableView: UITableView,
                           estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        UITableView.automaticDimension
+        guard let component = sections[indexPath.section].rows?[indexPath.row] else {
+            return UITableView.automaticDimension
+        }
+
+        return estimatedHeightForRowComponent?(component) ?? UITableView.automaticDimension
     }
 
     public func tableView(_ tableView: UITableView,
@@ -407,7 +568,11 @@ extension TableViewRenderer {
 
     public func tableView(_ tableView: UITableView,
                           estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        UITableView.automaticDimension
+        guard let component = sections[section].header else {
+            return UITableView.automaticDimension
+        }
+
+        return estimatedHeightForHeaderComponent?(component) ?? UITableView.automaticDimension
     }
 
     public func tableView(_ tableView: UITableView,
@@ -420,6 +585,10 @@ extension TableViewRenderer {
 
     public func tableView(_ tableView: UITableView,
                           estimatedHeightForFooterInSection section: Int) -> CGFloat {
-        UITableView.automaticDimension
+        guard let component = sections[section].footer else {
+            return UITableView.automaticDimension
+        }
+
+        return estimatedHeightForFooterComponent?(component) ?? UITableView.automaticDimension
     }
 }

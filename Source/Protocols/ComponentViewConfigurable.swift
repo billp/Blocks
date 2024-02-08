@@ -1,6 +1,6 @@
 // CellComponentViewProtocol.swift
 //
-// Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -26,8 +26,8 @@ private var tableViewHandle: UInt8 = 0
 public protocol ComponentViewConfigurable: UIView {
     /// Required for cell configuration with the given model (e.g. setup MVVM Bindings)
     /// - Parameters:
-    ///   - model: The corresponding view model.
-    func configure(with model: Block)
+    ///   - viewModel: The corresponding view model.
+    func configure(with viewModel: any Component)
 
     /// Notifies the parent UITableView to update its cell heights.
     /// - Parameters:
@@ -37,9 +37,9 @@ public protocol ComponentViewConfigurable: UIView {
 
 /// Add default implementation for ComponentViewProtocol.
 extension ComponentViewConfigurable {
-    weak var tableView: UITableView? {
+    weak var renderer: TableViewRenderer? {
         get {
-            objc_getAssociatedObject(self, &tableViewHandle) as? UITableView
+            objc_getAssociatedObject(self, &tableViewHandle) as? TableViewRenderer
         }
         set {
             objc_setAssociatedObject(self,
@@ -51,8 +51,8 @@ extension ComponentViewConfigurable {
 
     public func updateCellHeight(animated: Bool) {
         let updateHeights = {
-            self.tableView?.beginUpdates()
-            self.tableView?.endUpdates()
+            self.renderer?.tableView.beginUpdates()
+            self.renderer?.tableView.endUpdates()
         }
 
         if animated {
@@ -65,9 +65,9 @@ extension ComponentViewConfigurable {
     }
 
     // Make configure optional
-    func configure(with model: Block) { }
+    func configure(with model: any Component) { }
 
-    func setTableView(_ tableView: UITableView) {
-        self.tableView = tableView
+    func setRenderer(_ renderer: TableViewRenderer) {
+        self.renderer = renderer
     }
 }

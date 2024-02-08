@@ -1,6 +1,6 @@
 // DiffableDataSourceTests.swift
 //
-// Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -17,7 +17,6 @@
 // FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-// swiftlint:disable type_body_length
 
 import XCTest
 @testable import Blocks
@@ -37,54 +36,43 @@ class DiffableDataSourceTests: XCTestCase {
     }
 
     lazy var renderer: FakeRenderer = {
-        FakeRenderer(tableView: tableView, bundle: Bundle(for: Self.self))
+        let renderer = FakeRenderer(tableView: tableView, bundle: Bundle(for: Self.self))
+        renderer.register(viewModelType: TestNibComponentViewModel.self,
+                          nibName: String(describing: TestNibComponentViewCell.self))
+        renderer.register(viewModelType: TestComponentViewModel.self,
+                          classType: TestComponentCell.self)
+
+        return renderer
     }()
 
     override func setUp() {
         super.setUp()
 
-        // Given
         let models = [
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello1"),
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello2")
+            TestNibComponentViewModel(title: "Hello1"),
+            TestNibComponentViewModel(title: "Hello2")
         ]
 
-        // When
-        renderer.updateRows(models.asBlocks)
-        let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
-        let cell2 = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TestNibComponentViewCell
-
-        // Then
-        XCTAssertNotNil(cell1)
-        XCTAssertNotNil(cell2)
-        XCTAssertEqual(tableView.numberOfRows(inSection: 0), models.count)
-        XCTAssertEqual(cell1?.testLabel.text, models[0].title)
-        XCTAssertEqual(cell2?.testLabel.text, models[1].title)
+        renderer.updateRows(models)
     }
 
     override func tearDown() {
         super.tearDown()
-
-        // When
-        renderer.updateRows([].asBlocks)
-
-        // Then
-        XCTAssertEqual(tableView.numberOfSections, 1)
-        XCTAssertEqual(tableView.numberOfRows(inSection: 0), 0)
+        renderer.updateRows([])
     }
 
     func testOnInsertAfterRow1Action() {
         // Given
         let models = [
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello1"),
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello2")
+            TestNibComponentViewModel(title: "Hello1"),
+            TestNibComponentViewModel(title: "Hello2")
         ]
-        let newModel = TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello3")
+        let newModel = TestNibComponentViewModel(title: "Hello3")
 
         // When
-        renderer.updateRows(models.asBlocks)
+        renderer.updateRows(models)
         renderer.cellForRowCallCount = 0
-        renderer.insertRow(newModel.asBlock, at: IndexPath(row: 1, section: 0), with: .none)
+        renderer.insertRow(newModel, at: IndexPath(row: 1, section: 0), with: .none)
         let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
         let cell2 = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TestNibComponentViewCell
         let cell3 = tableView.cellForRow(at: IndexPath(row: 2, section: 0)) as? TestNibComponentViewCell
@@ -103,15 +91,15 @@ class DiffableDataSourceTests: XCTestCase {
     func testOnInsertAfterRow2Action() {
         // Given
         let models = [
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello1"),
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello2")
+            TestNibComponentViewModel(title: "Hello1"),
+            TestNibComponentViewModel(title: "Hello2")
         ]
-        let newModel = TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello3")
+        let newModel = TestNibComponentViewModel(title: "Hello3")
 
         // When
-        renderer.updateRows(models.asBlocks)
+        renderer.updateRows(models)
         renderer.cellForRowCallCount = 0
-        renderer.insertRow(newModel.asBlock, at: IndexPath(row: 2, section: 0), with: .none)
+        renderer.insertRow(newModel, at: IndexPath(row: 2, section: 0), with: .none)
         let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
         let cell2 = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TestNibComponentViewCell
         let cell3 = tableView.cellForRow(at: IndexPath(row: 2, section: 0)) as? TestNibComponentViewCell
@@ -131,16 +119,16 @@ class DiffableDataSourceTests: XCTestCase {
     func testOnInsertMultipleRowsAtTheBeginningAction() {
         // Given
         let models = [
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello1"),
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello2")
+            TestNibComponentViewModel(title: "Hello1"),
+            TestNibComponentViewModel(title: "Hello2")
         ]
-        let newModel = TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello3")
-        let newModel2 = TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello4")
+        let newModel = TestNibComponentViewModel(title: "Hello3")
+        let newModel2 = TestNibComponentViewModel(title: "Hello4")
 
         // When
-        renderer.updateRows(models.asBlocks)
+        renderer.updateRows(models)
         renderer.cellForRowCallCount = 0
-        renderer.insertRows([newModel, newModel2].asBlocks, at: IndexPath(row: 0, section: 0), with: .none)
+        renderer.insertRows([newModel, newModel2], at: IndexPath(row: 0, section: 0), with: .none)
         let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
         let cell2 = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TestNibComponentViewCell
         let cell3 = tableView.cellForRow(at: IndexPath(row: 2, section: 0)) as? TestNibComponentViewCell
@@ -163,16 +151,16 @@ class DiffableDataSourceTests: XCTestCase {
     func testOnInsertMultipleRowsInTheMiddleAction() {
         // Given
         let models = [
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello1"),
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello2")
+            TestNibComponentViewModel(title: "Hello1"),
+            TestNibComponentViewModel(title: "Hello2")
         ]
-        let newModel = TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello3")
-        let newModel2 = TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello4")
+        let newModel = TestNibComponentViewModel(title: "Hello3")
+        let newModel2 = TestNibComponentViewModel(title: "Hello4")
 
         // When
-        renderer.updateRows(models.asBlocks)
+        renderer.updateRows(models)
         renderer.cellForRowCallCount = 0
-        renderer.insertRows([newModel, newModel2].asBlocks, at: IndexPath(row: 1, section: 0), with: .none)
+        renderer.insertRows([newModel, newModel2], at: IndexPath(row: 1, section: 0), with: .none)
         let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
         let cell2 = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TestNibComponentViewCell
         let cell3 = tableView.cellForRow(at: IndexPath(row: 2, section: 0)) as? TestNibComponentViewCell
@@ -195,16 +183,16 @@ class DiffableDataSourceTests: XCTestCase {
     func testOnInsertMultipleRowsAtTheEndAction() {
         // Given
         let models = [
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello1"),
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello2")
+            TestNibComponentViewModel(title: "Hello1"),
+            TestNibComponentViewModel(title: "Hello2")
         ]
-        let newModel = TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello3")
-        let newModel2 = TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello4")
+        let newModel = TestNibComponentViewModel(title: "Hello3")
+        let newModel2 = TestNibComponentViewModel(title: "Hello4")
 
         // When
-        renderer.updateRows(models.asBlocks)
+        renderer.updateRows(models)
         renderer.cellForRowCallCount = 0
-        renderer.insertRows([newModel, newModel2].asBlocks, at: IndexPath(row: 2, section: 0), with: .none)
+        renderer.insertRows([newModel, newModel2], at: IndexPath(row: 2, section: 0), with: .none)
         let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
         let cell2 = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TestNibComponentViewCell
         let cell3 = tableView.cellForRow(at: IndexPath(row: 2, section: 0)) as? TestNibComponentViewCell
@@ -227,15 +215,15 @@ class DiffableDataSourceTests: XCTestCase {
     func testOnAppend() {
         // Given
         let models = [
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello1"),
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello2")
+            TestNibComponentViewModel(title: "Hello1"),
+            TestNibComponentViewModel(title: "Hello2")
         ]
-        let newModel = TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello3")
+        let newModel = TestNibComponentViewModel(title: "Hello3")
 
         // When
-        renderer.updateRows(models.asBlocks)
+        renderer.updateRows(models)
         renderer.cellForRowCallCount = 0
-        renderer.appendRow(newModel.asBlock)
+        renderer.appendRow(newModel)
         let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
         let cell2 = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TestNibComponentViewCell
         let cell3 = tableView.cellForRow(at: IndexPath(row: 2, section: 0)) as? TestNibComponentViewCell
@@ -257,7 +245,7 @@ class DiffableDataSourceTests: XCTestCase {
         renderer.cellForRowCallCount = 0
 
         // When
-        renderer.removeRow(from: IndexPath(row: 0, section: 0), with: .none)
+        renderer.removeRow(at: IndexPath(row: 0, section: 0), with: .none)
         let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
 
         // Then
@@ -271,7 +259,7 @@ class DiffableDataSourceTests: XCTestCase {
         renderer.cellForRowCallCount = 0
 
         // When
-        renderer.removeRow(from: IndexPath(row: 1, section: 0), with: .none)
+        renderer.removeRow(at: IndexPath(row: 1, section: 0), with: .none)
         let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
 
         // Then
@@ -297,14 +285,14 @@ class DiffableDataSourceTests: XCTestCase {
     func testOnMoveRows() {
         // Given
         let models = [
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello1"),
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello2")
+            TestNibComponentViewModel(title: "Hello1"),
+            TestNibComponentViewModel(title: "Hello2")
         ]
 
         // When
-        renderer.updateRows(models.asBlocks)
+        renderer.updateRows(models)
         renderer.cellForRowCallCount = 0
-        renderer.updateRows([models[1], models[0]].asBlocks)
+        renderer.updateRows([models[1], models[0]])
 
         let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
         let cell2 = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TestNibComponentViewCell
@@ -321,39 +309,37 @@ class DiffableDataSourceTests: XCTestCase {
 
     func testOnRemoveWhere() {
         // Given
-        let models: [AnyHashable] = [
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello1"),
-            TestNibComponentViewModel(reuseIdentifier: "test2", title: "Hello2"),
-            TestComponentViewModel(componentId: "test3")
+        let models: [any Component] = [
+            TestNibComponentViewModel(title: "Hello1"),
+            TestNibComponentViewModel(title: "Hello2"),
+            TestComponentViewModel(text: "test3")
         ]
 
         // When
-        renderer.updateRows(models.asBlocks)
+        renderer.updateRows(models)
         renderer.removeRows(where: { block in
-            guard let reuseIdentifier = (block.component as? AnyComponent)?.reuseIdentifier else {
-                return false
-            }
-            return ["TestComponentCell", "test"].contains(reuseIdentifier)
+            let type = String(describing: type(of: block))
+            return ["TestNibComponentViewModel"].contains(type)
         }, animation: .none)
-        let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
+        let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestComponentCell
 
         // Then
         XCTAssertEqual(tableView.numberOfSections, 1)
         XCTAssertEqual(tableView.numberOfRows(inSection: 0), 1)
-        XCTAssertEqual(cell1?.testLabel.text, "Hello2")
+        XCTAssertEqual(cell1?.label.text, "test3")
     }
 
     func testOnNoChange() {
         // Given
         let models = [
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello1"),
-            TestNibComponentViewModel(reuseIdentifier: "test", title: "Hello2")
+            TestNibComponentViewModel(title: "Hello1"),
+            TestNibComponentViewModel(title: "Hello2")
         ]
 
         // When
-        renderer.updateRows(models.asBlocks)
+        renderer.updateRows(models)
         renderer.cellForRowCallCount = 0
-        renderer.updateRows([models[0], models[1]].asBlocks)
+        renderer.updateRows([models[0], models[1]])
 
         let cell1 = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TestNibComponentViewCell
         let cell2 = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? TestNibComponentViewCell
@@ -377,5 +363,3 @@ class FakeRenderer: TableViewRenderer {
         return super.tableView(tableView, cellForRowAt: indexPath)
     }
 }
-
-// swiftlint:enable type_body_length

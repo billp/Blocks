@@ -1,6 +1,6 @@
 // Spacer.swift
 //
-// Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -20,7 +20,7 @@
 import Foundation
 
 /// Specifies a type of the Spacer.
-public enum SpacerType {
+public enum SpacerType: Hashable, Equatable {
     private enum Constants {
         static let flexibleValue: Float = -1
     }
@@ -41,27 +41,15 @@ public enum SpacerType {
     }
 }
 
-public class Spacer: ClassComponent {
-    var id: AnyHashable = 0
-
-    public static func == (lhs: Spacer, rhs: Spacer) -> Bool {
-        lhs.type.value == rhs.type.value && lhs.id == rhs.id
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-        hasher.combine(type.value)
-    }
-
-    public var viewClass: AnyClass {
-        SpacerCell.self
-    }
+/// Defines a special type of Component which defines a vertical spacer based on a type.
+/// The type can be either flexible (expands up to the blank space) or fixed (defines a specific height).
+public struct Spacer: Component {
+    var id: UUID = .init()
 
     /// The type of the spacer.
     var type: SpacerType
 
-    init(type: SpacerType) {
+    public init(type: SpacerType) {
         self.type = type
-        self.id = -1
     }
 }

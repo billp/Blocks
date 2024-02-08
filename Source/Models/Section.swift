@@ -1,6 +1,6 @@
 // Section.swift
 //
-// Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -24,19 +24,19 @@ import Foundation
 /// Find bellow an example of Section initialization:
 ///
 ///     Section(id: "section1",
-///                 header: MyHeaderFooterComponent(title: "Header 1").asBlock,
-///                 footer: MyHeaderFooterComponent(title: "Footer 1").asBlock,
-///                 items: [
-///                     MyLabelComponent(title: "Row 1"),
-///                     MyLabelComponent(title: "Row 2"),
-///                     MyLabelComponent(title: "Row 3"),
-///                     MyButtonComponent(title: "Button 1", onTap: {
-///                        print("Button 1 tapped")
-///                     })
-///                 ].asBlocks)
+///             header: MyHeaderFooterComponent(title: "Header 1").asBlock,
+///             footer: MyHeaderFooterComponent(title: "Footer 1").asBlock,
+///             items: [
+///                 MyLabelComponent(title: "Row 1"),
+///                 MyLabelComponent(title: "Row 2"),
+///                 MyLabelComponent(title: "Row 3"),
+///                 MyButtonComponent(title: "Button 1", onTap: {
+///                    print("Button 1 tapped")
+///                 })
+///             ].asBlocks)
 public struct Section: Hashable, Identifiable {
     /// A unique id of the hashable
-    public let id: AnyHashable
+    public var id: AnyHashable
 
     /// Tell Equatable to only take id into account.
     public static func == (lhs: Section, rhs: Section) -> Bool {
@@ -49,26 +49,38 @@ public struct Section: Hashable, Identifiable {
     }
 
     /// The header component of the Section.
-    public var header: Block?
+    public var header: (any Component)? {
+        didSet {
+            invalidate()
+        }
+    }
     /// The footer component of the Section.
-    public var footer: Block?
+    public var footer: (any Component)? {
+        didSet {
+            invalidate()
+        }
+    }
     /// The row components of the Section.
-    public var rows: [Block]?
+    public var rows: [any Component]?
 
     /// Default initializer of the Section.
     ///
     /// Parameters:
-    ///    - id: A unique id of the section.
     ///    - header: The header component of the Section.
     ///    - footer: The footer component of the Section.
-    ///    - items: The item components of the Section.
-    public init(id: AnyHashable,
-                header: Block? = nil,
-                footer: Block? = nil,
-                items: [Block]? = nil) {
+    ///    - rows: The row components of the Section.
+    public init(id: AnyHashable = UUID(),
+                header: (any Component)? = nil,
+                footer: (any Component)? = nil,
+                rows: [any Component]? = nil) {
         self.id = id
         self.header = header
         self.footer = footer
-        self.rows = items
+        self.rows = rows
+    }
+
+    /// Invalidates the section after header/footer update
+    private mutating func invalidate() {
+        id = UUID()
     }
 }

@@ -1,6 +1,6 @@
 // ComponentViewModelProtocol.swift
 //
-// Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -19,79 +19,30 @@
 
 import Foundation
 
-/// Protocol for AnyComponent.
-public protocol AnyComponent {
-    /// Sets the reuseIdentifier of cell/header/footer. (Optional)
-    var reuseIdentifier: String { get }
-
-    /// Called before cell/header/footer reuse. (Optional)
-    func beforeReuse()
-}
-
-/// Protocol for Any Nib-based Components.
-public protocol AnyNibComponent: AnyComponent {
-    /// Sets the nibName to automatically register as UINib.
-    var nibName: String { get }
-}
-
-/// Protocol for Any Class-based Components.
-public protocol AnyClassComponent: AnyComponent {
-    /// Set the className to automatically register as Class.
-    var viewClass: AnyClass { get }
-}
-
 /// Protocol for Component.
-public protocol Component: Hashable, AnyComponent {
-    /// Quickly convert Component to a Block instance.
-    var asBlock: Block { get }
+public protocol Component: Hashable {
+    /// Called before cell/header/footer reuse. (Optional)
+    func prepare()
+
+    /// Returns model value casted to the given type.
+    /// - Parameters:
+    ///   - type: The type to be casted with.
+    func `as`<T: Component>(_ type: T.Type) -> T
 }
 
 /// Default implementation for Component.
 public extension Component {
-    var asBlock: Block {
-        Block(self)
+    internal var asBox: Box {
+        Box(self)
     }
-}
 
-/// Protocol for Nib-based Components.
-///
-/// Example of a nib component:
-///
-///     struct TestNibComponentViewModel: NibComponent {
-///        var nibName: String {
-///           String(describing: TestNibComponentViewCell.self)
-///        }
-///     }
-public protocol NibComponent: Component, AnyNibComponent { }
+    func prepare() { }
 
-/// Protocol for Class-based Components.
-///
-/// Example of a class component:
-///
-///     struct TestClassComponentViewModel: ClassComponent {
-///        var viewClass: AnyClass {
-///           MyHeaderFooterView.self
-///        }
-///     }
-public protocol ClassComponent: Component, AnyClassComponent { }
+    func `as`<T: Component>(_ type: T.Type) -> T {
+        if let viewModel = self as? T {
+            return viewModel
+        }
 
-/// Add default implementation for Component.
-public extension Component {
-    func beforeReuse() { }
-}
-
-/// Add default implementation Nib-based Components.
-public extension NibComponent {
-    // Use nibName value for reuseIdentifier.
-    var reuseIdentifier: String {
-        nibName
-    }
-}
-
-/// Add default implementation Class-based Components.
-public extension ClassComponent {
-    // Use viewClass type name for reuseIdentifier.
-    var reuseIdentifier: String {
-        String(describing: viewClass.self)
+        fatalError("Invalid model class \(T.self). Please check the class type!")
     }
 }
