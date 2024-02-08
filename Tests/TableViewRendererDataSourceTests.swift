@@ -1,6 +1,6 @@
 // TableViewRendererDataSourceTests.swift
 //
-// Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -38,7 +38,17 @@ class TableViewRendererDataSourceTests: XCTestCase {
     }
 
     lazy var renderer: TableViewRenderer = {
-        TableViewRenderer(tableView: tableView, bundle: Bundle(for: Self.self))
+        let renderer = TableViewRenderer(tableView: tableView, bundle: Bundle(for: Self.self))
+        renderer.register(viewModelType: TestComponentViewModel.self,
+                          classType: TestComponentCell.self)
+        renderer.register(viewModelType: TestNibComponentViewModel.self,
+                          nibName: String(describing: TestNibComponentViewCell.self))
+        renderer.register(viewModelType: TestHeaderFooterComponentViewModel.self,
+                          classType: TestHeaderFooterView.self)
+        renderer.register(viewModelType: TestViewComponent.self,
+                          viewType: TestView.self)
+
+        return renderer
     }()
 
     // MARK: - Generic
@@ -53,37 +63,36 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testRegisterNibForReuseIdentifier() {
         // Given
-        let models = [TestNibComponentViewModel(reuseIdentifier: "id1"),
-                      TestNibComponentViewModel(reuseIdentifier: "id2")].asBlocks
+        let models = [TestNibComponentViewModel(),
+                      TestNibComponentViewModel()]
         // When
         renderer.updateRows(models)
 
         // Then
-        XCTAssert(renderer.registeredNibNames.contains("id1"))
-        XCTAssert(renderer.registeredNibNames.contains("id2"))
+        XCTAssert(renderer.registeredNibNames.contains("TestNibComponentViewCell"))
+        XCTAssert(renderer.registeredNibNames.contains("TestNibComponentViewCell"))
         XCTAssertNotNil(tableView.cellForRow(at: IndexPath.init(row: 0, section: 0)))
         XCTAssertNotNil(tableView.cellForRow(at: IndexPath.init(row: 1, section: 0)))
     }
 
     func testRegisterClassForReuseIdentifier() {
         // Given
-        struct TestComponent: ClassComponent {
+        struct TestComponent: Component {
             var viewClass: AnyClass {
                 TestComponentCell.self
             }
-            var reuseIdentifier: String
+
+            var id: UUID = .init()
         }
         class TestComponentCell: UITableViewCell { }
+        renderer.register(viewModelType: TestComponent.self, classType: TestComponentCell.self)
 
         // When
-        renderer.updateRows([TestComponent(reuseIdentifier: "id1").asBlock,
-                          TestComponent(reuseIdentifier: "id2").asBlock])
+        renderer.updateRows([TestComponent(), TestComponent()])
 
         // Then
-        XCTAssert(renderer.registeredClassNames.contains("id1"))
-        XCTAssert(renderer.registeredClassNames.contains("id2"))
+        XCTAssert(renderer.registeredClassNames.contains("TestComponentCell"))
         XCTAssertNotNil(tableView.cellForRow(at: IndexPath.init(row: 0, section: 0)))
-        XCTAssertNotNil(tableView.cellForRow(at: IndexPath.init(row: 1, section: 0)))
     }
 
     // MARK: - Number of Rows/Sections
@@ -92,7 +101,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
         // Given
         let components = [TestComponentViewModel(),
                           TestComponentViewModel(),
-                          TestComponentViewModel()].asBlocks
+                          TestComponentViewModel()]
 
         // When
         renderer.updateRows(components)
@@ -103,14 +112,12 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testNumberOfSections() {
         // Given
-        let section1 = Section(id: "section1",
-                               items: [TestComponentViewModel(),
-                                       TestComponentViewModel(),
-                                       TestComponentViewModel()].asBlocks)
-        let section2 = Section(id: "section2",
-                               items: [TestComponentViewModel(),
-                                       TestComponentViewModel(),
-                                       TestComponentViewModel()].asBlocks)
+        let section1 = Section(rows: [TestComponentViewModel(),
+                                      TestComponentViewModel(),
+                                      TestComponentViewModel()])
+        let section2 = Section(rows: [TestComponentViewModel(),
+                                      TestComponentViewModel(),
+                                      TestComponentViewModel()])
         let sections = [section1, section2]
 
         // When
@@ -124,7 +131,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testRendererViewForHeaderInSection() {
         // Given
-        let section = Section(id: "section", header: TestHeaderFooterComponentViewModel().asBlock)
+        let section = Section(header: TestHeaderFooterComponentViewModel())
 
         // When
         renderer.updateSections([section], animation: .none)
@@ -140,7 +147,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testTableViewHeaderViewForSection() {
         // Given
-        let section = Section(id: "section", header: TestHeaderFooterComponentViewModel().asBlock)
+        let section = Section(header: TestHeaderFooterComponentViewModel())
 
         // When
         renderer.updateSections([section], animation: .none)
@@ -150,29 +157,9 @@ class TableViewRendererDataSourceTests: XCTestCase {
         XCTAssert(header is TestHeaderFooterView)
     }
 
-    func testRendererInvalidModelForHeaderViewInSection() {
-        // Given
-        let section = Section(id: "section", header: nil)
-
-        // When
-        renderer.updateSections([section], animation: .none)
-
-        // Then
-        do {
-            _ = try renderer.headerView(for: tableView, inSection: 0)
-            XCTAssert(false)
-        } catch let error {
-            if case .invalidModelClass = error.as(BlocksError.self) {
-                XCTAssert(true)
-            } else {
-                XCTAssert(false)
-            }
-        }
-    }
-
     func testTableViewInvalidModelViewForSection() {
         // Given
-        let section = Section(id: "section", header: nil)
+        let section = Section(header: nil)
 
         // When
         renderer.updateSections([section], animation: .none)
@@ -182,11 +169,27 @@ class TableViewRendererDataSourceTests: XCTestCase {
         XCTAssertNil(header)
     }
 
+    func testRendererSwiftUIViewForHeaderInSection() {
+        // Given
+        let section = Section(header: TestViewComponent(title: "Test"))
+
+        // When
+        renderer.updateSections([section], animation: .none)
+
+        // Then
+        do {
+            let header = try renderer.headerView(for: tableView, inSection: 0)
+            XCTAssert(header is SwiftUIHostingTableHeaderFooterView)
+        } catch {
+            XCTAssert(false)
+        }
+    }
+
     // MARK: - Footer
 
     func testRendererViewForFooterInSection() {
         // Given
-        let section = Section(id: "section", footer: TestHeaderFooterComponentViewModel().asBlock)
+        let section = Section(footer: TestHeaderFooterComponentViewModel())
 
         // When
         renderer.updateSections([section], animation: .none)
@@ -202,7 +205,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testTableViewFooterForSection() {
         // Given
-        let section = Section(id: "section", footer: TestHeaderFooterComponentViewModel().asBlock)
+        let section = Section(footer: TestHeaderFooterComponentViewModel())
 
         // When
         renderer.updateSections([section], animation: .none)
@@ -212,43 +215,27 @@ class TableViewRendererDataSourceTests: XCTestCase {
         XCTAssert(footer is TestHeaderFooterView)
     }
 
-    func testRendererInvalidModelForFooterInSection() {
+    func testRendererSwiftUIViewForFooterInSection() {
         // Given
-        let section = Section(id: "section", footer: nil)
+        let section = Section(header: TestViewComponent(title: "Test"))
 
         // When
         renderer.updateSections([section], animation: .none)
 
         // Then
         do {
-            _ = try renderer.footerView(for: tableView, inSection: 0)
-            XCTAssert(false)
+            let header = try renderer.headerView(for: tableView, inSection: 0)
+            XCTAssert(header is SwiftUIHostingTableHeaderFooterView)
         } catch {
-            if case .invalidModelClass = error.as(BlocksError.self) {
-                XCTAssert(true)
-            } else {
-                XCTAssert(false)
-            }
+            XCTAssert(false)
         }
-    }
-
-    func testTableViewInvalidModelForFooterInSection() {
-        // Given
-        let section = Section(id: "section", footer: nil)
-
-        // When
-        renderer.updateSections([section], animation: .none)
-        let footer = tableView.footerView(forSection: 0)
-
-        // Then
-        XCTAssertNil(footer)
     }
 
     // MARK: - Cell
 
     func testRendererClassCellForRowAt() {
         // Given
-        let row = TestComponentViewModel().asBlock
+        let row = TestComponentViewModel()
 
         // When
         renderer.updateRows([row])
@@ -265,7 +252,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testTableViewClassCellForRowAt() {
         // Given
-        let row = TestComponentViewModel().asBlock
+        let row = TestComponentViewModel()
 
         // When
         renderer.updateRows([row])
@@ -277,7 +264,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testRendererNibCellForRowAt() {
         // Given
-        let row = TestNibComponentViewModel(reuseIdentifier: "test").asBlock
+        let row = TestNibComponentViewModel()
 
         // When
         renderer.updateRows([row])
@@ -296,7 +283,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testTableViewNibCellForRowAt() {
         // Given
-        let row = TestNibComponentViewModel(reuseIdentifier: "test").asBlock
+        let row = TestNibComponentViewModel()
 
         // When
         renderer.updateRows([row])
@@ -310,10 +297,10 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testRendererCellForRowAtInvalidView() {
         // Given
-        let row = TestComponentInvalidView().asBlock
+        let row = TestComponentInvalidView()
 
         // When
-        renderer.sections = [Section(id: "section", items: [row])]
+        renderer.sections = [Section(rows: [row])]
         tableView.register(TestComponentInvalidCell.self, forCellReuseIdentifier: "TestComponentInvalidCell")
 
         // Then
@@ -322,7 +309,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
                                            at: IndexPath(row: 0, section: 0))
             XCTAssert(false)
         } catch let error {
-            if case .invalidViewClass = error.as(BlocksError.self) {
+            if case .viewModelNotRegistered = error.as(BlocksError.self) {
                 XCTAssert(true)
             } else {
                 XCTAssert(false)
@@ -332,19 +319,36 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testTableViewCellForRowAtInvalidView() {
         // Given
-        let row = TestComponentInvalidView().asBlock
+        let row = TestComponentInvalidView()
 
         // When
-        renderer.sections = [Section(id: "section", items: [row])]
+        renderer.sections = [Section(rows: [row])]
         let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0))
 
         // Then
         XCTAssert(cell == nil)
     }
 
+    func testRendererSwiftUICellForRowAt() {
+        // Given
+        let row = TestViewComponent(title: "test")
+
+        // When
+        renderer.updateRows([row])
+
+        // Then
+        do {
+            let cell = try self.renderer.cellView(for: tableView,
+                                                  at: IndexPath(row: 0, section: 0))
+            XCTAssert(cell is SwiftUIHostingTableViewCell)
+        } catch {
+            XCTAssert(false)
+        }
+    }
+
     func testRendererCallbeforeReuse() {
         // Given
-        let row = TestComponentViewModel().asBlock
+        let row = TestComponentViewModel()
 
         // When
         renderer.updateRows([row])
@@ -360,7 +364,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testTableViewCallBeforeReuse() {
         // Given
-        let row = TestComponentViewModel().asBlock
+        let row = TestComponentViewModel()
 
         // When
         renderer.updateRows([row])
@@ -372,7 +376,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testRendererCellSetTableView() {
         // Given
-        let row = TestComponentViewModel().asBlock
+        let row = TestComponentViewModel()
 
         // When
         renderer.updateRows([row])
@@ -388,7 +392,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testTableViewCallSetTableView() {
         // Given
-        let row = TestComponentViewModel().asBlock
+        let row = TestComponentViewModel()
 
         // When
         renderer.updateRows([row])
@@ -398,9 +402,9 @@ class TableViewRendererDataSourceTests: XCTestCase {
         XCTAssert(TestComponentCell.tableView == renderer.tableView)
     }
 
-    func testRendererCellForRowCallConfigure() {
+    func testRendererCellForRowCallsConfigure() {
         // Given
-        let row = TestComponentViewModel().asBlock
+        let row = TestComponentViewModel()
 
         // When
         renderer.updateRows([row])
@@ -414,9 +418,9 @@ class TableViewRendererDataSourceTests: XCTestCase {
         }
     }
 
-    func testTableViewCellForRowCallConfigure() {
+    func testTableViewCellForRowCallsConfigure() {
         // Given
-        let row = TestComponentViewModel().asBlock
+        let row = TestComponentViewModel()
 
         // When
         renderer.updateRows([row])
@@ -428,7 +432,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testRendererHeightForRowAt() {
         // Given
-        let row = TestComponentViewModel().asBlock
+        let row = TestComponentViewModel()
 
         // When
         renderer.updateRows([row])
@@ -447,7 +451,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testTableViewHeightForRowAt() {
         // Given
-        let row = TestComponentViewModel().asBlock
+        let row = TestComponentViewModel()
 
         // When
         renderer.updateRows([row])
@@ -460,7 +464,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testRendererHeightForHeaderInSection() {
         // Given
-        let section = [Section(id: "section", header: TestHeaderFooterComponentViewModel().asBlock)]
+        let section = [Section(header: TestHeaderFooterComponentViewModel())]
 
         // When
         renderer.updateSections(section,
@@ -480,7 +484,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testTableHeightForHeaderInSection() {
         // Given
-        let section = [Section(id: "section", header: TestHeaderFooterComponentViewModel().asBlock)]
+        let section = [Section(header: TestHeaderFooterComponentViewModel())]
 
         // When
         renderer.updateSections(section,
@@ -495,7 +499,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testRendererHeightForFooterInSection() {
         // Given
-        let section = Section(id: "section", footer: TestHeaderFooterComponentViewModel().asBlock)
+        let section = Section(footer: TestHeaderFooterComponentViewModel())
 
         // When
         renderer.updateSections([section], animation: .none)
@@ -514,7 +518,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testTableViewHeightForFooterInSection() {
         // Given
-        let section = Section(id: "section", footer: TestHeaderFooterComponentViewModel().asBlock)
+        let section = Section(footer: TestHeaderFooterComponentViewModel())
 
         // When
         renderer.updateSections([section], animation: .none)
@@ -530,7 +534,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testEstimatedHeightForRowAt() {
         // Given
-        let row = TestComponentViewModel().asBlock
+        let row = TestComponentViewModel()
 
         // When
         renderer.updateRows([row])
@@ -544,7 +548,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testEstimatedHeightForHeaderInSection() {
         // Given
-        let row = TestComponentViewModel().asBlock
+        let row = TestComponentViewModel()
 
         // When
         renderer.updateRows([row])
@@ -557,7 +561,7 @@ class TableViewRendererDataSourceTests: XCTestCase {
 
     func testEstimatedHeightForFooterInSection() {
         // Given
-        let row = TestComponentViewModel().asBlock
+        let row = TestComponentViewModel()
 
         // When
         renderer.updateRows([row])
@@ -566,6 +570,103 @@ class TableViewRendererDataSourceTests: XCTestCase {
         let estimatedHeight = renderer.tableView(tableView, estimatedHeightForFooterInSection: 0)
 
         XCTAssert(estimatedHeight == UITableView.automaticDimension)
+    }
+
+    func testEstimatedCellHeight() {
+        // Given
+        let row = TestComponentViewModel()
+        renderer.estimatedHeightForRowComponent = { $0 is TestComponentViewModel ? 50 : 0 }
+
+        // When
+        renderer.updateRows([row])
+        let estimatedHeight = renderer.tableView(renderer.tableView, estimatedHeightForRowAt: .init(row: 0, section: 0))
+
+        // Then
+        XCTAssertEqual(estimatedHeight, 50)
+    }
+
+    func testEstimatedHeaderHeight() {
+        // Given
+        let header = TestHeaderFooterComponentViewModel()
+        renderer.estimatedHeightForHeaderComponent = { $0 is TestHeaderFooterComponentViewModel ? 13.5 : 0 }
+
+        // When
+        renderer.updateSections([Section(header: header)], animation: .none)
+        let estimatedHeight = renderer.tableView(renderer.tableView, estimatedHeightForHeaderInSection: 0)
+
+        // Then
+        XCTAssertEqual(estimatedHeight, 13.5)
+    }
+
+    func testEstimatedFooterHeight() {
+        // Given
+        let footer = TestHeaderFooterComponentViewModel()
+        renderer.estimatedHeightForFooterComponent = { $0 is TestHeaderFooterComponentViewModel ? 99.5 : 0 }
+
+        // When
+        renderer.updateSections([Section(footer: footer)], animation: .none)
+        let estimatedHeight = renderer.tableView(renderer.tableView, estimatedHeightForFooterInSection: 0)
+
+        // Then
+        XCTAssertEqual(estimatedHeight, 99.5)
+    }
+
+    func testEstimatedHeightsAuto() {
+        // Given
+        let header = TestHeaderFooterComponentViewModel()
+        let footer = TestHeaderFooterComponentViewModel()
+        let cell = TestComponentViewModel()
+
+        renderer.estimatedHeightForRowComponent = nil
+        renderer.estimatedHeightForHeaderComponent = nil
+        renderer.estimatedHeightForFooterComponent = nil
+
+        // When
+        renderer.updateSections([Section(header: header, footer: footer, rows: [cell])], animation: .none)
+
+        // Then
+        let estimatedHeaderHeight = renderer.tableView(
+            renderer.tableView,
+            estimatedHeightForHeaderInSection: 0)
+        let estimatedFooterHeight = renderer.tableView(
+            renderer.tableView,
+            estimatedHeightForFooterInSection: 0)
+        let estimatedRowHeight = renderer.tableView(
+            renderer.tableView,
+            estimatedHeightForRowAt: .init(row: 0, section: 0))
+
+        XCTAssertEqual(estimatedHeaderHeight, UITableView.automaticDimension)
+        XCTAssertEqual(estimatedFooterHeight, UITableView.automaticDimension)
+        XCTAssertEqual(estimatedRowHeight, UITableView.automaticDimension)
+    }
+
+    func testAllEstimatedHeightsSimultaneously() {
+        // Given
+        let header = TestHeaderFooterComponentViewModel()
+        let footer = TestHeaderFooterComponentViewModel()
+        let cell = TestComponentViewModel()
+
+        renderer.estimatedHeightForRowComponent = { $0 is TestComponentViewModel ? 3 : 0 }
+        renderer.estimatedHeightForHeaderComponent = { $0 is TestHeaderFooterComponentViewModel ? 2 : 0 }
+        renderer.estimatedHeightForFooterComponent = { $0 is TestHeaderFooterComponentViewModel ? 1 : 0 }
+
+        // When
+        renderer.updateSections([Section(header: header, footer: footer, rows: [cell])], animation: .none)
+
+        // Then
+        let estimatedHeaderHeight = renderer.tableView(
+            renderer.tableView,
+            estimatedHeightForHeaderInSection: 0)
+        let estimatedFooterHeight = renderer.tableView(
+            renderer.tableView,
+            estimatedHeightForFooterInSection: 0)
+        let estimatedRowHeight = renderer.tableView(
+            renderer.tableView,
+            estimatedHeightForRowAt: .init(row: 0, section: 0))
+
+        XCTAssertEqual(estimatedHeaderHeight, 2)
+        XCTAssertEqual(estimatedFooterHeight, 1)
+        XCTAssertEqual(estimatedRowHeight, 3)
     }
 }
 

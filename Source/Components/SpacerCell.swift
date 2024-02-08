@@ -1,6 +1,6 @@
 // SpacerCell.swift
 //
-// Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -20,8 +20,17 @@
 import UIKit
 
 public class SpacerCell: UITableViewCell, ComponentViewConfigurable, FlexibleViewHeightProtocol {
-    public func configure(with model: Block) {
-        let model = model.as(Spacer.self)
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = .none
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    public func configure(with viewModel: any Component) {
+        let model = viewModel.as(Spacer.self)
 
         switch model.type {
         case .flexible:

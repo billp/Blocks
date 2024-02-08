@@ -1,6 +1,6 @@
 // TestComponentInvalidCell.swift
 //
-// Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -21,7 +21,7 @@ import UIKit
 import Blocks
 
 class TestComponentInvalidCell: UITableViewCell {
-    func configure(with model: Block) {
+    func configure(with model: any Component) {
 
     }
 }

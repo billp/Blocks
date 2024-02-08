@@ -31,13 +31,27 @@
 		23D82C4827652D5800322193 /* UITableView+FlexibleHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C352765263000322193 /* UITableView+FlexibleHeight.swift */; };
 		23D82C4B27652D5F00322193 /* FlexibleHeightCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C2E2765263000322193 /* FlexibleHeightCellProtocol.swift */; };
 		23D82C4C27652D5F00322193 /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C302765263000322193 /* Component.swift */; };
-		23D82C4D27652D5F00322193 /* ComponentViewConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C2D2765263000322193 /* ComponentViewConfigurable.swift */; };
 		23D82C4E27652D5F00322193 /* TableViewRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C372765263000322193 /* TableViewRenderer.swift */; };
 		23D82C502765445D00322193 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C4F2765445D00322193 /* Section.swift */; };
 		23D82C542765482B00322193 /* TestComponentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C532765482B00322193 /* TestComponentViewModel.swift */; };
 		23D82C562765488F00322193 /* TestComponentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D82C552765488F00322193 /* TestComponentCell.swift */; };
 		23E1A21E283B6A8800230874 /* TestHeaderComponentFlexibleHeightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E1A21D283B6A8800230874 /* TestHeaderComponentFlexibleHeightView.swift */; };
 		23E1A220283B6A9F00230874 /* TestHeaderComponentFlexibleHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E1A21F283B6A9F00230874 /* TestHeaderComponentFlexibleHeight.swift */; };
+		F31D5DBF2B7E64000038EC69 /* ComponentViewConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31D5DBE2B7E64000038EC69 /* ComponentViewConfigurable.swift */; };
+		F342E4D72B766BFD00C38360 /* TableViewRenderer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F342E4D52B7667FA00C38360 /* TableViewRenderer+Extensions.swift */; };
+		F3AC40F82B7BFE3F00772127 /* SwiftUIHostingTableHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC40F72B7BFE3F00772127 /* SwiftUIHostingTableHeaderFooterView.swift */; };
+		F3AC41052B7BFF8600772127 /* TestViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC40FA2B7BFF8600772127 /* TestViewComponent.swift */; };
+		F3AC41062B7BFF8600772127 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC40FB2B7BFF8600772127 /* TestView.swift */; };
+		F3AC41072B7BFF8600772127 /* ButtonViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC40FD2B7BFF8600772127 /* ButtonViewCell.swift */; };
+		F3AC41082B7BFF8600772127 /* MyButtonComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC40FE2B7BFF8600772127 /* MyButtonComponent.swift */; };
+		F3AC41092B7BFF8600772127 /* MyHeaderFooterComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC41002B7BFF8600772127 /* MyHeaderFooterComponent.swift */; };
+		F3AC410A2B7BFF8600772127 /* MyHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC41012B7BFF8600772127 /* MyHeaderFooterView.swift */; };
+		F3AC410B2B7BFF8600772127 /* LabelViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC41032B7BFF8600772127 /* LabelViewCell.swift */; };
+		F3AC410C2B7BFF8600772127 /* MyLabelComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC41042B7BFF8600772127 /* MyLabelComponent.swift */; };
+		F3B6AC7E2B7BC26300E61F6A /* Object+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B6AC7D2B7BC26300E61F6A /* Object+Extensions.swift */; };
+		F3D5B16D2B7A67000080E3C4 /* SectionsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D5B16B2B7A66C80080E3C4 /* SectionsTest.swift */; };
+		F3D5B16F2B7B75090080E3C4 /* ComponentSwiftUIViewConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D5B16E2B7B75090080E3C4 /* ComponentSwiftUIViewConfigurable.swift */; };
+		F3D5B1712B7B761C0080E3C4 /* SwiftUIHostingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D5B1702B7B761C0080E3C4 /* SwiftUIHostingTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,7 +87,6 @@
 		23D82C1B27651FEE00322193 /* TableViewRendererDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewRendererDataSourceTests.swift; sourceTree = "<group>"; };
 		23D82C262765209900322193 /* Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Blocks.h; sourceTree = "<group>"; };
 		23D82C2A2765263000322193 /* TableViewRendererProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewRendererProtocol.swift; sourceTree = "<group>"; };
-		23D82C2D2765263000322193 /* ComponentViewConfigurable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentViewConfigurable.swift; sourceTree = "<group>"; };
 		23D82C2E2765263000322193 /* FlexibleHeightCellProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlexibleHeightCellProtocol.swift; sourceTree = "<group>"; };
 		23D82C302765263000322193 /* Component.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Component.swift; sourceTree = "<group>"; };
 		23D82C322765263000322193 /* Block.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
@@ -84,6 +97,21 @@
 		23D82C552765488F00322193 /* TestComponentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestComponentCell.swift; sourceTree = "<group>"; };
 		23E1A21D283B6A8800230874 /* TestHeaderComponentFlexibleHeightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHeaderComponentFlexibleHeightView.swift; sourceTree = "<group>"; };
 		23E1A21F283B6A9F00230874 /* TestHeaderComponentFlexibleHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHeaderComponentFlexibleHeight.swift; sourceTree = "<group>"; };
+		F31D5DBE2B7E64000038EC69 /* ComponentViewConfigurable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentViewConfigurable.swift; sourceTree = "<group>"; };
+		F342E4D52B7667FA00C38360 /* TableViewRenderer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableViewRenderer+Extensions.swift"; sourceTree = "<group>"; };
+		F3AC40F72B7BFE3F00772127 /* SwiftUIHostingTableHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftUIHostingTableHeaderFooterView.swift; sourceTree = "<group>"; };
+		F3AC40FA2B7BFF8600772127 /* TestViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewComponent.swift; sourceTree = "<group>"; };
+		F3AC40FB2B7BFF8600772127 /* TestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
+		F3AC40FD2B7BFF8600772127 /* ButtonViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonViewCell.swift; sourceTree = "<group>"; };
+		F3AC40FE2B7BFF8600772127 /* MyButtonComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyButtonComponent.swift; sourceTree = "<group>"; };
+		F3AC41002B7BFF8600772127 /* MyHeaderFooterComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyHeaderFooterComponent.swift; sourceTree = "<group>"; };
+		F3AC41012B7BFF8600772127 /* MyHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyHeaderFooterView.swift; sourceTree = "<group>"; };
+		F3AC41032B7BFF8600772127 /* LabelViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelViewCell.swift; sourceTree = "<group>"; };
+		F3AC41042B7BFF8600772127 /* MyLabelComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyLabelComponent.swift; sourceTree = "<group>"; };
+		F3B6AC7D2B7BC26300E61F6A /* Object+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Object+Extensions.swift"; sourceTree = "<group>"; };
+		F3D5B16B2B7A66C80080E3C4 /* SectionsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionsTest.swift; sourceTree = "<group>"; };
+		F3D5B16E2B7B75090080E3C4 /* ComponentSwiftUIViewConfigurable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentSwiftUIViewConfigurable.swift; sourceTree = "<group>"; };
+		F3D5B1702B7B761C0080E3C4 /* SwiftUIHostingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIHostingTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -232,6 +260,7 @@
 				23D82C1B27651FEE00322193 /* TableViewRendererDataSourceTests.swift */,
 				2388AA3327BE6025007EF24E /* DiffableDataSourceTests.swift */,
 				23175BC5280555FA00D9D209 /* FlexibleHeightCellTests.swift */,
+				F3D5B16B2B7A66C80080E3C4 /* SectionsTest.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -244,6 +273,7 @@
 				23D82C342765263000322193 /* Extensions */,
 				23D82C312765263000322193 /* Models */,
 				23D82C292765263000322193 /* Protocols */,
+				F3D5B1722B7B76330080E3C4 /* Views */,
 				23D82C362765263000322193 /* Renderers */,
 				2391367F2833E7710066A579 /* Components */,
 			);
@@ -254,9 +284,10 @@
 			isa = PBXGroup;
 			children = (
 				23D82C302765263000322193 /* Component.swift */,
-				23D82C2D2765263000322193 /* ComponentViewConfigurable.swift */,
+				F3D5B16E2B7B75090080E3C4 /* ComponentSwiftUIViewConfigurable.swift */,
 				23D82C2A2765263000322193 /* TableViewRendererProtocol.swift */,
 				23D82C2E2765263000322193 /* FlexibleHeightCellProtocol.swift */,
+				F31D5DBE2B7E64000038EC69 /* ComponentViewConfigurable.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -273,8 +304,10 @@
 		23D82C342765263000322193 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				F3B6AC7D2B7BC26300E61F6A /* Object+Extensions.swift */,
 				23D82C352765263000322193 /* UITableView+FlexibleHeight.swift */,
 				23A85890279951A100019970 /* Collection+Block.swift */,
+				F342E4D52B7667FA00C38360 /* TableViewRenderer+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -290,10 +323,59 @@
 		23D82C52276546C000322193 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				F3AC40FC2B7BFF8600772127 /* MyButton */,
+				F3AC40FF2B7BFF8600772127 /* MyHeaderFooter */,
+				F3AC41022B7BFF8600772127 /* MyLabel */,
+				F3AC40F92B7BFF8600772127 /* SwiftUIComponent */,
 				237E5942276FC16C00E36E73 /* HeaderFooters */,
 				237E5941276FC16100E36E73 /* Cells */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		F3AC40F92B7BFF8600772127 /* SwiftUIComponent */ = {
+			isa = PBXGroup;
+			children = (
+				F3AC40FA2B7BFF8600772127 /* TestViewComponent.swift */,
+				F3AC40FB2B7BFF8600772127 /* TestView.swift */,
+			);
+			path = SwiftUIComponent;
+			sourceTree = "<group>";
+		};
+		F3AC40FC2B7BFF8600772127 /* MyButton */ = {
+			isa = PBXGroup;
+			children = (
+				F3AC40FD2B7BFF8600772127 /* ButtonViewCell.swift */,
+				F3AC40FE2B7BFF8600772127 /* MyButtonComponent.swift */,
+			);
+			path = MyButton;
+			sourceTree = "<group>";
+		};
+		F3AC40FF2B7BFF8600772127 /* MyHeaderFooter */ = {
+			isa = PBXGroup;
+			children = (
+				F3AC41002B7BFF8600772127 /* MyHeaderFooterComponent.swift */,
+				F3AC41012B7BFF8600772127 /* MyHeaderFooterView.swift */,
+			);
+			path = MyHeaderFooter;
+			sourceTree = "<group>";
+		};
+		F3AC41022B7BFF8600772127 /* MyLabel */ = {
+			isa = PBXGroup;
+			children = (
+				F3AC41032B7BFF8600772127 /* LabelViewCell.swift */,
+				F3AC41042B7BFF8600772127 /* MyLabelComponent.swift */,
+			);
+			path = MyLabel;
+			sourceTree = "<group>";
+		};
+		F3D5B1722B7B76330080E3C4 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F3D5B1702B7B761C0080E3C4 /* SwiftUIHostingTableViewCell.swift */,
+				F3AC40F72B7BFE3F00772127 /* SwiftUIHostingTableHeaderFooterView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -452,19 +534,32 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3AC410C2B7BFF8600772127 /* MyLabelComponent.swift in Sources */,
 				23D82C4C27652D5F00322193 /* Component.swift in Sources */,
 				23D82C4E27652D5F00322193 /* TableViewRenderer.swift in Sources */,
+				F31D5DBF2B7E64000038EC69 /* ComponentViewConfigurable.swift in Sources */,
+				F3AC41072B7BFF8600772127 /* ButtonViewCell.swift in Sources */,
 				23D82C4727652D5800322193 /* Block.swift in Sources */,
+				F3D5B16F2B7B75090080E3C4 /* ComponentSwiftUIViewConfigurable.swift in Sources */,
 				23D82C502765445D00322193 /* Section.swift in Sources */,
 				23A85891279951A100019970 /* Collection+Block.swift in Sources */,
+				F3AC410B2B7BFF8600772127 /* LabelViewCell.swift in Sources */,
+				F3D5B1712B7B761C0080E3C4 /* SwiftUIHostingTableViewCell.swift in Sources */,
 				239136812833E79E0066A579 /* SpacerCell.swift in Sources */,
 				23D82C4627652D0A00322193 /* TableViewRendererProtocol.swift in Sources */,
+				F3AC40F82B7BFE3F00772127 /* SwiftUIHostingTableHeaderFooterView.swift in Sources */,
+				F3AC41082B7BFF8600772127 /* MyButtonComponent.swift in Sources */,
+				F3AC410A2B7BFF8600772127 /* MyHeaderFooterView.swift in Sources */,
 				23332B9F27AC23FC0007493E /* Logger.swift in Sources */,
+				F342E4D72B766BFD00C38360 /* TableViewRenderer+Extensions.swift in Sources */,
 				23D82C4827652D5800322193 /* UITableView+FlexibleHeight.swift in Sources */,
 				23D82C4B27652D5F00322193 /* FlexibleHeightCellProtocol.swift in Sources */,
 				239136832834D40A0066A579 /* Spacer.swift in Sources */,
-				23D82C4D27652D5F00322193 /* ComponentViewConfigurable.swift in Sources */,
+				F3AC41062B7BFF8600772127 /* TestView.swift in Sources */,
+				F3B6AC7E2B7BC26300E61F6A /* Object+Extensions.swift in Sources */,
 				237E5962276FDCD400E36E73 /* BlocksError.swift in Sources */,
+				F3AC41092B7BFF8600772127 /* MyHeaderFooterComponent.swift in Sources */,
+				F3AC41052B7BFF8600772127 /* TestViewComponent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -477,6 +572,7 @@
 				237E5949276FC8FB00E36E73 /* TestHeaderComponentViewModel.swift in Sources */,
 				23175BC6280555FA00D9D209 /* FlexibleHeightCellTests.swift in Sources */,
 				23D82C562765488F00322193 /* TestComponentCell.swift in Sources */,
+				F3D5B16D2B7A67000080E3C4 /* SectionsTest.swift in Sources */,
 				234BCBB4279397F200DC77BA /* TestNibComponentViewModel.swift in Sources */,
 				23E1A220283B6A9F00230874 /* TestHeaderComponentFlexibleHeight.swift in Sources */,
 				2303DE1627863CB700B17C0A /* TestComponentInvalidView.swift in Sources */,

@@ -1,6 +1,6 @@
 // ExtensionTests.swift
 //
-// Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -40,12 +40,13 @@ class ExtensionTests: XCTestCase {
 
     lazy var renderer: TableViewRenderer = {
         let renderer = TableViewRenderer(tableView: tableView, bundle: Bundle(for: Self.self))
+        renderer.register(viewModelType: TestComponentViewModel.self, classType: TestComponentCell.self)
         return renderer
     }()
 
     func testAsBlock() {
         // Given
-        let component = TestComponentViewModel().asBlock
+        let component = TestComponentViewModel()
         TestComponentCell.models.removeAll()
 
         // When
@@ -64,7 +65,7 @@ class ExtensionTests: XCTestCase {
 
     func testAsBlocks() {
         // Given
-        let blocks = [TestComponentViewModel(), TestComponentViewModel()].asBlocks
+        let blocks = [TestComponentViewModel(), TestComponentViewModel()]
         TestComponentCell.models.removeAll()
 
         // When

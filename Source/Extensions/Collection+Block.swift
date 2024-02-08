@@ -1,6 +1,6 @@
 // Collection+Block.swift
 //
-// Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -19,21 +19,21 @@
 
 import Foundation
 
-public extension Collection where Element == AnyHashable {
-    /// Convenience method for converting Component(s) to Block(s)
-    var asBlocks: [Block] {
-        compactMap({ ($0 as? any Component)?.asBlock })
+extension Collection where Element == AnyHashable {
+    /// Convenience method for converting Component(s) to Boxes
+    var asBoxes: [Box] {
+        compactMap({ ($0 as? any Component)?.asBox })
     }
 }
 
-public extension Collection where Element: Component {
-    /// Convenience method for converting Component(s) to Block(s)
-    var asAnyHashable: [AnyHashable] {
-        compactMap({ $0 })
+extension Collection where Element == any Component {
+    /// Convenience method for converting Component(s) to Boxes
+    var asAnyHashables: [AnyHashable] {
+        compactMap({ $0 as? AnyHashable })
     }
 
-    /// Convenience method for converting Component(s) to Block(s)
-    var asBlocks: [Block] {
-        self.asAnyHashable.asBlocks
+    /// Convenience method for converting Component(s) to Bloxes
+    var asBoxes: [Box] {
+        self.asAnyHashables.asBoxes
     }
 }

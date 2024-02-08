@@ -1,6 +1,6 @@
 // BlocksError.swift
 //
-// Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -21,10 +21,12 @@ import Foundation
 
 /// Custom implementation of errors for Blocks.
 enum BlocksError: Error {
-    /// Thowed when invalid model class is provided.
+    /// Thrown when invalid model class is provided.
     case invalidModelClass
-    /// Thowed when invalid view class is provided.
+    /// Thrown when invalid view class is provided.
     case invalidViewClass(reuseIdentifier: String)
+    /// Thrown when the view model is not registered with a view.
+    case viewModelNotRegistered
 }
 
 extension BlocksError: LocalizedError {
@@ -36,6 +38,8 @@ extension BlocksError: LocalizedError {
         case .invalidViewClass(let reuseIdentifier):
             return NSLocalizedString("Your view class with reuseIdentifier '\(reuseIdentifier)' should conform to '" +
                                      String(describing: ComponentViewConfigurable.self) + "'", comment: "Blocks")
+        case .viewModelNotRegistered:
+            return NSLocalizedString("View model not registered", comment: "Blocks")
         }
     }
 }

@@ -1,6 +1,6 @@
 // ComponentViewModel.swift
 //
-// Copyright © 2021-2022 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -19,21 +19,10 @@
 
 import Foundation
 
-public struct Block: Hashable {
-    public let component: AnyHashable
+struct Box: Hashable {
+    private let component: AnyHashable
 
     init<C: Component>(_ component: C) {
         self.component = component
-    }
-
-    /// Returns model value casted to the given type.
-    /// - Parameters:
-    ///   - type: The type to be casted with.
-    public func `as`<T: Component>(_ type: T.Type) -> T {
-        if let viewModel = component as? T {
-            return viewModel
-        }
-
-        fatalError("Invalid model class \(T.self). Please check the class type!")
     }
 }
