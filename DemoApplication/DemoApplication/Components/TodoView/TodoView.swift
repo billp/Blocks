@@ -116,10 +116,41 @@ extension TodoView {
         .frame(maxHeight: .infinity)
     }
     
-    var dragGesture: _EndedGesture<_ChangedGesture<DragGesture>> {
-        return DragGesture(minimumDistance: 30)
+    var dragGesture: some Gesture {
+        let drag = DragGesture(minimumDistance: 30)
             .onChanged(viewModel.dragGestureOnChange)
             .onEnded(viewModel.dragGestureEnded)
+
+        let pinch = MagnificationGesture(minimumScaleDelta: 0.0)
+            .onChanged({ delta in
+                viewModel.swipeReset()
+            })
+            .onEnded({ delta in
+                viewModel.swipeReset()
+            })
+
+        let rotation = RotationGesture(minimumAngleDelta: Angle(degrees: 0.0))
+            .onChanged({ delta in
+                viewModel.swipeReset()
+            })
+            .onEnded({ delta in
+                viewModel.swipeReset()
+            })
+
+        let longPress = LongPressGesture(minimumDuration: 0.0, maximumDistance: 0.0)
+            .onChanged({ _ in
+                viewModel.swipeReset()
+            })
+            .onEnded({ delta in
+                viewModel.swipeReset()
+            })
+
+        let combinedGesture = drag
+            .simultaneously(with: pinch)
+            .simultaneously(with: rotation)
+            .exclusively(before: longPress)
+
+        return combinedGesture
     }
 }
 

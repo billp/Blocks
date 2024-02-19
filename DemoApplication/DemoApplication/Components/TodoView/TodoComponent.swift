@@ -81,9 +81,13 @@ class TodoComponent: ObservableObject, Component {
             isSwipeMenuOpened = true
             offsetX = -swipeMenuItemWidthWithPadding
         } else {
-            isSwipeMenuOpened = false
-            offsetX = 0
+            swipeReset()
         }
+    }
+
+    func swipeReset() {
+        isSwipeMenuOpened = false
+        offsetX = 0
     }
 
     // MARK: - Helpers
