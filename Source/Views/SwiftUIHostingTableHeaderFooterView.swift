@@ -25,6 +25,14 @@ final class SwiftUIHostingTableHeaderFooterView: UITableViewHeaderFooterView, Co
 
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
+
+        if #available(iOS 14.0, *) {
+            var backgroundConfig = UIBackgroundConfiguration.listPlainHeaderFooter()
+            backgroundConfig.backgroundColor = .clear
+            backgroundConfiguration = backgroundConfig
+        } else {
+            backgroundColor = .clear
+        }
     }
 
     required init?(coder: NSCoder) {

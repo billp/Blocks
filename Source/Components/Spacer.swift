@@ -45,6 +45,8 @@ public enum SpacerType: Hashable, Equatable {
 /// The type can be either flexible (expands up to the blank space) or fixed (defines a specific height).
 public struct Spacer: Component {
     var id: UUID = .init()
+    
+    var isDragNDropSpacer = false
 
     /// The type of the spacer.
     var type: SpacerType

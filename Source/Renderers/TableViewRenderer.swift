@@ -24,7 +24,7 @@ import SwiftUI
 
 /// The renderer that uses UITableView as the container
 /// of rendering components.
-open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSource {
+open class TableViewRenderer: NSObject {
     // MARK: - Properties
 
     /// Holds an unowned reference of table view.
@@ -89,6 +89,10 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
         // Fix top and bottom empty space when UITableView is grouped
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: Double.leastNormalMagnitude))
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: Double.leastNormalMagnitude))
+
+        tableView.dragInteractionEnabled = true // Enable drag
+        tableView.dropDelegate = self
+        tableView.dragDelegate = self
 
         // Register Spacer
         register(viewModelType: Spacer.self, classType: SpacerCell.self)
@@ -421,7 +425,8 @@ extension TableViewRenderer: TableViewRendererProtocol {
 
 // MARK: - Configure Views
 
-extension TableViewRenderer {
+extension TableViewRenderer: UITableViewDelegate,
+                             UITableViewDataSource {
     func headerView(for tableView: UITableView, inSection section: Int) throws -> UIView? {
         let sectionModel = sections[section]
 
@@ -434,14 +439,6 @@ extension TableViewRenderer {
 
         guard let header = header as? UITableViewHeaderFooterView & ComponentViewConfigurable else {
             throw BlocksError.invalidViewClass(reuseIdentifier: reuseIdentifier)
-        }
-
-        if #available(iOS 14.0, *) {
-            var backgroundConfig = UIBackgroundConfiguration.listPlainHeaderFooter()
-            backgroundConfig.backgroundColor = .clear
-            header.backgroundConfiguration = backgroundConfig
-        } else {
-            header.backgroundColor = .clear
         }
 
         headerComponent.prepare()
@@ -463,14 +460,6 @@ extension TableViewRenderer {
         let footer = tableView.dequeueReusableHeaderFooterView(withIdentifier: reuseIdentifier)
         guard let footer = footer as? UITableViewHeaderFooterView & ComponentViewConfigurable else {
             throw BlocksError.invalidViewClass(reuseIdentifier: reuseIdentifier)
-        }
-
-        if #available(iOS 14.0, *) {
-            var backgroundConfig = UIBackgroundConfiguration.listPlainHeaderFooter()
-            backgroundConfig.backgroundColor = .clear
-            footer.backgroundConfiguration = backgroundConfig
-        } else {
-            footer.backgroundColor = .clear
         }
 
         footerComponent.prepare()
@@ -590,5 +579,114 @@ extension TableViewRenderer {
         }
 
         return estimatedHeightForFooterComponent?(component) ?? UITableView.automaticDimension
+    }
+}
+
+extension TableViewRenderer: UITableViewDragDelegate, UITableViewDropDelegate {
+    public func tableView(_ tableView: UITableView,
+                          itemsForBeginning session: UIDragSession,
+                          at indexPath: IndexPath) -> [UIDragItem] {
+        guard let item = sections[indexPath.section].rows?[indexPath.row]
+                as? (any Hashable) else {
+            return []
+        }
+
+        let itemProvider = NSItemProvider(object: String(item.hashValue) as NSString)
+        let dragItem = UIDragItem(itemProvider: itemProvider)
+        return [dragItem]
+    }
+
+    public func tableView(_ tableView: UITableView, dragPreviewParametersForRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        let cell = tableView.cellForRow(at: indexPath)
+        let previewParameters = UIDragPreviewParameters()
+        var frame = cell!.contentView.frame
+
+        frame.origin.x += 20
+        frame.origin.y += 2
+        frame.size.width -= 40
+        frame.size.height -= 4
+
+        let path = UIBezierPath(roundedRect: frame,
+                                cornerRadius: 5)
+        previewParameters.visiblePath = path
+        return previewParameters
+    }
+
+    public func tableView(_ tableView: UITableView,
+                          performDropWith coordinator: UITableViewDropCoordinator) {
+        for item in coordinator.items where item.sourceIndexPath != nil {
+            let destinationIndexPath: IndexPath
+            if let indexPath = coordinator.destinationIndexPath {
+                destinationIndexPath = indexPath
+            } else {
+                // Default to the last section, last row
+                let section = tableView.numberOfSections - 1
+                let row = tableView.numberOfRows(inSection: section)
+                destinationIndexPath = IndexPath(row: row, section: section)
+            }
+
+
+            var sourceIndexPath = item.sourceIndexPath!
+            var sourceItem = sections[sourceIndexPath.section].rows![sourceIndexPath.row]
+            var newSections = sections
+
+            newSections[sourceIndexPath.section].rows?.remove(at: sourceIndexPath.row)
+            updateSections(newSections, animation: .automatic)
+
+            var destinationRows = newSections[destinationIndexPath.section].rows ?? []
+            destinationRows.insert(sourceItem, at: destinationIndexPath.row)
+            newSections[destinationIndexPath.section].rows = destinationRows
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.006) { [weak self] in
+                self?.updateSections(newSections, animation: .fade)
+            }
+        }
+
+       /* coordinator.session.loadObjects(ofClass: NSString.self) { [weak self] items in
+            guard let self, let items = items as? [String] else { return }
+
+            var indexPaths = [IndexPath]()
+            var allRows = self
+                .sections
+                .compactMap { $0.rows ?? [] }
+                .flatMap { $0 }
+                .reduce([String: any Component](), { dict, component in
+                    var newDict = dict
+                    var hashValue = (component as? AnyHashable)?.hashValue ?? -1
+                    newDict[String(hashValue)] = component
+                    return newDict
+                })
+
+            for (index, item) in items.enumerated() {
+                let indexPath = IndexPath(row: destinationIndexPath.row + index,
+                                          section: destinationIndexPath.section)
+
+                let sourceItem = allRows[item]!
+                let destinationItem = sections[indexPath.section].rows?[indexPath.row]
+
+                removeRows(where: { Box($0) == Box(sourceItem) }, animation: .automatic)
+                insertRows([sourceItem], at: indexPath, with: .automatic)
+            }
+        }*/
+    }
+
+    public func tableView(_ tableView: UITableView, 
+                          dropSessionDidUpdate session: UIDropSession,
+                          withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+        var dropProposal = UITableViewDropProposal(operation: .cancel)
+
+        // Accept only one drag item.
+        guard session.items.count == 1 else { return dropProposal }
+
+        if tableView.hasActiveDrag {
+            dropProposal = UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+        }
+
+        return dropProposal
+    }
+
+    public func tableView(_ tableView: UITableView,
+                          canHandle session: UIDropSession) -> Bool {
+        return session.canLoadObjects(ofClass: NSString.self)
     }
 }

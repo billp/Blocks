@@ -62,12 +62,11 @@ extension TableViewRenderer {
     func swiftUIView<ComponentType: Component>(for component: ComponentType) throws -> any View {
         let typeId = ObjectIdentifier(type(of: component))
 
-        guard let viewFactory = swiftUIRegistrations[typeId] else {
+        guard let view = swiftUIRegistrations[typeId] else {
             throw BlocksError.viewModelNotRegistered
         }
 
-        var view = viewFactory.init(viewModel: component)
-        return view
+        return view.init(viewModel: component)
     }
 
     /// Attempts to retrieve a representation (nib name or class name as a string) for a given view model instance.
