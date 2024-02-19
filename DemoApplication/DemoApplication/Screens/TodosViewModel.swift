@@ -30,7 +30,8 @@ class TodosViewModel {
     // MARK: - Lifecycle
 
     func configureScreen() {
-        updateSections(activeTodos: [], 
+        setupDragNDrop()
+        updateSections(activeTodos: [],
                        completedTodos: [])
     }
 
@@ -87,6 +88,16 @@ class TodosViewModel {
             .deleteActionPublisher
             .sink(receiveValue: handleDeletion)
             .store(in: &disposableBag)
+    }
+
+    private func setupDragNDrop() {
+        renderer?.canDropAt = { [weak self] sourceIndexPath, destinationIndexPath in
+            guard let self else { return false }
+            return sourceIndexPath.section == 1 &&
+                destinationIndexPath.section == 1 &&
+                destinationIndexPath.row < activeTodos.count &&
+                sourceIndexPath.row != activeTodos.count
+        }
     }
 
     private func updateSections(activeTodos: [TodoComponent],

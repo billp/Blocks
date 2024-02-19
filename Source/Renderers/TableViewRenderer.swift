@@ -37,6 +37,10 @@ open class TableViewRenderer: NSObject {
     public var estimatedHeightForHeaderComponent: ((any Component) -> CGFloat)?
     public var estimatedHeightForFooterComponent: ((any Component) -> CGFloat)?
 
+    /// Providers for drag & drop
+    var dragSourceIndexPath: IndexPath?
+    public var canDropAt: ((_ sourceIndexPath: IndexPath, _ destinationIndexPath: IndexPath) -> Bool) = { _, _ in true }
+
     /// The main data source of TableViewRenderer.
     /// This is where the view models are held.
     public var sections = [Section]()
@@ -425,8 +429,7 @@ extension TableViewRenderer: TableViewRendererProtocol {
 
 // MARK: - Configure Views
 
-extension TableViewRenderer: UITableViewDelegate,
-                             UITableViewDataSource {
+extension TableViewRenderer {
     func headerView(for tableView: UITableView, inSection section: Int) throws -> UIView? {
         let sectionModel = sections[section]
 
@@ -489,7 +492,8 @@ extension TableViewRenderer: UITableViewDelegate,
 
 // MARK: - UITableView Delegate
 
-extension TableViewRenderer {
+extension TableViewRenderer: UITableViewDelegate,
+                              UITableViewDataSource {
 
     // MARK: - Header/Footer/Cell Handling
 
@@ -586,10 +590,11 @@ extension TableViewRenderer: UITableViewDragDelegate, UITableViewDropDelegate {
     public func tableView(_ tableView: UITableView,
                           itemsForBeginning session: UIDragSession,
                           at indexPath: IndexPath) -> [UIDragItem] {
-        guard let item = sections[indexPath.section].rows?[indexPath.row]
-                as? (any Hashable) else {
+        guard let item = sections[indexPath.section].rows?[indexPath.row] else {
             return []
         }
+        
+        dragSourceIndexPath = indexPath
 
         let itemProvider = NSItemProvider(object: String(item.hashValue) as NSString)
         let dragItem = UIDragItem(itemProvider: itemProvider)
@@ -614,66 +619,44 @@ extension TableViewRenderer: UITableViewDragDelegate, UITableViewDropDelegate {
 
     public func tableView(_ tableView: UITableView,
                           performDropWith coordinator: UITableViewDropCoordinator) {
-        for item in coordinator.items where item.sourceIndexPath != nil {
-            let destinationIndexPath: IndexPath
-            if let indexPath = coordinator.destinationIndexPath {
-                destinationIndexPath = indexPath
-            } else {
-                // Default to the last section, last row
-                let section = tableView.numberOfSections - 1
-                let row = tableView.numberOfRows(inSection: section)
-                destinationIndexPath = IndexPath(row: row, section: section)
-            }
 
+        guard let item = coordinator.items.first, let sourceIndexPath = item.sourceIndexPath else {
+            return
+        }
+        guard var sourceItem = sections[sourceIndexPath.section].rows?[sourceIndexPath.row] else { return }
 
-            var sourceIndexPath = item.sourceIndexPath!
-            var sourceItem = sections[sourceIndexPath.section].rows![sourceIndexPath.row]
-            var newSections = sections
-
-            newSections[sourceIndexPath.section].rows?.remove(at: sourceIndexPath.row)
-            updateSections(newSections, animation: .automatic)
-
-            var destinationRows = newSections[destinationIndexPath.section].rows ?? []
-            destinationRows.insert(sourceItem, at: destinationIndexPath.row)
-            newSections[destinationIndexPath.section].rows = destinationRows
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.006) { [weak self] in
-                self?.updateSections(newSections, animation: .fade)
-            }
+        let destinationIndexPath: IndexPath
+        if let indexPath = coordinator.destinationIndexPath {
+            destinationIndexPath = indexPath
+        } else {
+            // Default to the last section, last row
+            let section = tableView.numberOfSections - 1
+            let row = tableView.numberOfRows(inSection: section)
+            destinationIndexPath = IndexPath(row: row, section: section)
         }
 
-       /* coordinator.session.loadObjects(ofClass: NSString.self) { [weak self] items in
-            guard let self, let items = items as? [String] else { return }
+        var newSections = sections
 
-            var indexPaths = [IndexPath]()
-            var allRows = self
-                .sections
-                .compactMap { $0.rows ?? [] }
-                .flatMap { $0 }
-                .reduce([String: any Component](), { dict, component in
-                    var newDict = dict
-                    var hashValue = (component as? AnyHashable)?.hashValue ?? -1
-                    newDict[String(hashValue)] = component
-                    return newDict
-                })
+        newSections[sourceIndexPath.section].rows?.remove(at: sourceIndexPath.row)
+        updateSections(newSections, animation: .automatic)
 
-            for (index, item) in items.enumerated() {
-                let indexPath = IndexPath(row: destinationIndexPath.row + index,
-                                          section: destinationIndexPath.section)
+        var destinationRows = newSections[destinationIndexPath.section].rows ?? []
+        destinationRows.insert(sourceItem, at: destinationIndexPath.row)
+        newSections[destinationIndexPath.section].rows = destinationRows
 
-                let sourceItem = allRows[item]!
-                let destinationItem = sections[indexPath.section].rows?[indexPath.row]
-
-                removeRows(where: { Box($0) == Box(sourceItem) }, animation: .automatic)
-                insertRows([sourceItem], at: indexPath, with: .automatic)
-            }
-        }*/
+        DispatchQueue.main.async { [weak self] in
+            self?.updateSections(newSections, animation: .fade)
+        }
     }
 
     public func tableView(_ tableView: UITableView, 
                           dropSessionDidUpdate session: UIDropSession,
                           withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
         var dropProposal = UITableViewDropProposal(operation: .cancel)
+
+        guard let destinationIndexPath, 
+                let dragSourceIndexPath,
+                canDropAt(dragSourceIndexPath, destinationIndexPath) else { return dropProposal }
 
         // Accept only one drag item.
         guard session.items.count == 1 else { return dropProposal }
@@ -683,10 +666,5 @@ extension TableViewRenderer: UITableViewDragDelegate, UITableViewDropDelegate {
         }
 
         return dropProposal
-    }
-
-    public func tableView(_ tableView: UITableView,
-                          canHandle session: UIDropSession) -> Bool {
-        return session.canLoadObjects(ofClass: NSString.self)
     }
 }
