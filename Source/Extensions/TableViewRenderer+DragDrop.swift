@@ -98,8 +98,8 @@ extension TableViewRenderer: UITableViewDragDelegate, UITableViewDropDelegate {
         var dropProposal = UITableViewDropProposal(operation: .cancel)
 
         guard let destinationIndexPath,
-                let dragSourceIndexPath,
-                canDrop(dragSourceIndexPath, destinationIndexPath) else { return dropProposal }
+              let dragSourceIndexPath,
+              canDrop(dragSourceIndexPath, destinationIndexPath) else { return dropProposal }
 
         // Accept only one drag item.
         guard session.items.count == 1 else { return dropProposal }

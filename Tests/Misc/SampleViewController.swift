@@ -20,8 +20,8 @@
 import UIKit
 
 class SampleViewController: UIViewController {
-    lazy var tableView: UITableView = {
-        let tableView = UITableView()
+    lazy var tableView: MockTableView = {
+        let tableView = MockTableView()
         tableView.separatorStyle = .none
         tableView.bounds = self.view.bounds
 

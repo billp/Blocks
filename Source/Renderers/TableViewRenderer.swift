@@ -64,16 +64,17 @@ open class TableViewRenderer: NSObject {
     ///     - sourceIndexPath: The index path of the item to be evaluated for drag capability.
     ///     - component: The component that will be dragd.
     /// - Returns: A Boolean value indicating whether the item can be dragged.
-    public var canDrag: (_ sourceIndexPath: IndexPath, _ component: any Component) -> Bool = { _, _ in true }
+    public var canDrag: (_ sourceIndexPath: IndexPath,
+                         _ component: any Component) -> Bool = { _, _ in true }
 
     /// A closure that determines if an item can be dropped at a specified location.
     /// - Parameters:
     ///   - sourceIndexPath: The source index path of the item being dragged.
     ///   - destinationIndexPath: The destination index path where the item might be dropped.
     /// - Returns: A Boolean value indicating whether the item can be dropped at the destination index path.
-
     public var canDrop: (_ sourceIndexPath: IndexPath,
-                           _ destinationIndexPath: IndexPath) -> Bool = { _, _ in true }
+                         _ destinationIndexPath: IndexPath) -> Bool = { _, _ in true }
+
     /// A closure that is called when a drop action has been completed.
     /// - Parameters:
     ///   - sourceIndexPath: The source index path from which the item was dragged.
