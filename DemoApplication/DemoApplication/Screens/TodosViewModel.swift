@@ -95,6 +95,10 @@ class TodosViewModel {
             return .init(top: 2, right: 20, bottom: 2, left: 20, cornerRadius: 5)
         }
 
+        renderer?.dragStarted = { [weak self] in
+            self?.closeAllSwipeMenus()
+        }
+
         renderer?.canDrag = { _, component in
             return component is TodoComponent
         }
@@ -211,6 +215,10 @@ class TodosViewModel {
         updateSections(activeTodos: activeTodos,
                        completedTodos: completedTodos,
                        animated: true)
+    }
+
+    private func closeAllSwipeMenus() {
+        (activeTodos + completedTodos).forEach({ $0.offsetX = 0 })
     }
 }
 

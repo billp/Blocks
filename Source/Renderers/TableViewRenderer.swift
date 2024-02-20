@@ -52,8 +52,15 @@ open class TableViewRenderer: NSObject {
     public var dragEnabled: Bool = false {
         didSet { setDragInteractionEnabled(dragEnabled) }
     }
+
+    /// A closure called when a drag operation starts.
+    ///
+    /// This property serves as a notification hook for when a drag operation is initiated, allowing
+    /// for custom actions or state updates at the start of dragging.
+    public var dragStarted: (() -> Void)?
+
     /// A closure that determines if an item at a given `IndexPath` can be dragged.
-    /// - Parameter 
+    /// - Parameter
     ///     - sourceIndexPath: The index path of the item to be evaluated for drag capability.
     ///     - component: The component that will be dragd.
     /// - Returns: A Boolean value indicating whether the item can be dragged.

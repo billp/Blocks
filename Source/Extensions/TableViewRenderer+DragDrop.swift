@@ -24,7 +24,7 @@ extension TableViewRenderer: UITableViewDragDelegate, UITableViewDropDelegate {
     public func tableView(_ tableView: UITableView,
                           itemsForBeginning session: UIDragSession,
                           at indexPath: IndexPath) -> [UIDragItem] {
-        guard let component = sections[indexPath.section].rows?[indexPath.row], 
+        guard let component = sections[indexPath.section].rows?[indexPath.row],
                 canDrag(indexPath, component) else {
             return []
         }
@@ -33,6 +33,9 @@ extension TableViewRenderer: UITableViewDragDelegate, UITableViewDropDelegate {
 
         let itemProvider = NSItemProvider(object: String(component.hashValue) as NSString)
         let dragItem = UIDragItem(itemProvider: itemProvider)
+
+        dragStarted?()
+
         return [dragItem]
     }
 
