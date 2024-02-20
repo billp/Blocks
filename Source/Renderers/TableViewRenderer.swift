@@ -53,9 +53,11 @@ open class TableViewRenderer: NSObject {
         didSet { setDragInteractionEnabled(dragEnabled) }
     }
     /// A closure that determines if an item at a given `IndexPath` can be dragged.
-    /// - Parameter sourceIndexPath: The index path of the item to be evaluated for drag capability.
+    /// - Parameter 
+    ///     - sourceIndexPath: The index path of the item to be evaluated for drag capability.
+    ///     - component: The component that will be dragd.
     /// - Returns: A Boolean value indicating whether the item can be dragged.
-    public var canDragAt: (_ sourceIndexPath: IndexPath) -> Bool = { _ in true }
+    public var canDrag: (_ sourceIndexPath: IndexPath, _ component: any Component) -> Bool = { _, _ in true }
 
     /// A closure that determines if an item can be dropped at a specified location.
     /// - Parameters:
@@ -63,14 +65,26 @@ open class TableViewRenderer: NSObject {
     ///   - destinationIndexPath: The destination index path where the item might be dropped.
     /// - Returns: A Boolean value indicating whether the item can be dropped at the destination index path.
 
-    public var canDropAt: (_ sourceIndexPath: IndexPath,
+    public var canDrop: (_ sourceIndexPath: IndexPath,
                            _ destinationIndexPath: IndexPath) -> Bool = { _, _ in true }
     /// A closure that is called when a drop action has been completed.
     /// - Parameters:
     ///   - sourceIndexPath: The source index path from which the item was dragged.
     ///   - destinationIndexPath: The destination index path where the item was dropped.
-    public var dropCompletedFrom: ((_ sourceIndexPath: IndexPath,
-                                    _ destinationIndexPath: IndexPath) -> Void) = { _, _ in }
+    public var dropCompleted: ((_ sourceIndexPath: IndexPath,
+                                _ destinationIndexPath: IndexPath) -> Void)?
+
+    /// A closure for customizing the drag preview appearance for a draggable component in a table view.
+    ///
+    /// This property enables customization of the drag preview for a specific component being dragged,
+    /// allowing adjustments to the preview's frame and the application of a corner radius,
+    /// thus enhancing visual feedback during drag operations.
+    ///
+    /// - Parameter component: The component associated with the table view row being dragged.
+    ///                        It is used to determine the custom drag preview properties.
+    /// - Returns: An optional `DragViewMaskProperties` object with insets and corner radius for the drag preview.
+    ///            Returns nil to apply default drag preview parameters.
+    public var customizeDragPreviewForComponent: ((_ component: any Component) -> DragViewMaskProperties)?
 
     /// The main data source of TableViewRenderer.
     /// This is where the view models are held.

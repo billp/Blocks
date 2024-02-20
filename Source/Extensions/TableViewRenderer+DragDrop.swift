@@ -24,30 +24,34 @@ extension TableViewRenderer: UITableViewDragDelegate, UITableViewDropDelegate {
     public func tableView(_ tableView: UITableView,
                           itemsForBeginning session: UIDragSession,
                           at indexPath: IndexPath) -> [UIDragItem] {
-        guard let item = sections[indexPath.section].rows?[indexPath.row] else {
+        guard let component = sections[indexPath.section].rows?[indexPath.row], 
+                canDrag(indexPath, component) else {
             return []
         }
 
         dragSourceIndexPath = indexPath
 
-        let itemProvider = NSItemProvider(object: String(item.hashValue) as NSString)
+        let itemProvider = NSItemProvider(object: String(component.hashValue) as NSString)
         let dragItem = UIDragItem(itemProvider: itemProvider)
         return [dragItem]
     }
 
     public func tableView(_ tableView: UITableView,
                           dragPreviewParametersForRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {
-        let cell = tableView.cellForRow(at: indexPath)
+        guard var frame = tableView.cellForRow(at: indexPath)?.contentView.frame,
+              let component = sections[indexPath.section].rows?[indexPath.row],
+              let dragViewMaskProperties = customizeDragPreviewForComponent?(component) else {
+            return nil
+        }
+
+        frame.origin.x += dragViewMaskProperties.left
+        frame.origin.y += dragViewMaskProperties.top
+        frame.size.width -= dragViewMaskProperties.left + dragViewMaskProperties.right
+        frame.size.height -= dragViewMaskProperties.top + dragViewMaskProperties.bottom
+
         let previewParameters = UIDragPreviewParameters()
-        var frame = cell!.contentView.frame
 
-        frame.origin.x += 20
-        frame.origin.y += 2
-        frame.size.width -= 40
-        frame.size.height -= 4
-
-        let path = UIBezierPath(roundedRect: frame,
-                                cornerRadius: 5)
+        let path = UIBezierPath(roundedRect: frame, cornerRadius: dragViewMaskProperties.cornerRadius)
         previewParameters.visiblePath = path
         return previewParameters
     }
@@ -80,9 +84,9 @@ extension TableViewRenderer: UITableViewDragDelegate, UITableViewDropDelegate {
         destinationRows.insert(sourceItem, at: destinationIndexPath.row)
         newSections[destinationIndexPath.section].rows = destinationRows
 
-        DispatchQueue.main.async { [weak self] in
-            self?.updateSections(newSections, animation: .fade)
-        }
+        updateSections(newSections, animation: .fade)
+
+        dropCompleted?(sourceIndexPath, destinationIndexPath)
     }
 
     public func tableView(_ tableView: UITableView,
@@ -92,7 +96,7 @@ extension TableViewRenderer: UITableViewDragDelegate, UITableViewDropDelegate {
 
         guard let destinationIndexPath,
                 let dragSourceIndexPath,
-                canDropAt(dragSourceIndexPath, destinationIndexPath) else { return dropProposal }
+                canDrop(dragSourceIndexPath, destinationIndexPath) else { return dropProposal }
 
         // Accept only one drag item.
         guard session.items.count == 1 else { return dropProposal }

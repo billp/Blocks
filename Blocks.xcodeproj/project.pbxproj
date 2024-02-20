@@ -41,6 +41,7 @@
 		F342E4D72B766BFD00C38360 /* TableViewRenderer+ViewHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F342E4D52B7667FA00C38360 /* TableViewRenderer+ViewHelpers.swift */; };
 		F3A178DB2B8496FE00B53928 /* TableViewRenderer+DragDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A178DA2B8496FE00B53928 /* TableViewRenderer+DragDrop.swift */; };
 		F3A178DD2B84977D00B53928 /* TableViewRenderer+UITableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A178DC2B84977D00B53928 /* TableViewRenderer+UITableViewDelegate.swift */; };
+		F3A178DF2B849AF600B53928 /* DragViewMaskProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A178DE2B849AF600B53928 /* DragViewMaskProperties.swift */; };
 		F3AC40F82B7BFE3F00772127 /* SwiftUIHostingTableHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC40F72B7BFE3F00772127 /* SwiftUIHostingTableHeaderFooterView.swift */; };
 		F3AC41052B7BFF8600772127 /* TestViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC40FA2B7BFF8600772127 /* TestViewComponent.swift */; };
 		F3AC41062B7BFF8600772127 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC40FB2B7BFF8600772127 /* TestView.swift */; };
@@ -103,6 +104,7 @@
 		F342E4D52B7667FA00C38360 /* TableViewRenderer+ViewHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableViewRenderer+ViewHelpers.swift"; sourceTree = "<group>"; };
 		F3A178DA2B8496FE00B53928 /* TableViewRenderer+DragDrop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableViewRenderer+DragDrop.swift"; sourceTree = "<group>"; };
 		F3A178DC2B84977D00B53928 /* TableViewRenderer+UITableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableViewRenderer+UITableViewDelegate.swift"; sourceTree = "<group>"; };
+		F3A178DE2B849AF600B53928 /* DragViewMaskProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragViewMaskProperties.swift; sourceTree = "<group>"; };
 		F3AC40F72B7BFE3F00772127 /* SwiftUIHostingTableHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftUIHostingTableHeaderFooterView.swift; sourceTree = "<group>"; };
 		F3AC40FA2B7BFF8600772127 /* TestViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewComponent.swift; sourceTree = "<group>"; };
 		F3AC40FB2B7BFF8600772127 /* TestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
@@ -301,6 +303,7 @@
 			children = (
 				23D82C4F2765445D00322193 /* Section.swift */,
 				23D82C322765263000322193 /* Block.swift */,
+				F3A178DE2B849AF600B53928 /* DragViewMaskProperties.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -548,6 +551,7 @@
 				F3A178DB2B8496FE00B53928 /* TableViewRenderer+DragDrop.swift in Sources */,
 				23D82C4727652D5800322193 /* Block.swift in Sources */,
 				F3D5B16F2B7B75090080E3C4 /* ComponentSwiftUIViewConfigurable.swift in Sources */,
+				F3A178DF2B849AF600B53928 /* DragViewMaskProperties.swift in Sources */,
 				23D82C502765445D00322193 /* Section.swift in Sources */,
 				23A85891279951A100019970 /* Collection+Block.swift in Sources */,
 				F3AC410B2B7BFF8600772127 /* LabelViewCell.swift in Sources */,

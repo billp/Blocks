@@ -123,7 +123,7 @@ class TodoComponent: ObservableObject, Component {
 
 extension TodoComponent {
     static func == (lhs: TodoComponent, rhs: TodoComponent) -> Bool {
-        return lhs.title == rhs.title && lhs.id == rhs.id
+        return lhs.id == rhs.id && lhs.title == rhs.title
     }
 
     func hash(into hasher: inout Hasher) {

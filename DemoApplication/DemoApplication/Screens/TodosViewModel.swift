@@ -91,12 +91,46 @@ class TodosViewModel {
     }
 
     private func setupDragNDrop() {
-        renderer?.canDropAt = { [weak self] sourceIndexPath, destinationIndexPath in
+        renderer?.customizeDragPreviewForComponent = { component in
+            return .init(top: 2, right: 20, bottom: 2, left: 20, cornerRadius: 5)
+        }
+
+        renderer?.canDrag = { _, component in
+            return component is TodoComponent
+        }
+
+        renderer?.dropCompleted = { [weak self] sourceIndexPath, destinationIndexPath in
+            guard let self else { return }
+            guard let section = renderer?.sections[sourceIndexPath.section] else {
+                return
+            }
+
+            switch section.id as? String {
+            case Constants.activeTodosSectionId:
+                activeTodos = section.rows?.filter({ $0 is TodoComponent }).map { $0.as(TodoComponent.self) } ?? []
+            case Constants.completedTodosSectionId:
+                completedTodos = section.rows?.filter({ $0 is TodoComponent }).map { $0.as(TodoComponent.self) } ?? []
+            default:
+                break
+            }
+        }
+
+        renderer?.canDrop = { [weak self] sourceIndexPath, destinationIndexPath in
             guard let self else { return false }
-            return sourceIndexPath.section == 1 &&
-                destinationIndexPath.section == 1 &&
-                destinationIndexPath.row < activeTodos.count &&
-                sourceIndexPath.row != activeTodos.count
+            guard let sourceSection = renderer?.sections[sourceIndexPath.section],
+                  let destinationSection = renderer?.sections[destinationIndexPath.section],
+                    sourceSection == destinationSection else {
+                        return false
+                    }
+
+            switch sourceSection.id as? String {
+            case Constants.activeTodosSectionId:
+                return destinationIndexPath.row < activeTodos.count && sourceIndexPath.row != activeTodos.count
+            case Constants.completedTodosSectionId:
+                return destinationIndexPath.row < completedTodos.count && sourceIndexPath.row != completedTodos.count
+            default:
+                return false
+            }
         }
     }
 
@@ -125,7 +159,7 @@ class TodosViewModel {
             )
         ]
 
-        renderer?.updateSections(newSections, animation: animated ? .automatic : .none)
+        renderer?.updateSections(newSections, animation: animated ? .fade : .none)
     }
 
     private func createActiveTodos(_ todos: [TodoComponent]) -> [any Component] {
