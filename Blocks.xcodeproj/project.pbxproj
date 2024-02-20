@@ -38,7 +38,9 @@
 		23E1A21E283B6A8800230874 /* TestHeaderComponentFlexibleHeightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E1A21D283B6A8800230874 /* TestHeaderComponentFlexibleHeightView.swift */; };
 		23E1A220283B6A9F00230874 /* TestHeaderComponentFlexibleHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E1A21F283B6A9F00230874 /* TestHeaderComponentFlexibleHeight.swift */; };
 		F31D5DBF2B7E64000038EC69 /* ComponentViewConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31D5DBE2B7E64000038EC69 /* ComponentViewConfigurable.swift */; };
-		F342E4D72B766BFD00C38360 /* TableViewRenderer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F342E4D52B7667FA00C38360 /* TableViewRenderer+Extensions.swift */; };
+		F342E4D72B766BFD00C38360 /* TableViewRenderer+ViewHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F342E4D52B7667FA00C38360 /* TableViewRenderer+ViewHelpers.swift */; };
+		F3A178DB2B8496FE00B53928 /* TableViewRenderer+DragDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A178DA2B8496FE00B53928 /* TableViewRenderer+DragDrop.swift */; };
+		F3A178DD2B84977D00B53928 /* TableViewRenderer+UITableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A178DC2B84977D00B53928 /* TableViewRenderer+UITableViewDelegate.swift */; };
 		F3AC40F82B7BFE3F00772127 /* SwiftUIHostingTableHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC40F72B7BFE3F00772127 /* SwiftUIHostingTableHeaderFooterView.swift */; };
 		F3AC41052B7BFF8600772127 /* TestViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC40FA2B7BFF8600772127 /* TestViewComponent.swift */; };
 		F3AC41062B7BFF8600772127 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC40FB2B7BFF8600772127 /* TestView.swift */; };
@@ -98,7 +100,9 @@
 		23E1A21D283B6A8800230874 /* TestHeaderComponentFlexibleHeightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHeaderComponentFlexibleHeightView.swift; sourceTree = "<group>"; };
 		23E1A21F283B6A9F00230874 /* TestHeaderComponentFlexibleHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHeaderComponentFlexibleHeight.swift; sourceTree = "<group>"; };
 		F31D5DBE2B7E64000038EC69 /* ComponentViewConfigurable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentViewConfigurable.swift; sourceTree = "<group>"; };
-		F342E4D52B7667FA00C38360 /* TableViewRenderer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableViewRenderer+Extensions.swift"; sourceTree = "<group>"; };
+		F342E4D52B7667FA00C38360 /* TableViewRenderer+ViewHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableViewRenderer+ViewHelpers.swift"; sourceTree = "<group>"; };
+		F3A178DA2B8496FE00B53928 /* TableViewRenderer+DragDrop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableViewRenderer+DragDrop.swift"; sourceTree = "<group>"; };
+		F3A178DC2B84977D00B53928 /* TableViewRenderer+UITableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableViewRenderer+UITableViewDelegate.swift"; sourceTree = "<group>"; };
 		F3AC40F72B7BFE3F00772127 /* SwiftUIHostingTableHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftUIHostingTableHeaderFooterView.swift; sourceTree = "<group>"; };
 		F3AC40FA2B7BFF8600772127 /* TestViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewComponent.swift; sourceTree = "<group>"; };
 		F3AC40FB2B7BFF8600772127 /* TestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
@@ -307,7 +311,9 @@
 				F3B6AC7D2B7BC26300E61F6A /* Object+Extensions.swift */,
 				23D82C352765263000322193 /* UITableView+FlexibleHeight.swift */,
 				23A85890279951A100019970 /* Collection+Block.swift */,
-				F342E4D52B7667FA00C38360 /* TableViewRenderer+Extensions.swift */,
+				F342E4D52B7667FA00C38360 /* TableViewRenderer+ViewHelpers.swift */,
+				F3A178DA2B8496FE00B53928 /* TableViewRenderer+DragDrop.swift */,
+				F3A178DC2B84977D00B53928 /* TableViewRenderer+UITableViewDelegate.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -539,11 +545,13 @@
 				23D82C4E27652D5F00322193 /* TableViewRenderer.swift in Sources */,
 				F31D5DBF2B7E64000038EC69 /* ComponentViewConfigurable.swift in Sources */,
 				F3AC41072B7BFF8600772127 /* ButtonViewCell.swift in Sources */,
+				F3A178DB2B8496FE00B53928 /* TableViewRenderer+DragDrop.swift in Sources */,
 				23D82C4727652D5800322193 /* Block.swift in Sources */,
 				F3D5B16F2B7B75090080E3C4 /* ComponentSwiftUIViewConfigurable.swift in Sources */,
 				23D82C502765445D00322193 /* Section.swift in Sources */,
 				23A85891279951A100019970 /* Collection+Block.swift in Sources */,
 				F3AC410B2B7BFF8600772127 /* LabelViewCell.swift in Sources */,
+				F3A178DD2B84977D00B53928 /* TableViewRenderer+UITableViewDelegate.swift in Sources */,
 				F3D5B1712B7B761C0080E3C4 /* SwiftUIHostingTableViewCell.swift in Sources */,
 				239136812833E79E0066A579 /* SpacerCell.swift in Sources */,
 				23D82C4627652D0A00322193 /* TableViewRendererProtocol.swift in Sources */,
@@ -551,7 +559,7 @@
 				F3AC41082B7BFF8600772127 /* MyButtonComponent.swift in Sources */,
 				F3AC410A2B7BFF8600772127 /* MyHeaderFooterView.swift in Sources */,
 				23332B9F27AC23FC0007493E /* Logger.swift in Sources */,
-				F342E4D72B766BFD00C38360 /* TableViewRenderer+Extensions.swift in Sources */,
+				F342E4D72B766BFD00C38360 /* TableViewRenderer+ViewHelpers.swift in Sources */,
 				23D82C4827652D5800322193 /* UITableView+FlexibleHeight.swift in Sources */,
 				23D82C4B27652D5F00322193 /* FlexibleHeightCellProtocol.swift in Sources */,
 				239136832834D40A0066A579 /* Spacer.swift in Sources */,

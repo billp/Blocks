@@ -1,4 +1,4 @@
-// TableViewRenderer+Extensions.swift
+// TableViewRenderer+ViewHelpers.swift
 //
 // Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
 //
@@ -107,5 +107,83 @@ extension TableViewRenderer {
         } else {
             return false
         }
+    }
+
+    /// Retrieves or creates a header view for a given table view section.
+    /// - Parameters:
+    ///   - tableView: The table view requesting the header.
+    ///   - section: The index of the section requesting the header.
+    /// - Returns: A configured header view or `nil` if the section does not have a header.
+    /// - Throws: `BlocksError.invalidViewClass` if the dequeued view does not conform to `ComponentViewConfigurable`.
+    func headerView(for tableView: UITableView, inSection section: Int) throws -> UIView? {
+        let sectionModel = sections[section]
+
+        guard let headerComponent = sectionModel.header else {
+            return nil
+        }
+
+        let reuseIdentifier = try reuseIdentifier(for: headerComponent)
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: reuseIdentifier)
+
+        guard let header = header as? UITableViewHeaderFooterView & ComponentViewConfigurable else {
+            throw BlocksError.invalidViewClass(reuseIdentifier: reuseIdentifier)
+        }
+
+        headerComponent.prepare()
+        header.setRenderer(self)
+        header.configure(with: headerComponent)
+        tableView.setHeight(headerSection: section, view: header)
+        return header
+    }
+
+    /// Retrieves or creates a footer view for a given table view section.
+    /// - Parameters:
+    ///   - tableView: The table view requesting the footer.
+    ///   - section: The index of the section requesting the footer.
+    /// - Returns: A configured footer view or `nil` if the section does not have a footer.
+    /// - Throws: `BlocksError.invalidViewClass` if the dequeued view does not conform to `ComponentViewConfigurable`.
+    func footerView(for tableView: UITableView, inSection section: Int) throws -> UIView? {
+        let sectionModel = sections[section]
+
+        guard let footerComponent = sectionModel.footer else {
+            return nil
+        }
+
+        let reuseIdentifier = try reuseIdentifier(for: footerComponent)
+
+        let footer = tableView.dequeueReusableHeaderFooterView(withIdentifier: reuseIdentifier)
+        guard let footer = footer as? UITableViewHeaderFooterView & ComponentViewConfigurable else {
+            throw BlocksError.invalidViewClass(reuseIdentifier: reuseIdentifier)
+        }
+
+        footerComponent.prepare()
+        footer.setRenderer(self)
+        footer.configure(with: footerComponent)
+        return footer
+    }
+
+    /// Retrieves or creates a cell for a given table view indexPath.
+    /// - Parameters:
+    ///   - tableView: The table view requesting the cell.
+    ///   - indexPath: The index path specifying the location of the cell.
+    /// - Returns: A configured cell.
+    /// - Throws: `BlocksError.invalidModelClass` if the model for the cell is invalid.
+    ///           `BlocksError.invalidViewClass` if the dequeued cell does not conform to `ComponentViewConfigurable`.
+    func cellView(for tableView: UITableView, at indexPath: IndexPath) throws -> UITableViewCell? {
+        guard let cellModel = sections[indexPath.section].rows?[indexPath.row] else {
+            throw BlocksError.invalidModelClass
+        }
+
+        let reuseIdentifier = try reuseIdentifier(for: cellModel)
+
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
+        guard let cell = cell as? UITableViewCell & ComponentViewConfigurable else {
+            throw BlocksError.invalidViewClass(reuseIdentifier: reuseIdentifier)
+        }
+
+        cellModel.prepare()
+        cell.setRenderer(self)
+        cell.configure(with: cellModel)
+        return cell
     }
 }

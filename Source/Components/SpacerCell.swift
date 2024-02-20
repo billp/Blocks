@@ -23,7 +23,7 @@ public class SpacerCell: UITableViewCell, ComponentViewConfigurable, FlexibleVie
     public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
-        
+
         if #available(iOS 14.0, *) {
             var backgroundConfig = UIBackgroundConfiguration.listPlainHeaderFooter()
             backgroundConfig.backgroundColor = .clear

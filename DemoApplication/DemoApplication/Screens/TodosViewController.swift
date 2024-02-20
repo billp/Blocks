@@ -52,7 +52,9 @@ class TodosViewController: UIViewController {
     }
 
     private func createRenderer() -> TableViewRenderer {
-        TableViewRenderer(tableView: tableView)
+        let renderer = TableViewRenderer(tableView: tableView)
+        renderer.dragEnabled = true
+        return renderer
     }
 
     private func registerComponents() {
