@@ -64,7 +64,9 @@ class TodosViewModel {
         activeTodos.append(todoComponent)
 
         // Clear input
-        todoInputField.value = ""
+        DispatchQueue.main.async { [weak self] in
+            self?.todoInputField.value = ""
+        }
 
         updateSections(activeTodos: activeTodos,
                        completedTodos: completedTodos)
