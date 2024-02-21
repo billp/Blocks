@@ -201,6 +201,38 @@ class DragDropInteractionTests: XCTestCase {
                        .cancel,
                        "Drop proposal operation should be .cancel when canDrop returns false.")
     }
+
+    func testDropCompletedClosureCalled() {
+        // Given
+        let sourceIndexPath = IndexPath(row: 0, section: 0)
+        let destinationIndexPath = IndexPath(row: 1, section: 0)
+        renderer.canDrag = { _, _ in true }
+        renderer.canDrop = { _, _ in true }
+
+        var dropCompletedCalled = false
+        var dropSourceIndexPath: IndexPath?
+        var dropDestinationIndexPath: IndexPath?
+
+        renderer.dropCompleted = { source, destination in
+            dropCompletedCalled = true
+            dropSourceIndexPath = source
+            dropDestinationIndexPath = destination
+        }
+
+        // When
+        let expectation = self.expectation(description: "Update main queue.")
+        UIView.performWithoutAnimation { [weak self] in
+            self?.simulateDragAndDrop(from: sourceIndexPath, to: destinationIndexPath)
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1.0)
+
+        // Then
+        XCTAssertTrue(dropCompletedCalled, "Drop completed closure should be called.")
+        XCTAssertEqual(dropSourceIndexPath, sourceIndexPath, "Source index path should match.")
+        XCTAssertEqual(dropDestinationIndexPath, destinationIndexPath, "Destination index path should match.")
+    }
 }
 
 extension DragDropInteractionTests {
