@@ -120,7 +120,7 @@ Create a view model that conforms to the `Component` protocol, containing proper
 
 ```swift
 class TodoComponent: ObservableObject, Component {
-    var id: UUID
+    var id: UUID = .init()
     @Published var title: String
 
     init(title: String) {
