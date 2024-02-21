@@ -233,6 +233,35 @@ class DragDropInteractionTests: XCTestCase {
         XCTAssertEqual(dropSourceIndexPath, sourceIndexPath, "Source index path should match.")
         XCTAssertEqual(dropDestinationIndexPath, destinationIndexPath, "Destination index path should match.")
     }
+
+    func testCustomizeDragPreviewForComponent() {
+        // Given
+        let indexPath = IndexPath(row: 0, section: 0)
+        let expectedProperties = DragViewMaskProperties(top: 10, right: 10, bottom: 10, left: 10, cornerRadius: 5)
+        renderer.customizeDragPreviewForComponent = { _ in return expectedProperties }
+
+        guard let previewParameters = renderer.tableView(tableView, dragPreviewParametersForRowAt: indexPath) else {
+            XCTFail("Expected drag preview parameters to be non-nil")
+            return
+        }
+        guard var frame = tableView.cellForRow(at: indexPath)?.contentView.frame else {
+            XCTFail("frame to be non-nil")
+            return
+        }
+
+        // When
+        frame.origin.x += expectedProperties.left
+        frame.origin.y += expectedProperties.top
+        frame.size.width -= expectedProperties.left + expectedProperties.right
+        frame.size.height -= expectedProperties.top + expectedProperties.bottom
+
+        let expectedPath = UIBezierPath(roundedRect: frame, cornerRadius: expectedProperties.cornerRadius)
+
+        // Then
+        XCTAssertEqual(previewParameters.visiblePath?.cgPath.boundingBox,
+                       expectedPath.cgPath.boundingBox,
+                       "The visible path's bounding box should match the expected path's bounding box.")
+    }
 }
 
 extension DragDropInteractionTests {

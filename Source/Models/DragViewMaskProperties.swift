@@ -9,9 +9,9 @@ import Foundation
 
 public struct DragViewMaskProperties {
     let top: Double
-    let right: Double
-    let bottom: Double
     let left: Double
+    let bottom: Double
+    let right: Double
     let cornerRadius: Double
 
     public init(top: Double, right: Double, bottom: Double, left: Double, cornerRadius: Double) {
