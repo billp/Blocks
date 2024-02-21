@@ -1,4 +1,3 @@
-//
 // TestView.swift
 //
 // Copyright © 2021-2024 Vassilis Panagiotopoulos. All rights reserved.
