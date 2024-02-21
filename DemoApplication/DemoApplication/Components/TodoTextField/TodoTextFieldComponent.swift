@@ -1,4 +1,3 @@
-//
 // TodoTextFieldComponent.swift
 //
 // Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
