@@ -166,8 +166,8 @@ To update the UI using renderer.updateSections, incorporating TodoComponent with
 ```swift
 // Example method to update sections with todos and handle empty states
 private func updateUI(withActiveTodos activeTodos: [TodoComponent], completedTodos: [TodoComponent]) {
-    let activeSectionRows: [any Component] = activeTodos.isEmpty ? [EmptyResultsComponent(title: "No active todos.")] : activeTodos.map { $0 as any Component }
-    let completedSectionRows: [any Component] = completedTodos.isEmpty ? [EmptyResultsComponent(title: "No completed todos.")] : completedTodos.map { $0 as any Component }
+    let activeSectionRows: [any Component] = activeTodos.isEmpty ? [EmptyResultsComponent(title: "No active todos.")] : activeTodos
+    let completedSectionRows: [any Component] = completedTodos.isEmpty ? [EmptyResultsComponent(title: "No completed todos.")] : completedTodos
     
     let sections = [
         Section(id: "activeTodos", rows: activeSectionRows),
