@@ -16,9 +16,8 @@ class TodosViewModel {
     private var activeTodos: [TodoComponent] = []
     private var disposableBag = Set<AnyCancellable>()
     private var completedTodos: [TodoComponent] = []
-    private var todoInputField = TodoTextFieldComponent(
-        placeholder: NSLocalizedString("What's next?", comment: "")
-    )
+    private var todoInputField = TodoTextFieldComponent(placeholder: NSLocalizedString("What's next?",
+                                                                                       comment: ""))
 
     // MARK: - Initializers
 

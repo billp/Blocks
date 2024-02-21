@@ -47,23 +47,23 @@ struct TodoView: View, ComponentSwiftUIViewConfigurable {
                 }
                 .frame(maxHeight: .infinity)
                 .padding(15)
-                .background(Color("TodoBackgroundColor"))
-                .foregroundColor(tintColor)
-                .cornerRadius(10, corners: viewModel.roundedCorners)
-                .padding(.horizontal, 20)
-                .scaleEffect(viewModel.scale)
-                .offset(.init(width: viewModel.offsetX, height: 0))
-                .animation(.spring(duration: 0.25), value: viewModel.offsetX)
-                .gesture(dragGesture)
 
                 if viewModel.shouldAddSeparator {
                     Rectangle()
                         .fill(Color("TodoSeparatorColor"))
                         .frame(height: 1)
                         .scaleEffect(viewModel.scale)
-                        .padding(.horizontal, 20)
                 }
             }
+            .background(Color("TodoBackgroundColor"))
+            .foregroundColor(tintColor)
+            .cornerRadius(10, corners: viewModel.roundedCorners)
+            .offset(.init(width: viewModel.offsetX, height: 0))
+            .padding(.horizontal, 20)
+            .scaleEffect(viewModel.scale)
+            .animation(.spring(duration: 0.25), value: viewModel.offsetX)
+            .gesture(dragGesture)
+
 
 
 

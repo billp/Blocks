@@ -36,7 +36,7 @@ class TodoComponent: ObservableObject, Component {
     }
 
     var shouldAddSeparator: Bool {
-        ![TodoPosition.last, TodoPosition.none].contains(position) && scale == 1
+        ![TodoPosition.last, TodoPosition.none].contains(position)
     }
 
     private var isSwipeMenuOpened: Bool = false
@@ -159,7 +159,7 @@ extension TodoComponent {
 extension TodoComponent {
     enum Constants {
         static var toggleAnimationDuration = 0.3
-        static var toggleAnimationCompletedMaxScale = 1.08
+        static var toggleAnimationCompletedMaxScale = 1.1
         static var toggleAnimationEndScale = 1.0
         static var swipeMenuItemWidth = 35.0
         static var swipeMenuItemCount = 1
