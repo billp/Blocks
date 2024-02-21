@@ -30,32 +30,43 @@ struct TodoView: View, ComponentSwiftUIViewConfigurable {
     }
 
     var body: some View {
-        ZStack(alignment: .top) {
+        ZStack(alignment: .bottom) {
             swipeButtonsView
+                .frame(maxHeight: .infinity)
                 .padding(TodoComponent.Constants.swipeMenuItemPadding / 2)
                 .background(Color("TodoBackgroundColor"))
                 .foregroundColor(tintColor)
-                .clipShape(clipShape)
+                .cornerRadius(10, corners: viewModel.roundedCorners)
                 .padding(.horizontal, 20)
-                .padding(.vertical, 2)
                 .scaleEffect(viewModel.scale)
 
-            HStack {
-                leftIconView
-                titleView
+            VStack(spacing: 0) {
+                HStack {
+                    leftIconView
+                    titleView
+                }
+                .frame(maxHeight: .infinity)
+                .padding(15)
+                .background(Color("TodoBackgroundColor"))
+                .foregroundColor(tintColor)
+                .cornerRadius(10, corners: viewModel.roundedCorners)
+                .padding(.horizontal, 20)
+                .scaleEffect(viewModel.scale)
+                .offset(.init(width: viewModel.offsetX, height: 0))
+                .animation(.spring(duration: 0.25), value: viewModel.offsetX)
+                .gesture(dragGesture)
+
+                if viewModel.shouldAddSeparator {
+                    Rectangle()
+                        .fill(Color("TodoSeparatorColor"))
+                        .frame(height: 1)
+                        .scaleEffect(viewModel.scale)
+                        .padding(.horizontal, 20)
+                }
             }
-            .frame(maxHeight: .infinity)
-            .padding(15)
-            .background(Color("TodoBackgroundColor"))
-            .foregroundColor(tintColor)
-            .overlay(clipShape.stroke(borderColor, lineWidth: 2))
-            .clipShape(clipShape)
-            .padding(.horizontal, 20)
-            .padding(.vertical, 2)
-            .scaleEffect(viewModel.scale)
-            .offset(.init(width: viewModel.offsetX, height: 0))
-            .animation(.spring(duration: 0.25), value: viewModel.offsetX)
-            .gesture(dragGesture)
+
+
+
         }
         .onAppear {
             withAnimation(.spring(duration: 0.3)) {
@@ -113,7 +124,6 @@ extension TodoView {
                            height: TodoComponent.Constants.swipeMenuItemWidth)
             }
         }
-        .frame(maxHeight: .infinity)
     }
     
     var dragGesture: some Gesture {

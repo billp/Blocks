@@ -29,6 +29,15 @@ class TodoComponent: ObservableObject, Component {
     @Published var offsetX = 0.0
     @Published var scale: CGFloat = 0.5
     @Published var completed: Bool = false
+    @Published var position: TodoPosition = .middle
+
+    var roundedCorners: UIRectCorner {
+        roundedCorners(for: position)
+    }
+
+    var shouldAddSeparator: Bool {
+        ![TodoPosition.last, TodoPosition.none].contains(position) && scale == 1
+    }
 
     private var isSwipeMenuOpened: Bool = false
 
@@ -104,6 +113,19 @@ class TodoComponent: ObservableObject, Component {
         }
     }
 
+    private func roundedCorners(for position: TodoPosition) -> UIRectCorner {
+        switch position {
+        case .first:
+            return [.topLeft, .topRight]
+        case .last:
+            return [.bottomLeft, .bottomRight]
+        case .middle:
+            return []
+        case .none:
+            return [.topLeft, .topRight, .bottomLeft, .bottomRight]
+        }
+    }
+
     private func applyCompletedAnimation() {
         withAnimation(.spring(duration: Constants.toggleAnimationDuration)) {
             scale = Constants.toggleAnimationCompletedMaxScale
@@ -142,5 +164,16 @@ extension TodoComponent {
         static var swipeMenuItemWidth = 35.0
         static var swipeMenuItemCount = 1
         static var swipeMenuItemPadding = 20.0
+    }
+}
+
+// MARK: - Enums
+
+extension TodoComponent {
+    enum TodoPosition {
+        case first
+        case last
+        case middle
+        case none
     }
 }

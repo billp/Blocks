@@ -113,12 +113,21 @@ class TodosViewModel {
 
             switch section.id as? String {
             case Constants.activeTodosSectionId:
-                activeTodos = section.rows?.filter({ $0 is TodoComponent }).map { $0.as(TodoComponent.self) } ?? []
+                activeTodos = section
+                    .rows?
+                    .filter { $0 is TodoComponent }
+                    .map { $0.as(TodoComponent.self) } ?? []
             case Constants.completedTodosSectionId:
-                completedTodos = section.rows?.filter({ $0 is TodoComponent }).map { $0.as(TodoComponent.self) } ?? []
+                completedTodos = section
+                    .rows?
+                    .filter { $0 is TodoComponent }
+                    .map { $0.as(TodoComponent.self) } ?? []
             default:
                 break
             }
+
+            updateTodoPositions(self.activeTodos)
+            updateTodoPositions(self.completedTodos)
         }
 
         renderer?.canDrop = { [weak self] sourceIndexPath, destinationIndexPath in
@@ -145,6 +154,9 @@ class TodosViewModel {
                                 animated: Bool = false) {
         self.activeTodos = activeTodos
         self.completedTodos = completedTodos
+
+        updateTodoPositions(activeTodos)
+        updateTodoPositions(completedTodos)
 
         let newSections = [
             Section(
@@ -182,6 +194,16 @@ class TodosViewModel {
         }
 
         return todos
+    }
+
+    private func updateTodoPositions(_ todos: [TodoComponent]) {
+        if todos.count == 1 {
+            todos.first?.position = .none
+        } else {
+            todos.forEach({ $0.position = .middle })
+            todos.first?.position = .first
+            todos.last?.position = .last
+        }
     }
 
     private func handleCompletedChanged(_ todoComponent: TodoComponent) {
