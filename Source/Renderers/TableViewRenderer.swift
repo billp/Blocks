@@ -151,8 +151,9 @@ open class TableViewRenderer: NSObject {
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: Double.leastNormalMagnitude))
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: Double.leastNormalMagnitude))
 
-        // Register Spacer
-        register(viewModelType: Spacer.self, classType: SpacerCell.self)
+        // Register Spacers
+        register(viewModelType: RowSpacer.self, classType: RowSpacerCell.self)
+        register(viewModelType: HeaderFooterSpacer.self, classType: HeaderFooterSpacerCell.self)
 
         // Remove strage empty space on occured in iOS Version >= 15.0
         if #available(iOS 15.0, *) {

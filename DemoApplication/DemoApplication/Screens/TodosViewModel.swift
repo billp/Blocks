@@ -149,7 +149,7 @@ class TodosViewModel {
         let newSections = [
             Section(
                 id: Constants.textFieldSectionId,
-                rows: [todoInputField, Spacer(type: .fixed(15))]
+                rows: [todoInputField, RowSpacer(type: .fixed(15))]
             ),
             Section(
                 id: Constants.activeTodosSectionId,
@@ -173,7 +173,7 @@ class TodosViewModel {
             return [EmptyResultsComponent(title: "No active todos.")]
         }
 
-        return todos + [Spacer(type: .fixed(15))]
+        return todos + [RowSpacer(type: .fixed(15))]
     }
 
     private func createCompletedTodos(_ todos: [TodoComponent]) -> [any Component] {

@@ -1,4 +1,4 @@
-// Spacer.swift
+// SpacerHeaderFooterCell.swift
 //
 // Copyright © 2021-2024 Vassilis Panagiotopoulos. All rights reserved.
 //
@@ -17,41 +17,37 @@
 // FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import Foundation
+import UIKit
 
-/// Specifies a type of the Spacer.
-public enum SpacerType: Hashable, Equatable {
-    private enum Constants {
-        static let flexibleValue: Float = -1
-    }
+public class HeaderFooterSpacerCell: UITableViewHeaderFooterView,
+                                     ComponentViewConfigurable,
+                                     FlexibleViewHeightProtocol {
 
-    /// Automatically adjusts height to fill the blank space.
-    case flexible
-    /// Specifies a fixed height constant for the spacer.
-    case fixed(Float)
+    public override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
 
-    /// Convert enum case to float.
-    var value: Float {
-        switch self {
-        case .flexible:
-            return Constants.flexibleValue
-        case .fixed(let float):
-            return float
+        if #available(iOS 14.0, *) {
+            var backgroundConfig = UIBackgroundConfiguration.listPlainHeaderFooter()
+            backgroundConfig.backgroundColor = .clear
+            backgroundConfiguration = backgroundConfig
+        } else {
+            backgroundColor = .clear
         }
     }
-}
 
-/// Defines a special type of Component which defines a vertical spacer based on a type.
-/// The type can be either flexible (expands up to the blank space) or fixed (defines a specific height).
-public struct Spacer: Component {
-    var id: UUID = .init()
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
-    var isDragNDropSpacer = false
+    public func configure(with viewModel: any Component) {
+        let model = viewModel.as(HeaderFooterSpacer.self)
 
-    /// The type of the spacer.
-    var type: SpacerType
-
-    public init(type: SpacerType) {
-        self.type = type
+        switch model.type {
+        case .flexible:
+            isFlexible = true
+        case .fixed(let constant):
+            heightConstraint.constant = CGFloat(constant)
+            isFlexible = false
+        }
     }
 }

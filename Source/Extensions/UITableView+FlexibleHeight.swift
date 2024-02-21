@@ -66,7 +66,7 @@ extension UITableView {
     }
 
     func setHeight(headerSection: Int, view: UIView) {
-        guard !(view is FlexibleViewHeightProtocol) else {
+        if let flexibleCell = view as? FlexibleViewHeightProtocol, flexibleCell.isFlexible {
             return
         }
         let height = view.systemLayoutSizeFitting(UIView.layoutFittingExpandedSize).height
@@ -75,7 +75,7 @@ extension UITableView {
     }
 
     func setHeight(footerSection: Int, view: UIView) {
-        guard !(view is FlexibleViewHeightProtocol) else {
+        if let flexibleCell = view as? FlexibleViewHeightProtocol, flexibleCell.isFlexible {
             return
         }
         let height = view.systemLayoutSizeFitting(UIView.layoutFittingExpandedSize).height
@@ -90,9 +90,11 @@ extension UITableView {
             .compactMap({ self.cellForRow(at: $0) as? FlexibleView })
             .filter({ $0.isFlexible }) ?? []
         let flexibleHeightHeaders = self.indexPathsForVisibleRows?
-            .compactMap({ self.headerView(forSection: $0.section) as? FlexibleView }) ?? []
+            .compactMap({ self.headerView(forSection: $0.section) as? FlexibleView })
+            .filter({ $0.isFlexible }) ?? []
         let flexibleHeightFooters = self.indexPathsForVisibleRows?
-            .compactMap({ self.footerView(forSection: $0.section) as? FlexibleView }) ?? []
+            .compactMap({ self.footerView(forSection: $0.section) as? FlexibleView })
+            .filter({ $0.isFlexible }) ?? []
 
         let allViews = flexibleHeightCells + flexibleHeightHeaders + flexibleHeightFooters
 
