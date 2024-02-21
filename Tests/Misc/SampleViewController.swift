@@ -1,6 +1,6 @@
 // SampleViewController.swift
 //
-// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2024 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -20,8 +20,8 @@
 import UIKit
 
 class SampleViewController: UIViewController {
-    lazy var tableView: UITableView = {
-        let tableView = UITableView()
+    lazy var tableView: MockTableView = {
+        let tableView = MockTableView()
         tableView.separatorStyle = .none
         tableView.bounds = self.view.bounds
 

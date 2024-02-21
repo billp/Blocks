@@ -1,6 +1,6 @@
 // SwiftUIHostingTableViewCell.swift
 //
-// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2024 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -26,6 +26,14 @@ class SwiftUIHostingTableViewCell: UITableViewCell, ComponentViewConfigurable {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
+
+        if #available(iOS 14.0, *) {
+            var backgroundConfig = UIBackgroundConfiguration.listPlainHeaderFooter()
+            backgroundConfig.backgroundColor = .clear
+            backgroundConfiguration = backgroundConfig
+        } else {
+            backgroundColor = .clear
+        }
     }
 
     required init?(coder: NSCoder) {

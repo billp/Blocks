@@ -1,5 +1,4 @@
-//
-// MyLabelComponent.swift
+// SpacerType.swift
 //
 // Copyright © 2021-2024 Vassilis Panagiotopoulos. All rights reserved.
 //
@@ -20,21 +19,24 @@
 
 import Foundation
 
-class MyLabelComponent: ObservableObject, Component {
-    @Published var title2 = UUID().uuidString
-
-    var title = "5"
-
-    init(title: String) {
-        self.title = title
+/// Specifies a type of the Spacer.
+public enum SpacerType: Hashable, Equatable {
+    private enum Constants {
+        static let flexibleValue: Float = -1
     }
 
-    static func == (lhs: MyLabelComponent, rhs: MyLabelComponent) -> Bool {
-        lhs.title == rhs.title && lhs.title2 == rhs.title2
-    }
+    /// Automatically adjusts height to fill the blank space.
+    case flexible
+    /// Specifies a fixed height constant for the spacer.
+    case fixed(Float)
 
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(title)
-        hasher.combine(title2)
+    /// Convert enum case to float.
+    var value: Float {
+        switch self {
+        case .flexible:
+            return Constants.flexibleValue
+        case .fixed(let float):
+            return float
+        }
     }
 }

@@ -19,6 +19,7 @@
 		F3843BF12B7F9FFE00A61B74 /* EmptyResultsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3843BEF2B7F9FFE00A61B74 /* EmptyResultsViewCell.swift */; };
 		F3843BF22B7F9FFE00A61B74 /* EmptyResultsViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F3843BF02B7F9FFE00A61B74 /* EmptyResultsViewCell.xib */; };
 		F385E5E42B7E24FC00EB2C99 /* TestFieldWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F385E5E32B7E24FC00EB2C99 /* TestFieldWrapper.swift */; };
+		F3B307232B86385B00BCB318 /* View+RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B307222B86385B00BCB318 /* View+RoundedCorner.swift */; };
 		F3D5B1772B7B87F70080E3C4 /* EmptyResultsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D5B1762B7B87F70080E3C4 /* EmptyResultsComponent.swift */; };
 		F3DC00AD2B73D92100217EB0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DC00AC2B73D92100217EB0 /* AppDelegate.swift */; };
 		F3DC00AF2B73D92100217EB0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DC00AE2B73D92100217EB0 /* SceneDelegate.swift */; };
@@ -42,6 +43,7 @@
 		F3843BEF2B7F9FFE00A61B74 /* EmptyResultsViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResultsViewCell.swift; sourceTree = "<group>"; };
 		F3843BF02B7F9FFE00A61B74 /* EmptyResultsViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyResultsViewCell.xib; sourceTree = "<group>"; };
 		F385E5E32B7E24FC00EB2C99 /* TestFieldWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFieldWrapper.swift; sourceTree = "<group>"; };
+		F3B307222B86385B00BCB318 /* View+RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+RoundedCorner.swift"; sourceTree = "<group>"; };
 		F3D5B1762B7B87F70080E3C4 /* EmptyResultsComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResultsComponent.swift; sourceTree = "<group>"; };
 		F3DC00A92B73D92100217EB0 /* DemoApplication.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoApplication.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3DC00AC2B73D92100217EB0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -129,6 +131,14 @@
 			path = SwiftUIWrappers;
 			sourceTree = "<group>";
 		};
+		F3B307202B86383700BCB318 /* SwiftUIExtensions */ = {
+			isa = PBXGroup;
+			children = (
+				F3B307222B86385B00BCB318 /* View+RoundedCorner.swift */,
+			);
+			path = SwiftUIExtensions;
+			sourceTree = "<group>";
+		};
 		F3D5B1752B7B87E80080E3C4 /* EmptyResults */ = {
 			isa = PBXGroup;
 			children = (
@@ -159,6 +169,7 @@
 		F3DC00AB2B73D92100217EB0 /* DemoApplication */ = {
 			isa = PBXGroup;
 			children = (
+				F3B307202B86383700BCB318 /* SwiftUIExtensions */,
 				F385E5E22B7E24E300EB2C99 /* SwiftUIWrappers */,
 				F324827D2B7D0F1100CE4941 /* Models */,
 				F303B8732B7D073B00DBF296 /* Screens */,
@@ -259,6 +270,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3B307232B86385B00BCB318 /* View+RoundedCorner.swift in Sources */,
 				2391A00D2B7812E300122065 /* TodoListHeaderView.swift in Sources */,
 				F3DC00B12B73D92100217EB0 /* TodosViewController.swift in Sources */,
 				2391A00E2B7812E300122065 /* TodoListHeaderComponent.swift in Sources */,

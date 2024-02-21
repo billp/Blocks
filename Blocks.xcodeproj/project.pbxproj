@@ -19,8 +19,8 @@
 		237E594A276FC8FE00E36E73 /* TestHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237E5946276FC1D700E36E73 /* TestHeaderFooterView.swift */; };
 		237E5962276FDCD400E36E73 /* BlocksError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237E5960276FDCCA00E36E73 /* BlocksError.swift */; };
 		2388AA3427BE6025007EF24E /* DiffableDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2388AA3327BE6025007EF24E /* DiffableDataSourceTests.swift */; };
-		239136812833E79E0066A579 /* SpacerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239136802833E79E0066A579 /* SpacerCell.swift */; };
-		239136832834D40A0066A579 /* Spacer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239136822834D40A0066A579 /* Spacer.swift */; };
+		239136812833E79E0066A579 /* RowSpacerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239136802833E79E0066A579 /* RowSpacerCell.swift */; };
+		239136832834D40A0066A579 /* RowSpacer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239136822834D40A0066A579 /* RowSpacer.swift */; };
 		23A85891279951A100019970 /* Collection+Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A85890279951A100019970 /* Collection+Block.swift */; };
 		23AB4F8127933982003A324C /* ExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AB4F8027933982003A324C /* ExtensionTests.swift */; };
 		23D82C1727651FEE00322193 /* Blocks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23D82C0C27651FED00322193 /* Blocks.framework */; };
@@ -38,7 +38,15 @@
 		23E1A21E283B6A8800230874 /* TestHeaderComponentFlexibleHeightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E1A21D283B6A8800230874 /* TestHeaderComponentFlexibleHeightView.swift */; };
 		23E1A220283B6A9F00230874 /* TestHeaderComponentFlexibleHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E1A21F283B6A9F00230874 /* TestHeaderComponentFlexibleHeight.swift */; };
 		F31D5DBF2B7E64000038EC69 /* ComponentViewConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31D5DBE2B7E64000038EC69 /* ComponentViewConfigurable.swift */; };
-		F342E4D72B766BFD00C38360 /* TableViewRenderer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F342E4D52B7667FA00C38360 /* TableViewRenderer+Extensions.swift */; };
+		F33508EE2B85EFC900725464 /* HeaderFooterSpacerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33508ED2B85EFC900725464 /* HeaderFooterSpacerCell.swift */; };
+		F33508F02B85F5FD00725464 /* HeaderFooterSpacer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33508EF2B85F5FD00725464 /* HeaderFooterSpacer.swift */; };
+		F33508F32B85F62400725464 /* SpacerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33508F22B85F62400725464 /* SpacerType.swift */; };
+		F342E4D72B766BFD00C38360 /* TableViewRenderer+ViewHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F342E4D52B7667FA00C38360 /* TableViewRenderer+ViewHelpers.swift */; };
+		F3A178DB2B8496FE00B53928 /* TableViewRenderer+DragDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A178DA2B8496FE00B53928 /* TableViewRenderer+DragDrop.swift */; };
+		F3A178DD2B84977D00B53928 /* TableViewRenderer+UITableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A178DC2B84977D00B53928 /* TableViewRenderer+UITableViewDelegate.swift */; };
+		F3A178DF2B849AF600B53928 /* DragViewMaskProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A178DE2B849AF600B53928 /* DragViewMaskProperties.swift */; };
+		F3A4872C2B84ED090016D220 /* DragDropInteractionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A4872B2B84ED090016D220 /* DragDropInteractionTests.swift */; };
+		F3A4872E2B84FA460016D220 /* MockedDragInteractionClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A4872D2B84FA460016D220 /* MockedDragInteractionClasses.swift */; };
 		F3AC40F82B7BFE3F00772127 /* SwiftUIHostingTableHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC40F72B7BFE3F00772127 /* SwiftUIHostingTableHeaderFooterView.swift */; };
 		F3AC41052B7BFF8600772127 /* TestViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC40FA2B7BFF8600772127 /* TestViewComponent.swift */; };
 		F3AC41062B7BFF8600772127 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC40FB2B7BFF8600772127 /* TestView.swift */; };
@@ -78,8 +86,8 @@
 		237E5960276FDCCA00E36E73 /* BlocksError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlocksError.swift; sourceTree = "<group>"; };
 		2388AA3327BE6025007EF24E /* DiffableDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffableDataSourceTests.swift; sourceTree = "<group>"; };
 		238F4EBD27946D1D00706E08 /* SampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleViewController.swift; sourceTree = "<group>"; };
-		239136802833E79E0066A579 /* SpacerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpacerCell.swift; sourceTree = "<group>"; };
-		239136822834D40A0066A579 /* Spacer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spacer.swift; sourceTree = "<group>"; };
+		239136802833E79E0066A579 /* RowSpacerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowSpacerCell.swift; sourceTree = "<group>"; };
+		239136822834D40A0066A579 /* RowSpacer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowSpacer.swift; sourceTree = "<group>"; };
 		23A85890279951A100019970 /* Collection+Block.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Block.swift"; sourceTree = "<group>"; };
 		23AB4F8027933982003A324C /* ExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionTests.swift; sourceTree = "<group>"; };
 		23D82C0C27651FED00322193 /* Blocks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Blocks.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,7 +106,15 @@
 		23E1A21D283B6A8800230874 /* TestHeaderComponentFlexibleHeightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHeaderComponentFlexibleHeightView.swift; sourceTree = "<group>"; };
 		23E1A21F283B6A9F00230874 /* TestHeaderComponentFlexibleHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHeaderComponentFlexibleHeight.swift; sourceTree = "<group>"; };
 		F31D5DBE2B7E64000038EC69 /* ComponentViewConfigurable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentViewConfigurable.swift; sourceTree = "<group>"; };
-		F342E4D52B7667FA00C38360 /* TableViewRenderer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableViewRenderer+Extensions.swift"; sourceTree = "<group>"; };
+		F33508ED2B85EFC900725464 /* HeaderFooterSpacerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderFooterSpacerCell.swift; sourceTree = "<group>"; };
+		F33508EF2B85F5FD00725464 /* HeaderFooterSpacer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderFooterSpacer.swift; sourceTree = "<group>"; };
+		F33508F22B85F62400725464 /* SpacerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpacerType.swift; sourceTree = "<group>"; };
+		F342E4D52B7667FA00C38360 /* TableViewRenderer+ViewHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableViewRenderer+ViewHelpers.swift"; sourceTree = "<group>"; };
+		F3A178DA2B8496FE00B53928 /* TableViewRenderer+DragDrop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableViewRenderer+DragDrop.swift"; sourceTree = "<group>"; };
+		F3A178DC2B84977D00B53928 /* TableViewRenderer+UITableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableViewRenderer+UITableViewDelegate.swift"; sourceTree = "<group>"; };
+		F3A178DE2B849AF600B53928 /* DragViewMaskProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragViewMaskProperties.swift; sourceTree = "<group>"; };
+		F3A4872B2B84ED090016D220 /* DragDropInteractionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragDropInteractionTests.swift; sourceTree = "<group>"; };
+		F3A4872D2B84FA460016D220 /* MockedDragInteractionClasses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockedDragInteractionClasses.swift; sourceTree = "<group>"; };
 		F3AC40F72B7BFE3F00772127 /* SwiftUIHostingTableHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftUIHostingTableHeaderFooterView.swift; sourceTree = "<group>"; };
 		F3AC40FA2B7BFF8600772127 /* TestViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewComponent.swift; sourceTree = "<group>"; };
 		F3AC40FB2B7BFF8600772127 /* TestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
@@ -202,6 +218,7 @@
 			isa = PBXGroup;
 			children = (
 				238F4EBD27946D1D00706E08 /* SampleViewController.swift */,
+				F3A4872D2B84FA460016D220 /* MockedDragInteractionClasses.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -217,8 +234,7 @@
 		2391367F2833E7710066A579 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				239136802833E79E0066A579 /* SpacerCell.swift */,
-				239136822834D40A0066A579 /* Spacer.swift */,
+				F33508F12B85F60900725464 /* Spacer */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -261,6 +277,7 @@
 				2388AA3327BE6025007EF24E /* DiffableDataSourceTests.swift */,
 				23175BC5280555FA00D9D209 /* FlexibleHeightCellTests.swift */,
 				F3D5B16B2B7A66C80080E3C4 /* SectionsTest.swift */,
+				F3A4872B2B84ED090016D220 /* DragDropInteractionTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -297,6 +314,7 @@
 			children = (
 				23D82C4F2765445D00322193 /* Section.swift */,
 				23D82C322765263000322193 /* Block.swift */,
+				F3A178DE2B849AF600B53928 /* DragViewMaskProperties.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -307,7 +325,9 @@
 				F3B6AC7D2B7BC26300E61F6A /* Object+Extensions.swift */,
 				23D82C352765263000322193 /* UITableView+FlexibleHeight.swift */,
 				23A85890279951A100019970 /* Collection+Block.swift */,
-				F342E4D52B7667FA00C38360 /* TableViewRenderer+Extensions.swift */,
+				F342E4D52B7667FA00C38360 /* TableViewRenderer+ViewHelpers.swift */,
+				F3A178DA2B8496FE00B53928 /* TableViewRenderer+DragDrop.swift */,
+				F3A178DC2B84977D00B53928 /* TableViewRenderer+UITableViewDelegate.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -331,6 +351,18 @@
 				237E5941276FC16100E36E73 /* Cells */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		F33508F12B85F60900725464 /* Spacer */ = {
+			isa = PBXGroup;
+			children = (
+				F33508F22B85F62400725464 /* SpacerType.swift */,
+				F33508EF2B85F5FD00725464 /* HeaderFooterSpacer.swift */,
+				F33508ED2B85EFC900725464 /* HeaderFooterSpacerCell.swift */,
+				239136802833E79E0066A579 /* RowSpacerCell.swift */,
+				239136822834D40A0066A579 /* RowSpacer.swift */,
+			);
+			path = Spacer;
 			sourceTree = "<group>";
 		};
 		F3AC40F92B7BFF8600772127 /* SwiftUIComponent */ = {
@@ -537,24 +569,30 @@
 				F3AC410C2B7BFF8600772127 /* MyLabelComponent.swift in Sources */,
 				23D82C4C27652D5F00322193 /* Component.swift in Sources */,
 				23D82C4E27652D5F00322193 /* TableViewRenderer.swift in Sources */,
+				F33508EE2B85EFC900725464 /* HeaderFooterSpacerCell.swift in Sources */,
 				F31D5DBF2B7E64000038EC69 /* ComponentViewConfigurable.swift in Sources */,
 				F3AC41072B7BFF8600772127 /* ButtonViewCell.swift in Sources */,
+				F3A178DB2B8496FE00B53928 /* TableViewRenderer+DragDrop.swift in Sources */,
 				23D82C4727652D5800322193 /* Block.swift in Sources */,
 				F3D5B16F2B7B75090080E3C4 /* ComponentSwiftUIViewConfigurable.swift in Sources */,
+				F3A178DF2B849AF600B53928 /* DragViewMaskProperties.swift in Sources */,
 				23D82C502765445D00322193 /* Section.swift in Sources */,
+				F33508F32B85F62400725464 /* SpacerType.swift in Sources */,
 				23A85891279951A100019970 /* Collection+Block.swift in Sources */,
 				F3AC410B2B7BFF8600772127 /* LabelViewCell.swift in Sources */,
+				F3A178DD2B84977D00B53928 /* TableViewRenderer+UITableViewDelegate.swift in Sources */,
 				F3D5B1712B7B761C0080E3C4 /* SwiftUIHostingTableViewCell.swift in Sources */,
-				239136812833E79E0066A579 /* SpacerCell.swift in Sources */,
+				239136812833E79E0066A579 /* RowSpacerCell.swift in Sources */,
 				23D82C4627652D0A00322193 /* TableViewRendererProtocol.swift in Sources */,
 				F3AC40F82B7BFE3F00772127 /* SwiftUIHostingTableHeaderFooterView.swift in Sources */,
+				F33508F02B85F5FD00725464 /* HeaderFooterSpacer.swift in Sources */,
 				F3AC41082B7BFF8600772127 /* MyButtonComponent.swift in Sources */,
 				F3AC410A2B7BFF8600772127 /* MyHeaderFooterView.swift in Sources */,
 				23332B9F27AC23FC0007493E /* Logger.swift in Sources */,
-				F342E4D72B766BFD00C38360 /* TableViewRenderer+Extensions.swift in Sources */,
+				F342E4D72B766BFD00C38360 /* TableViewRenderer+ViewHelpers.swift in Sources */,
 				23D82C4827652D5800322193 /* UITableView+FlexibleHeight.swift in Sources */,
 				23D82C4B27652D5F00322193 /* FlexibleHeightCellProtocol.swift in Sources */,
-				239136832834D40A0066A579 /* Spacer.swift in Sources */,
+				239136832834D40A0066A579 /* RowSpacer.swift in Sources */,
 				F3AC41062B7BFF8600772127 /* TestView.swift in Sources */,
 				F3B6AC7E2B7BC26300E61F6A /* Object+Extensions.swift in Sources */,
 				237E5962276FDCD400E36E73 /* BlocksError.swift in Sources */,
@@ -568,8 +606,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				237E594A276FC8FE00E36E73 /* TestHeaderFooterView.swift in Sources */,
+				F3A4872C2B84ED090016D220 /* DragDropInteractionTests.swift in Sources */,
 				23D82C542765482B00322193 /* TestComponentViewModel.swift in Sources */,
 				237E5949276FC8FB00E36E73 /* TestHeaderComponentViewModel.swift in Sources */,
+				F3A4872E2B84FA460016D220 /* MockedDragInteractionClasses.swift in Sources */,
 				23175BC6280555FA00D9D209 /* FlexibleHeightCellTests.swift in Sources */,
 				23D82C562765488F00322193 /* TestComponentCell.swift in Sources */,
 				F3D5B16D2B7A67000080E3C4 /* SectionsTest.swift in Sources */,

@@ -1,9 +1,21 @@
+// TodosViewModel.swift
 //
-//  TodoViewViewModel.swift
-//  DemoApplication
+// Copyright © 2021-2024 Vassilis Panagiotopoulos. All rights reserved.
 //
-//  Created by Bill Panagiotopoulos on 14/2/24.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in the
+// Software without restriction, including without limitation the rights to use, copy,
+// modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
+// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 //
+// The above copyright notice and this permission notice shall be included in all copies
+// or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FIESS FOR A PARTICULAR
+// PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+// FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
 import Blocks
@@ -16,9 +28,8 @@ class TodosViewModel {
     private var activeTodos: [TodoComponent] = []
     private var disposableBag = Set<AnyCancellable>()
     private var completedTodos: [TodoComponent] = []
-    private var todoInputField = TodoTextFieldComponent(
-        placeholder: NSLocalizedString("What's next?", comment: "")
-    )
+    private var todoInputField = TodoTextFieldComponent(placeholder: NSLocalizedString("What's next?",
+                                                                                       comment: ""))
 
     // MARK: - Initializers
 
@@ -30,7 +41,8 @@ class TodosViewModel {
     // MARK: - Lifecycle
 
     func configureScreen() {
-        updateSections(activeTodos: [], 
+        setupDragNDrop()
+        updateSections(activeTodos: [],
                        completedTodos: [])
     }
 
@@ -63,7 +75,9 @@ class TodosViewModel {
         activeTodos.append(todoComponent)
 
         // Clear input
-        todoInputField.value = ""
+        DispatchQueue.main.async { [weak self] in
+            self?.todoInputField.value = ""
+        }
 
         updateSections(activeTodos: activeTodos,
                        completedTodos: completedTodos)
@@ -89,16 +103,76 @@ class TodosViewModel {
             .store(in: &disposableBag)
     }
 
+    private func setupDragNDrop() {
+        renderer?.customizeDragPreviewForComponent = { component in
+            return .init(top: 2, right: 20, bottom: 2, left: 20, cornerRadius: 5)
+        }
+
+        renderer?.dragStarted = { [weak self] in
+            self?.closeAllSwipeMenus()
+        }
+
+        renderer?.canDrag = { _, component in
+            return component is TodoComponent
+        }
+
+        renderer?.dropCompleted = { [weak self] sourceIndexPath, destinationIndexPath in
+            guard let self else { return }
+            guard let section = renderer?.sections[sourceIndexPath.section] else {
+                return
+            }
+
+            switch section.id as? String {
+            case Constants.activeTodosSectionId:
+                activeTodos = section
+                    .rows?
+                    .filter { $0 is TodoComponent }
+                    .map { $0.as(TodoComponent.self) } ?? []
+            case Constants.completedTodosSectionId:
+                completedTodos = section
+                    .rows?
+                    .filter { $0 is TodoComponent }
+                    .map { $0.as(TodoComponent.self) } ?? []
+            default:
+                break
+            }
+
+            updateTodoPositions(self.activeTodos)
+            updateTodoPositions(self.completedTodos)
+        }
+
+        renderer?.canDrop = { [weak self] sourceIndexPath, destinationIndexPath in
+            guard let self else { return false }
+            guard let sourceSection = renderer?.sections[sourceIndexPath.section],
+                  let destinationSection = renderer?.sections[destinationIndexPath.section],
+                    sourceSection == destinationSection else {
+                        return false
+                    }
+
+            switch sourceSection.id as? String {
+            case Constants.activeTodosSectionId:
+                return destinationIndexPath.row < activeTodos.count && sourceIndexPath.row != activeTodos.count
+            case Constants.completedTodosSectionId:
+                return destinationIndexPath.row < completedTodos.count && sourceIndexPath.row != completedTodos.count
+            default:
+                return false
+            }
+        }
+    }
+
     private func updateSections(activeTodos: [TodoComponent],
                                 completedTodos: [TodoComponent],
                                 animated: Bool = false) {
         self.activeTodos = activeTodos
         self.completedTodos = completedTodos
 
+        updateTodoPositions(activeTodos)
+        updateTodoPositions(completedTodos)
+
         let newSections = [
             Section(
                 id: Constants.textFieldSectionId,
-                rows: [todoInputField, Spacer(type: .fixed(15))]
+                rows: [todoInputField, RowSpacer(type: .fixed(15))]
             ),
             Section(
                 id: Constants.activeTodosSectionId,
@@ -114,7 +188,7 @@ class TodosViewModel {
             )
         ]
 
-        renderer?.updateSections(newSections, animation: animated ? .automatic : .none)
+        renderer?.updateSections(newSections, animation: animated ? .fade : .none)
     }
 
     private func createActiveTodos(_ todos: [TodoComponent]) -> [any Component] {
@@ -122,7 +196,7 @@ class TodosViewModel {
             return [EmptyResultsComponent(title: "No active todos.")]
         }
 
-        return todos + [Spacer(type: .fixed(15))]
+        return todos + [RowSpacer(type: .fixed(15))]
     }
 
     private func createCompletedTodos(_ todos: [TodoComponent]) -> [any Component] {
@@ -131,6 +205,16 @@ class TodosViewModel {
         }
 
         return todos
+    }
+
+    private func updateTodoPositions(_ todos: [TodoComponent]) {
+        if todos.count == 1 {
+            todos.first?.position = .none
+        } else {
+            todos.forEach({ $0.position = .middle })
+            todos.first?.position = .first
+            todos.last?.position = .last
+        }
     }
 
     private func handleCompletedChanged(_ todoComponent: TodoComponent) {
@@ -166,6 +250,10 @@ class TodosViewModel {
         updateSections(activeTodos: activeTodos,
                        completedTodos: completedTodos,
                        animated: true)
+    }
+
+    private func closeAllSwipeMenus() {
+        (activeTodos + completedTodos).forEach({ $0.offsetX = 0 })
     }
 }
 

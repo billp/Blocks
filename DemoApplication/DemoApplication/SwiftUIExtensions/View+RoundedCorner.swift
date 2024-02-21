@@ -1,5 +1,4 @@
-//
-// MyLabelComponent.swift
+// View+RoundedCorner.swift
 //
 // Copyright © 2021-2024 Vassilis Panagiotopoulos. All rights reserved.
 //
@@ -19,22 +18,22 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
+import SwiftUI
 
-class MyLabelComponent: ObservableObject, Component {
-    @Published var title2 = UUID().uuidString
+struct RoundedCorner: Shape {
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
 
-    var title = "5"
-
-    init(title: String) {
-        self.title = title
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, 
+                                byRoundingCorners: corners,
+                                cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
     }
+}
 
-    static func == (lhs: MyLabelComponent, rhs: MyLabelComponent) -> Bool {
-        lhs.title == rhs.title && lhs.title2 == rhs.title2
-    }
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(title)
-        hasher.combine(title2)
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner(radius: radius, corners: corners))
     }
 }

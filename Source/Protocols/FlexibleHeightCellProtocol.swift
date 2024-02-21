@@ -1,6 +1,6 @@
 // FlexibleHeightCellProtocol.swift
 //
-// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2024 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -70,10 +70,25 @@ public extension FlexibleViewHeightProtocol {
     }
 
     private func initializeHeightConstraint() -> NSLayoutConstraint {
-        let heightConstraint = self.contentView.heightAnchor.constraint(
-            equalToConstant: FlexibleHeightConstants.leastAvailableCellHeight)
+        let blankView = UIView()
+        blankView.translatesAutoresizingMaskIntoConstraints = false
+
+        let heightConstraint = blankView
+            .heightAnchor
+            .constraint(equalToConstant: FlexibleHeightConstants.leastAvailableCellHeight)
+
+        contentView.addSubview(blankView)
+
+        NSLayoutConstraint.activate([
+            heightConstraint,
+            contentView.leftAnchor.constraint(equalTo: blankView.leftAnchor),
+            contentView.rightAnchor.constraint(equalTo: blankView.rightAnchor),
+            contentView.topAnchor.constraint(equalTo: blankView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: blankView.bottomAnchor)
+        ])
+
         heightConstraint.priority = UILayoutPriority(900)
-        heightConstraint.isActive = true
+
         return heightConstraint
     }
 

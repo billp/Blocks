@@ -1,6 +1,6 @@
-// SpacerCell.swift
+// SpacerHeaderFooterCell.swift
 //
-// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2024 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -19,10 +19,20 @@
 
 import UIKit
 
-public class SpacerCell: UITableViewCell, ComponentViewConfigurable, FlexibleViewHeightProtocol {
-    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.selectionStyle = .none
+public class HeaderFooterSpacerCell: UITableViewHeaderFooterView,
+                                     ComponentViewConfigurable,
+                                     FlexibleViewHeightProtocol {
+
+    public override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
+
+        if #available(iOS 14.0, *) {
+            var backgroundConfig = UIBackgroundConfiguration.listPlainHeaderFooter()
+            backgroundConfig.backgroundColor = .clear
+            backgroundConfiguration = backgroundConfig
+        } else {
+            backgroundColor = .clear
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -30,7 +40,7 @@ public class SpacerCell: UITableViewCell, ComponentViewConfigurable, FlexibleVie
     }
 
     public func configure(with viewModel: any Component) {
-        let model = viewModel.as(Spacer.self)
+        let model = viewModel.as(HeaderFooterSpacer.self)
 
         switch model.type {
         case .flexible:

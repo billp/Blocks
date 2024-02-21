@@ -1,5 +1,4 @@
-//
-// MyLabelComponent.swift
+// Spacer.swift
 //
 // Copyright © 2021-2024 Vassilis Panagiotopoulos. All rights reserved.
 //
@@ -20,21 +19,15 @@
 
 import Foundation
 
-class MyLabelComponent: ObservableObject, Component {
-    @Published var title2 = UUID().uuidString
+/// Defines a special type of Component which defines a vertical spacer based on a type.
+/// The type can be either flexible (expands up to the blank space) or fixed (defines a specific height).
+public struct RowSpacer: Component {
+    var id: UUID = .init()
 
-    var title = "5"
+    /// The type of the spacer.
+    var type: SpacerType
 
-    init(title: String) {
-        self.title = title
-    }
-
-    static func == (lhs: MyLabelComponent, rhs: MyLabelComponent) -> Bool {
-        lhs.title == rhs.title && lhs.title2 == rhs.title2
-    }
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(title)
-        hasher.combine(title2)
+    public init(type: SpacerType) {
+        self.type = type
     }
 }

@@ -1,6 +1,6 @@
 // TableViewRenderer.swift
 //
-// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2024 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -24,18 +24,75 @@ import SwiftUI
 
 /// The renderer that uses UITableView as the container
 /// of rendering components.
-open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSource {
+open class TableViewRenderer: NSObject {
     // MARK: - Properties
 
     /// Holds an unowned reference of table view.
     unowned public var tableView: UITableView
+
     /// Defines a bundle that the xibs are loaded from.
     private var bundle: Bundle?
 
-    /// Provides closures for computing estimations
+    /// Closure to estimate row height. Accepts `Component`, returns estimated `CGFloat`.
     public var estimatedHeightForRowComponent: ((any Component) -> CGFloat)?
+
+    /// Closure to estimate header height. Accepts `Component`, returns estimated `CGFloat`.
     public var estimatedHeightForHeaderComponent: ((any Component) -> CGFloat)?
+
+    /// Closure to estimate footer height. Accepts `Component`, returns estimated `CGFloat`.
     public var estimatedHeightForFooterComponent: ((any Component) -> CGFloat)?
+
+    /// An optional property that stores the index path of the item being dragged.
+    /// This value is used to track the original position of an item during a drag and drop operation.
+    var dragSourceIndexPath: IndexPath?
+
+    /// A Boolean property indicating whether drag interaction is enabled for a component.
+    /// Setting this property calls `setDragInteractionEnabled(_:)` with the new value.
+
+    public var dragEnabled: Bool = false {
+        didSet { setDragInteractionEnabled(dragEnabled) }
+    }
+
+    /// A closure called when a drag operation starts.
+    ///
+    /// This property serves as a notification hook for when a drag operation is initiated, allowing
+    /// for custom actions or state updates at the start of dragging.
+    public var dragStarted: (() -> Void)?
+
+    /// A closure that determines if an item at a given `IndexPath` can be dragged.
+    /// - Parameter
+    ///     - sourceIndexPath: The index path of the item to be evaluated for drag capability.
+    ///     - component: The component that will be dragd.
+    /// - Returns: A Boolean value indicating whether the item can be dragged.
+    public var canDrag: (_ sourceIndexPath: IndexPath,
+                         _ component: any Component) -> Bool = { _, _ in true }
+
+    /// A closure that determines if an item can be dropped at a specified location.
+    /// - Parameters:
+    ///   - sourceIndexPath: The source index path of the item being dragged.
+    ///   - destinationIndexPath: The destination index path where the item might be dropped.
+    /// - Returns: A Boolean value indicating whether the item can be dropped at the destination index path.
+    public var canDrop: (_ sourceIndexPath: IndexPath,
+                         _ destinationIndexPath: IndexPath) -> Bool = { _, _ in true }
+
+    /// A closure that is called when a drop action has been completed.
+    /// - Parameters:
+    ///   - sourceIndexPath: The source index path from which the item was dragged.
+    ///   - destinationIndexPath: The destination index path where the item was dropped.
+    public var dropCompleted: ((_ sourceIndexPath: IndexPath,
+                                _ destinationIndexPath: IndexPath) -> Void)?
+
+    /// A closure for customizing the drag preview appearance for a draggable component in a table view.
+    ///
+    /// This property enables customization of the drag preview for a specific component being dragged,
+    /// allowing adjustments to the preview's frame and the application of a corner radius,
+    /// thus enhancing visual feedback during drag operations.
+    ///
+    /// - Parameter component: The component associated with the table view row being dragged.
+    ///                        It is used to determine the custom drag preview properties.
+    /// - Returns: An optional `DragViewMaskProperties` object with insets and corner radius for the drag preview.
+    ///            Returns nil to apply default drag preview parameters.
+    public var customizeDragPreviewForComponent: ((_ component: any Component) -> DragViewMaskProperties)?
 
     /// The main data source of TableViewRenderer.
     /// This is where the view models are held.
@@ -45,17 +102,21 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
 
     /// Holds a reference of UITableViewDiffableDataSource.
     private var dataSource: UITableViewDiffableDataSource<Section, Box>!
+
     /// Holds a reference registered nib names in case of NibComponent.
     internal var registeredNibNames = Set<String>()
+
     /// Holds a reference registered class names in case of ClassComponent.
     internal var registeredClassNames = Set<String>()
 
     // Dictionary to hold the association between component types
     // and nib names
     internal var nibRegistrations: [ObjectIdentifier: String] = [:]
+
     // Dictionary to hold the association between component types
     // and class types
     internal var classRegistrations: [ObjectIdentifier: AnyClass] = [:]
+
     // Dictionary to hold the association between component types
     // and SwiftUI types
     internal var swiftUIRegistrations: [ObjectIdentifier: any ComponentSwiftUIViewConfigurable.Type] = [:]
@@ -90,8 +151,9 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: Double.leastNormalMagnitude))
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: Double.leastNormalMagnitude))
 
-        // Register Spacer
-        register(viewModelType: Spacer.self, classType: SpacerCell.self)
+        // Register Spacers
+        register(viewModelType: RowSpacer.self, classType: RowSpacerCell.self)
+        register(viewModelType: HeaderFooterSpacer.self, classType: HeaderFooterSpacerCell.self)
 
         // Remove strage empty space on occured in iOS Version >= 15.0
         if #available(iOS 15.0, *) {
@@ -223,28 +285,10 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
 
     /// Helper method that updates sections by finding differences and applying changes to the table view.
     ///
-    /// This method performs several operations to update the table view sections:
-    /// 1. Registers any nibs or classes that are needed for new sections. 
-    /// This ensures that all cell types used in the new sections are available to the table view.
-    /// 2. Sets spacer identifiers for sections if needed. 
-    /// This is typically used for managing spacing or separator cells within sections.
-    /// 3. Updates the default row animation for the data source. 
-    /// This animation is used for insertions, deletions, and updates that are applied to the sections.
-    /// 4. Applies changes to the table view based on the new sections. 
-    /// This step involves calculating the differences between 
-    /// the current and new sections and applying those differences to
-    /// update the table view.
-    /// 5. Expands flexible views within the table view if needed.
-    /// If there are any views within the table view sections that 
-    /// need to adjust their size or layout based on the new content,
-    /// this step ensures those adjustments are made. The expansion can
-    /// be animated depending on the animation parameter.
-    ///
     /// - Parameters:
-    ///   - newSections: The new sections that are used to find differences 
-    ///   and apply changes. This array of `Section` objects represents the
-    ///   updated state of the table view sections.
-    ///   - animation: The animation to use when applying updates to the table view. 
+    ///   - newSections: The new sections that are used to find differences and apply changes.
+    ///   This array of `Section` objects represents the updated state of the table view sections.
+    ///   - animation: The animation to use when applying updates to the table view.
     ///   If `.none` is specified, updates will not be animated.
     private func applySectionsUpdate(_ newSections: [Section], animation: UITableView.RowAnimation) {
         registerNibsOrClassesIfNeeded(sections: newSections)
@@ -274,6 +318,16 @@ open class TableViewRenderer: NSObject, UITableViewDelegate, UITableViewDataSour
         DispatchQueue.main.async { [weak self] in
             self?.tableView.expandFlexibleViews(animated: animated)
         }
+    }
+
+    /// Configures the table view for drag and drop interactions based on the specified enabled state.
+    /// - Parameter enabled: A Boolean value that determines whether drag and drop interactions are enabled.
+    /// When `true`, the renderer is configured to allow drag and drop operations.
+    /// When `false`, drag and drop interactions are disabled.
+    private func setDragInteractionEnabled(_ enabled: Bool) {
+        tableView.dragInteractionEnabled = enabled
+        tableView.dropDelegate = enabled ? self : nil
+        tableView.dragDelegate = enabled ? self : nil
     }
 }
 
@@ -416,179 +470,5 @@ extension TableViewRenderer: TableViewRendererProtocol {
                 removeRow(at: mapping.key, with: animation)
             }
         }
-    }
-}
-
-// MARK: - Configure Views
-
-extension TableViewRenderer {
-    func headerView(for tableView: UITableView, inSection section: Int) throws -> UIView? {
-        let sectionModel = sections[section]
-
-        guard let headerComponent = sectionModel.header else {
-            return nil
-        }
-
-        let reuseIdentifier = try reuseIdentifier(for: headerComponent)
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: reuseIdentifier)
-
-        guard let header = header as? UITableViewHeaderFooterView & ComponentViewConfigurable else {
-            throw BlocksError.invalidViewClass(reuseIdentifier: reuseIdentifier)
-        }
-
-        if #available(iOS 14.0, *) {
-            var backgroundConfig = UIBackgroundConfiguration.listPlainHeaderFooter()
-            backgroundConfig.backgroundColor = .clear
-            header.backgroundConfiguration = backgroundConfig
-        } else {
-            header.backgroundColor = .clear
-        }
-
-        headerComponent.prepare()
-        header.setRenderer(self)
-        header.configure(with: headerComponent)
-        tableView.setHeight(headerSection: section, view: header)
-        return header
-    }
-
-    func footerView(for tableView: UITableView, inSection section: Int) throws -> UIView? {
-        let sectionModel = sections[section]
-
-        guard let footerComponent = sectionModel.footer else {
-            return nil
-        }
-
-        let reuseIdentifier = try reuseIdentifier(for: footerComponent)
-
-        let footer = tableView.dequeueReusableHeaderFooterView(withIdentifier: reuseIdentifier)
-        guard let footer = footer as? UITableViewHeaderFooterView & ComponentViewConfigurable else {
-            throw BlocksError.invalidViewClass(reuseIdentifier: reuseIdentifier)
-        }
-
-        if #available(iOS 14.0, *) {
-            var backgroundConfig = UIBackgroundConfiguration.listPlainHeaderFooter()
-            backgroundConfig.backgroundColor = .clear
-            footer.backgroundConfiguration = backgroundConfig
-        } else {
-            footer.backgroundColor = .clear
-        }
-
-        footerComponent.prepare()
-        footer.setRenderer(self)
-        footer.configure(with: footerComponent)
-        return footer
-    }
-
-    func cellView(for tableView: UITableView, at indexPath: IndexPath) throws -> UITableViewCell? {
-        guard let cellModel = sections[indexPath.section].rows?[indexPath.row] else {
-            throw BlocksError.invalidModelClass
-        }
-
-        let reuseIdentifier = try reuseIdentifier(for: cellModel)
-
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
-        guard let cell = cell as? UITableViewCell & ComponentViewConfigurable else {
-            throw BlocksError.invalidViewClass(reuseIdentifier: reuseIdentifier)
-        }
-
-        cellModel.prepare()
-        cell.setRenderer(self)
-        cell.configure(with: cellModel)
-        return cell
-    }
-}
-
-// MARK: - UITableView Delegate
-
-extension TableViewRenderer {
-
-    // MARK: - Header/Footer/Cell Handling
-
-    public func numberOfSections(in tableView: UITableView) -> Int {
-        return sections.count
-    }
-
-    public func tableView(_ tableView: UITableView,
-                          numberOfRowsInSection section: Int) -> Int {
-        sections[section].rows?.count ?? 0
-    }
-
-    public func tableView(_ tableView: UITableView,
-                          viewForHeaderInSection section: Int) -> UIView? {
-        do {
-            return try headerView(for: tableView, inSection: section)
-        } catch let error {
-            Logger.error("%@", error.localizedDescription)
-            return nil
-        }
-    }
-
-    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        do {
-            return try footerView(for: tableView, inSection: section)
-        } catch let error {
-            Logger.error("%@", error.localizedDescription)
-            return nil
-        }
-    }
-
-    public func tableView(_ tableView: UITableView,
-                          cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        do {
-            return try cellView(for: tableView, at: indexPath) ?? UITableViewCell()
-        } catch let error {
-            Logger.error("%@", error.localizedDescription)
-            return UITableViewCell()
-        }
-    }
-
-    // MARK: Set Heights
-
-    public func tableView(_ tableView: UITableView,
-                          heightForRowAt indexPath: IndexPath) -> CGFloat {
-        UITableView.automaticDimension
-    }
-
-    public func tableView(_ tableView: UITableView,
-                          estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let component = sections[indexPath.section].rows?[indexPath.row] else {
-            return UITableView.automaticDimension
-        }
-
-        return estimatedHeightForRowComponent?(component) ?? UITableView.automaticDimension
-    }
-
-    public func tableView(_ tableView: UITableView,
-                          heightForHeaderInSection section: Int) -> CGFloat {
-        if sections[section].header == nil {
-            return Double.leastNormalMagnitude
-        }
-        return UITableView.automaticDimension
-    }
-
-    public func tableView(_ tableView: UITableView,
-                          estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        guard let component = sections[section].header else {
-            return UITableView.automaticDimension
-        }
-
-        return estimatedHeightForHeaderComponent?(component) ?? UITableView.automaticDimension
-    }
-
-    public func tableView(_ tableView: UITableView,
-                          heightForFooterInSection section: Int) -> CGFloat {
-        if sections[section].footer == nil {
-            return Double.leastNormalMagnitude
-        }
-        return UITableView.automaticDimension
-    }
-
-    public func tableView(_ tableView: UITableView,
-                          estimatedHeightForFooterInSection section: Int) -> CGFloat {
-        guard let component = sections[section].footer else {
-            return UITableView.automaticDimension
-        }
-
-        return estimatedHeightForFooterComponent?(component) ?? UITableView.automaticDimension
     }
 }

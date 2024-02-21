@@ -1,5 +1,4 @@
-//
-// MyLabelComponent.swift
+// SpacerCell.swift
 //
 // Copyright © 2021-2024 Vassilis Panagiotopoulos. All rights reserved.
 //
@@ -18,23 +17,35 @@
 // FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import Foundation
+import UIKit
 
-class MyLabelComponent: ObservableObject, Component {
-    @Published var title2 = UUID().uuidString
+public class RowSpacerCell: UITableViewCell, ComponentViewConfigurable, FlexibleViewHeightProtocol {
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = .none
 
-    var title = "5"
-
-    init(title: String) {
-        self.title = title
+        if #available(iOS 14.0, *) {
+            var backgroundConfig = UIBackgroundConfiguration.listPlainHeaderFooter()
+            backgroundConfig.backgroundColor = .clear
+            backgroundConfiguration = backgroundConfig
+        } else {
+            backgroundColor = .clear
+        }
     }
 
-    static func == (lhs: MyLabelComponent, rhs: MyLabelComponent) -> Bool {
-        lhs.title == rhs.title && lhs.title2 == rhs.title2
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(title)
-        hasher.combine(title2)
+    public func configure(with viewModel: any Component) {
+        let model = viewModel.as(RowSpacer.self)
+
+        switch model.type {
+        case .flexible:
+            isFlexible = true
+        case .fixed(let constant):
+            heightConstraint.constant = CGFloat(constant)
+            isFlexible = false
+        }
     }
 }

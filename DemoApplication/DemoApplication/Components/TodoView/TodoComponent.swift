@@ -1,4 +1,3 @@
-//
 // TodoComponent.swift
 //
 // Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
@@ -29,6 +28,15 @@ class TodoComponent: ObservableObject, Component {
     @Published var offsetX = 0.0
     @Published var scale: CGFloat = 0.5
     @Published var completed: Bool = false
+    @Published var position: TodoPosition = .middle
+
+    var roundedCorners: UIRectCorner {
+        roundedCorners(for: position)
+    }
+
+    var shouldAddSeparator: Bool {
+        ![TodoPosition.last, TodoPosition.none].contains(position)
+    }
 
     private var isSwipeMenuOpened: Bool = false
 
@@ -81,9 +89,13 @@ class TodoComponent: ObservableObject, Component {
             isSwipeMenuOpened = true
             offsetX = -swipeMenuItemWidthWithPadding
         } else {
-            isSwipeMenuOpened = false
-            offsetX = 0
+            swipeReset()
         }
+    }
+
+    func swipeReset() {
+        isSwipeMenuOpened = false
+        offsetX = 0
     }
 
     // MARK: - Helpers
@@ -97,6 +109,19 @@ class TodoComponent: ObservableObject, Component {
             applyCompletedAnimation()
         } else {
             completedChangedPublisher.send(self)
+        }
+    }
+
+    private func roundedCorners(for position: TodoPosition) -> UIRectCorner {
+        switch position {
+        case .first:
+            return [.topLeft, .topRight]
+        case .last:
+            return [.bottomLeft, .bottomRight]
+        case .middle:
+            return []
+        case .none:
+            return [.topLeft, .topRight, .bottomLeft, .bottomRight]
         }
     }
 
@@ -119,7 +144,7 @@ class TodoComponent: ObservableObject, Component {
 
 extension TodoComponent {
     static func == (lhs: TodoComponent, rhs: TodoComponent) -> Bool {
-        return lhs.title == rhs.title && lhs.id == rhs.id
+        return lhs.id == rhs.id && lhs.title == rhs.title
     }
 
     func hash(into hasher: inout Hasher) {
@@ -133,10 +158,21 @@ extension TodoComponent {
 extension TodoComponent {
     enum Constants {
         static var toggleAnimationDuration = 0.3
-        static var toggleAnimationCompletedMaxScale = 1.08
+        static var toggleAnimationCompletedMaxScale = 1.1
         static var toggleAnimationEndScale = 1.0
         static var swipeMenuItemWidth = 35.0
         static var swipeMenuItemCount = 1
         static var swipeMenuItemPadding = 20.0
+    }
+}
+
+// MARK: - Enums
+
+extension TodoComponent {
+    enum TodoPosition {
+        case first
+        case last
+        case middle
+        case none
     }
 }

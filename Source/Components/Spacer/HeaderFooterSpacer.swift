@@ -1,6 +1,6 @@
-// Spacer.swift
+// HeaderFooterSpacer.swift
 //
-// Copyright © 2021-2023 Vassilis Panagiotopoulos. All rights reserved.
+// Copyright © 2021-2024 Vassilis Panagiotopoulos. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in the
@@ -19,31 +19,9 @@
 
 import Foundation
 
-/// Specifies a type of the Spacer.
-public enum SpacerType: Hashable, Equatable {
-    private enum Constants {
-        static let flexibleValue: Float = -1
-    }
-
-    /// Automatically adjusts height to fill the blank space.
-    case flexible
-    /// Specifies a fixed height constant for the spacer.
-    case fixed(Float)
-
-    /// Convert enum case to float.
-    var value: Float {
-        switch self {
-        case .flexible:
-            return Constants.flexibleValue
-        case .fixed(let float):
-            return float
-        }
-    }
-}
-
 /// Defines a special type of Component which defines a vertical spacer based on a type.
 /// The type can be either flexible (expands up to the blank space) or fixed (defines a specific height).
-public struct Spacer: Component {
+public struct HeaderFooterSpacer: Component {
     var id: UUID = .init()
 
     /// The type of the spacer.
