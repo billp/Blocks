@@ -9,7 +9,7 @@
   
 </p>
 
-Blocks is the only library you need to create user interfaces in a declerative way whilst at the same time keeping the flexibility of writing custom code when needed. It saves time on writing boilerplate code by focusing more on the actual UI & Animations and less on how to render your views. Inspired by React, it enforces you to create reusable components that leads to writing more abstract and modular code, recommended in large and complex projects. Blocks utilizes UIKit's **UITableView** and **UICollectionView** as containers to render components, leveraging the **MVVM design pattern**.
+Blocks is a Swift library designed to simplify the creation of user interfaces in iOS applications. It allows developers to use both SwiftUI components and traditional UITableView cells, headers, and footers within the same UITableView. This approach facilitates a declarative way of building UIs while maintaining the flexibility to write custom code when necessary. Inspired by React, Blocks encourages the development of reusable components, promoting more abstract and modular code, which is especially beneficial for large and complex projects. The library leverages UIKit's UITableView as container to render components, and it supports the MVVM design pattern.
 
 # Installation
 You can install **Blocks** using one of the following ways...
@@ -62,46 +62,125 @@ lazy var tableView: UITableView = {
 lazy var renderer = TableViewRenderer(tableView: tableView)
 ```
 
-## Render Components
+## Component Creation and Registration
 
-You can use the renderer's **setSection** method to build your sections. Each section consists of a header (optional), a footer (optional) and row components, which you can define by implementing one of the following protocols:
-- **NibComponent** for nib based components.
-- **ClassComponent** for nibless components.
+Blocks enables the creation of flexible and reusable UI components by defining view models that conform to the `Component` protocol. These components can be rendered using various view types, including traditional nib files (for `UITableViewCell` and `UITableViewHeaderFooterView`), class-based views (for nibless initializations), or SwiftUI class types. This hybrid approach allows for the integration of both UIKit and SwiftUI elements within your application's UI, providing a versatile toolset for UI development.
 
-### Example
+### Traditional UIKit Component (Nib-based)
 
-See the definition of components **[here](/Components.md)**.
+#### View Model:
+
+Define a view model that conforms to the `Component` protocol.
 
 ```swift
-renderer.setSections([
-    Section(id: "section1",
-            header: MyHeaderFooterComponent(title: "Header 1").asBlock,
-            footer: MyHeaderFooterComponent(title: "Footer 1").asBlock,
-            items: [
-                MyLabelComponent(title: "Row 1"),
-                MyLabelComponent(title: "Row 2"),
-                MyLabelComponent(title: "Row 3"),
-                MyButtonComponent(title: "Button 1", onTap: {
-                    print("Button 1 tapped")
-                })
-            ].asBlocks),
-    Section(id: "section2",
-            header: MyHeaderFooterComponent(title: "Header 2").asBlock,
-            footer: MyHeaderFooterComponent(title: "Footer 2").asBlock,
-            items: [
-                MyLabelComponent(title: "Row 4"),
-                MyLabelComponent(title: "Row 5"),
-                MyLabelComponent(title: "Row 6"),
-                MyButtonComponent(title: "Button 2", onTap: {
-                    print("Button 2 tapped")
-                })
-            ].asBlocks)
-], animation: .none)
+struct EmptyResultsComponent: Component {
+    var title: String
+}
 ```
 
-If you run the code above you will see the following screen in simulator:
+#### Cell View:
 
-<p>
-  <img width="350px" alt="Renderer in Action" src="https://user-images.githubusercontent.com/1566052/155484594-2bc1178d-382d-432f-942a-526b0ca60ded.png">
-</p>
+Implement a `UITableViewCell` subclass that conforms to `ComponentViewConfigurable` for configuring the cell with a view model.
 
+```swift
+class EmptyResultsViewCell: UITableViewCell, ComponentViewConfigurable {
+    @IBOutlet weak var resultLabel: UILabel!
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        selectionStyle = .none
+    }
+
+    func configure(with viewModel: any Component) {
+        guard let component = viewModel.as(EmptyResultsComponent.self) else { return }
+        resultLabel.text = component.title
+    }
+}
+```
+
+#### Xib File:
+
+Associated xib file: `EmptyResultsViewCell.xib`.
+
+#### Registration:
+
+Register the component with the renderer to connect the view model with its corresponding view.
+
+```swift
+renderer.register(viewModelType: EmptyResultsComponent.self, nibName: String(describing: EmptyResultsViewCell.self))
+```
+
+This registration method applies similarly for headers and footers using nib files.
+
+### SwiftUI Component
+
+#### View Model:
+
+Create a view model that conforms to the `Component` protocol, containing properties utilized by the SwiftUI view.
+
+```swift
+class TodoComponent: ObservableObject, Component {
+    var id: UUID
+    @Published var title: String
+
+    init(title: String) {
+       self.title = title
+    }
+}
+```
+
+#### View:
+
+Construct a SwiftUI view that complies with `ComponentSwiftUIViewConfigurable`, using the view model for UI configuration.
+
+```swift
+import SwiftUI
+
+struct TodoView: View, ComponentSwiftUIViewConfigurable {
+    @ObservedObject private var viewModel: TodoComponent
+
+    init(viewModel: any Component) {
+        self.viewModel = viewModel.as(TodoComponent.self)
+    }
+
+    var body: some View {
+        // SwiftUI view layout using viewModel properties
+    }
+}
+```
+
+#### Registration:
+
+SwiftUI components are registered with the renderer to link the view model with its SwiftUI view, ensuring proper management and rendering within the UIKit-based table or collection view.
+
+```swift
+renderer.register(viewModelType: TodoComponent.self, viewType: TodoView.self)
+```
+
+This strategy for defining and registering components offers a modular and reusable approach for constructing your app's UI, leveraging the best of both UIKit and SwiftUI frameworks.
+
+#### Usage
+
+To update the UI using renderer.updateSections, incorporating TodoComponent with sample data and handling empty states with EmptyResultsComponent, you can follow this streamlined approach:
+
+```swift
+// Example method to update sections with todos and handle empty states
+private func updateUI(withActiveTodos activeTodos: [TodoComponent], completedTodos: [TodoComponent]) {
+    let activeSectionRows: [any Component] = activeTodos.isEmpty ? [EmptyResultsComponent(title: "No active todos.")] : activeTodos.map { $0 as any Component }
+    let completedSectionRows: [any Component] = completedTodos.isEmpty ? [EmptyResultsComponent(title: "No completed todos.")] : completedTodos.map { $0 as any Component }
+    
+    let sections = [
+        Section(id: "activeTodos", rows: activeSectionRows),
+        Section(id: "completedTodos", rows: completedSectionRows)
+    ]
+    
+    renderer.updateSections(sections, animation: .fade)
+}
+
+// Sample usage with active and completed todos
+private func sampleUpdate() {
+    let activeTodos = [TodoComponent(title: "Buy groceries"), TodoComponent(title: "Read a book")]
+    let completedTodos = [TodoComponent(title: "Workout"), TodoComponent(title: "Call mom")]
+    updateUI(withActiveTodos: activeTodos, completedTodos: completedTodos)
+}
+```
