@@ -54,12 +54,14 @@ public struct Section: Hashable, Identifiable {
             invalidate()
         }
     }
+
     /// The footer component of the Section.
     public var footer: (any Component)? {
         didSet {
             invalidate()
         }
     }
+
     /// The row components of the Section.
     public var rows: [any Component]?
 
