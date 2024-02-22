@@ -179,8 +179,15 @@ private func updateUI(withActiveTodos activeTodos: [TodoComponent], completedTod
 
 // Sample usage with active and completed todos
 private func sampleUpdate() {
-    let activeTodos = [TodoComponent(title: "Buy groceries"), TodoComponent(title: "Read a book")]
-    let completedTodos = [TodoComponent(title: "Workout"), TodoComponent(title: "Call mom")]
+    let activeTodos = [
+        TodoComponent(title: "Buy groceries"),
+        TodoComponent(title: "Read a book")
+    ]
+    let completedTodos = [
+        TodoComponent(title: "Workout"),
+        TodoComponent(title: "Call mom")
+    ]
+    
     updateUI(withActiveTodos: activeTodos, completedTodos: completedTodos)
 }
 ```
