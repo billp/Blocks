@@ -29,7 +29,7 @@ struct TodoTextFieldView: View, ComponentSwiftUIViewConfigurable {
 
     var body: some View {
         HStack {
-            TestFieldWrapper(viewModel.placeholder, 
+            TextFieldWrapper(viewModel.placeholder, 
                              text: $viewModel.value) {
                 viewModel.onReturnPublisher.send(viewModel.value)
             }

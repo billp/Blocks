@@ -18,7 +18,7 @@
 		F32482842B7D184F00CE4941 /* TodoTextFieldComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32482832B7D184F00CE4941 /* TodoTextFieldComponent.swift */; };
 		F3843BF12B7F9FFE00A61B74 /* EmptyResultsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3843BEF2B7F9FFE00A61B74 /* EmptyResultsViewCell.swift */; };
 		F3843BF22B7F9FFE00A61B74 /* EmptyResultsViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F3843BF02B7F9FFE00A61B74 /* EmptyResultsViewCell.xib */; };
-		F385E5E42B7E24FC00EB2C99 /* TestFieldWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F385E5E32B7E24FC00EB2C99 /* TestFieldWrapper.swift */; };
+		F385E5E42B7E24FC00EB2C99 /* TextFieldWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F385E5E32B7E24FC00EB2C99 /* TextFieldWrapper.swift */; };
 		F3B307232B86385B00BCB318 /* View+RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B307222B86385B00BCB318 /* View+RoundedCorner.swift */; };
 		F3D5B1772B7B87F70080E3C4 /* EmptyResultsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D5B1762B7B87F70080E3C4 /* EmptyResultsComponent.swift */; };
 		F3DC00AD2B73D92100217EB0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DC00AC2B73D92100217EB0 /* AppDelegate.swift */; };
@@ -42,7 +42,7 @@
 		F32482832B7D184F00CE4941 /* TodoTextFieldComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoTextFieldComponent.swift; sourceTree = "<group>"; };
 		F3843BEF2B7F9FFE00A61B74 /* EmptyResultsViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResultsViewCell.swift; sourceTree = "<group>"; };
 		F3843BF02B7F9FFE00A61B74 /* EmptyResultsViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyResultsViewCell.xib; sourceTree = "<group>"; };
-		F385E5E32B7E24FC00EB2C99 /* TestFieldWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFieldWrapper.swift; sourceTree = "<group>"; };
+		F385E5E32B7E24FC00EB2C99 /* TextFieldWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldWrapper.swift; sourceTree = "<group>"; };
 		F3B307222B86385B00BCB318 /* View+RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+RoundedCorner.swift"; sourceTree = "<group>"; };
 		F3D5B1762B7B87F70080E3C4 /* EmptyResultsComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResultsComponent.swift; sourceTree = "<group>"; };
 		F3DC00A92B73D92100217EB0 /* DemoApplication.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoApplication.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -126,7 +126,7 @@
 		F385E5E22B7E24E300EB2C99 /* SwiftUIWrappers */ = {
 			isa = PBXGroup;
 			children = (
-				F385E5E32B7E24FC00EB2C99 /* TestFieldWrapper.swift */,
+				F385E5E32B7E24FC00EB2C99 /* TextFieldWrapper.swift */,
 			);
 			path = SwiftUIWrappers;
 			sourceTree = "<group>";
@@ -282,7 +282,7 @@
 				F31D5DC22B7E712F0038EC69 /* TodoComponent.swift in Sources */,
 				F3DC00AF2B73D92100217EB0 /* SceneDelegate.swift in Sources */,
 				F32482822B7D183900CE4941 /* TodoTextFieldView.swift in Sources */,
-				F385E5E42B7E24FC00EB2C99 /* TestFieldWrapper.swift in Sources */,
+				F385E5E42B7E24FC00EB2C99 /* TextFieldWrapper.swift in Sources */,
 				F324827F2B7D0F1A00CE4941 /* Todo.swift in Sources */,
 				F303B8762B7D075500DBF296 /* TodosViewModel.swift in Sources */,
 			);
