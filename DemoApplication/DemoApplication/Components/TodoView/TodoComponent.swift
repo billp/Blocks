@@ -35,7 +35,7 @@ class TodoComponent: ObservableObject, Component {
     }
 
     var shouldAddSeparator: Bool {
-        ![TodoPosition.last, TodoPosition.none].contains(position)
+        ![.last, .none].contains(position)
     }
 
     private var isSwipeMenuOpened: Bool = false

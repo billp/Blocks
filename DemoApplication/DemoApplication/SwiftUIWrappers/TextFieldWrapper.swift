@@ -20,7 +20,7 @@
 import Foundation
 import SwiftUI
 
-struct TestFieldWrapper: UIViewRepresentable {
+struct TextFieldWrapper: UIViewRepresentable {
     @Binding var text: String
 
     var placeholder: String
@@ -54,9 +54,9 @@ struct TestFieldWrapper: UIViewRepresentable {
     }
 
     class Coordinator: NSObject, UITextFieldDelegate {
-        private var parent: TestFieldWrapper
+        private var parent: TextFieldWrapper
 
-        init(_ textField: TestFieldWrapper) {
+        init(_ textField: TextFieldWrapper) {
             self.parent = textField
         }
 

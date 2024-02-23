@@ -62,10 +62,6 @@ struct TodoView: View, ComponentSwiftUIViewConfigurable {
             .scaleEffect(viewModel.scale)
             .animation(.spring(duration: 0.25), value: viewModel.offsetX)
             .gesture(dragGesture)
-
-
-
-
         }
         .onAppear {
             withAnimation(.spring(duration: 0.3)) {
@@ -162,7 +158,6 @@ extension TodoView {
         return combinedGesture
     }
 }
-
 
 #Preview {
     TodoView(viewModel: TodoComponent(todo: .init(title: "Line1\nLine2",
