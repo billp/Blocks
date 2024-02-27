@@ -17,14 +17,14 @@ You can install **Blocks** using one of the following ways...
 
 Add the following line to your **Podfile** and run **pod install** in your terminal:
 ```ruby
-pod 'Blocks', '~> 0.0.1'
+pod 'Blocks', '~> 0.1.0'
 ```
 
 ## Carthage
 
 Add the following line to your **Carthage** and run **carthage update** in your terminal:
 ```ruby
-github "billp/Blocks" ~> 0.0.1
+github "billp/Blocks" ~> 0.1.0
 ```
 
 ## Swift Package Manager
