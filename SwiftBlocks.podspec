@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'SwiftBlocks'
-  s.version          = '0.0.1'
+  s.version          = '0.1.0'
   s.summary          = 'A library for creating user interfaces using reusable components.'
   s.homepage         = 'https://github.com/billp/Blocks.git'
   s.license          = 'MIT'
