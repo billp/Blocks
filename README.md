@@ -11,6 +11,10 @@
 
 Blocks is a Swift library designed to simplify the creation of user interfaces in iOS applications. It allows developers to use both SwiftUI components and traditional UITableView cells, headers, and footers within the same UITableView. This approach facilitates a declarative way of building UIs while maintaining the flexibility to write custom code when necessary. Inspired by React, Blocks encourages the development of reusable components, promoting more abstract and modular code, which is especially beneficial for large and complex projects. The library leverages UIKit's UITableView as container to render components, and it supports the MVVM design pattern.
 
+**The following video presents how UIKit, SwiftUI views are rendered in the same UITableView that acts as a container (renderer)** 
+
+https://github.com/billp/Blocks/assets/1566052/67c5f322-3068-4513-82bd-965ce93b3b2a
+
 # Installation
 You can install **Blocks** using one of the following ways...
 ## CocoaPods
