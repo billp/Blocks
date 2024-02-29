@@ -196,7 +196,7 @@ private func sampleUpdate() {
 }
 ```
 
-# Contributing to [Project Name]
+# Contributing to Blocks
 
 We welcome contributions to Blocks! If you're looking to contribute, here's how you can help.
 
