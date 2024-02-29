@@ -195,3 +195,50 @@ private func sampleUpdate() {
     updateUI(withActiveTodos: activeTodos, completedTodos: completedTodos)
 }
 ```
+
+# Contributing to [Project Name]
+
+We welcome contributions to Blocks! If you're looking to contribute, here's how you can help.
+
+## How to Contribute
+
+### Reporting Bugs
+
+Before submitting a bug report, please check the issue tracker to avoid duplicates. When filing an issue, include:
+
+- A clear and descriptive title
+- Steps to reproduce the bug
+- Expected behavior
+- Actual behavior
+- Screenshots (if applicable)
+
+### Suggesting Enhancements
+
+We love to hear about new features or improvements! For feature requests, please provide:
+
+- A clear and concise description of what you want to happen
+- Any additional context or screenshots about the feature request
+
+### Pull Requests
+
+Want to make a direct contribution? Great! Here's how:
+
+1. Fork the repository and create your branch from `main`.
+2. Write clear, commented code.
+3. Ensure your changes pass any tests.
+4. Update the README.md with details of changes, if applicable.
+5. Submit a pull request with a comprehensive description of changes.
+
+## Code of Conduct
+
+Please note we have a Code of Conduct, please follow it in all your interactions with the project.
+
+## Questions?
+
+If you have any questions or need further clarification, feel free to open an issue or contact a project maintainer.
+
+Thank you for your interest in contributing to Blocks! We look forward to your contributions.
+
+
+# License
+Blocks is available under the MIT license. See the LICENSE file for more info.
